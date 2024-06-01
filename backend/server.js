@@ -1,6 +1,5 @@
 import  express  from 'express';
 import { connectToDB } from './config/connectionDB.js';
-import vendedoresRoutes from './routes/vendedoresRoutes.js';
 import clientesRoutes from './routes/clientesRoutes.js';
 
 const app = express();
@@ -20,4 +19,4 @@ app.listen(PORT , () => {
     console.log(`Server is running on port ${PORT}`);
 })
 
-app.use('api/clientes', clientesRoutes);
+app.use('/api/clientes', clientesRoutes);
