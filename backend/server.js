@@ -1,12 +1,16 @@
 import  express  from 'express';
 import { connectToDB } from './config/connectionDB.js';
-import clientesRoutes from './routes/clientesRoutes.js';
+import clientesRoutes from './routes/VendedoresRoutes.js';
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 
 connectToDB();
 
 app.use(express.json());
+
+
 
 
 app.get('/', (req, res) => {

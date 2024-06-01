@@ -4,8 +4,8 @@ import sql from 'mssql';
 
 const createSeller = asyncHandler(async (req, res) => {
     try {
-        const pool = await sql.connect();
-    const result = await pool.request()
+    const pool = await sql.connect();
+    await pool.request()
     .input('NombreCompleto', sql.VarChar, req.body.NombreCompleto)
     .input('NumeroDocumento', sql.VarChar, req.body.NumeroDocumento)
     .input('TipoDocumento', sql.Int, req.body.TipoDocumento)
@@ -31,7 +31,7 @@ const getSeller = asyncHandler(async (req, res) => {
     try {
         const pool = await sql.connect();
         const result = await pool.request().query('SELECT * FROM Usuarios.Clientes');
-        res.json(result.records);
+        res.json(result.recordset);
     } catch (error) {
         res.status(500).json({ message: 'no hay vendedores' });
     }
