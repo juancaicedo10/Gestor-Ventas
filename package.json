@@ -1,0 +1,13 @@
+{
+    "name": "proyecto-cristian",
+    "version": "1.0.0",
+    "description": "Project description",
+    "scripts": {
+        "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+        "backend": "node backend/server.js",
+        "frontend": "cd frontend && npm start"
+    },
+    "dependencies": {
+        "concurrently": "^6.2.2"
+    }
+}
