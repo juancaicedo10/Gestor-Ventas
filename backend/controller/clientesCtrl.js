@@ -1,19 +1,23 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
+import sql from 'mssql';
 
 const createClient = asyncHandler(async (req, res) => {
+    try {
+        const pool = await sql.connect();
+        await pool.request()
+        .input('NombreCompleto', sql.VarChar, req.body.NombreCompleto)
+        .input('NumeroDocumento', sql.VarChar, req.body.NumeroDocumento)
+        .input('TipoDocumento', sql.Int, req.body.TipoDocumento)
+        .input('Telefono', sql.VarChar, req.body.Telefono)
+        .input('Correo', sql.VarChar, req.body.Correo)
+        .input('Contraseña', sql.VarChar, req.body.Contraseña)
+        .query('INSERT INTO Usuarios.Clientes (NombreCompleto, NumeroDocumento, TipoDocumento, Telefono, Correo) VALUES (@NombreCompleto, @NumeroDocumento, @TipoDocumento, @Telefono, @Correo)');
 
-    const client = {
-        name: req.body.name,
-        email: req.body.email,
-        phone: req.body.phone,
-        address: req.body.address,
-        city: req.body.city,
-        state: req.body.state,
-        zip: req.body.zip
-    };
-
-    const newClient = await Client.create(client);
+        res.json({ message: 'Cliente creado correctamente'})
+    } catch (error) {
+        res.json({ message: "error al crear el cliente" })
+    }
     }
 );
 

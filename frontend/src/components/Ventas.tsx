@@ -11,7 +11,7 @@ function Ventas() {
 
   return (
     <div className="flex">
-      <Sidebar />
+          <Sidebar />
     <div className="w-full">
       <h1 className="text-center font-bold my-2 text-2xl">Ventas</h1>
       <section className="grid grid-cols-4 gap-4">
