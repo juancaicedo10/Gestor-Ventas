@@ -1,6 +1,7 @@
 import express from 'express';
 import asyncHandler from 'express-async-handler';
 import sql from 'mssql';
+import { paginate } from '../utils/pagination.js';
 
 const createSeller = asyncHandler(async (req, res) => {
     try {
@@ -31,7 +32,8 @@ const getSeller = asyncHandler(async (req, res) => {
     try {
         const pool = await sql.connect();
         const result = await pool.request().query('SELECT * FROM Usuarios.Clientes');
-        res.json(result.recordset);
+        var result2 = paginate(result.recordset, req.query.page, req.query.limit);
+        res.json(result2);
     } catch (error) {
         res.status(500).json({ message: 'no hay vendedores' });
     }
