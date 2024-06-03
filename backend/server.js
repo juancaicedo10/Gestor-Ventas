@@ -1,7 +1,9 @@
 import  express  from 'express';
 import { connectToDB } from './config/connectionDB.js';
-import clientesRoutes from './routes/VendedoresRoutes.js';
+import vendedoresRoutes from './routes/VendedoresRoutes.js';
+import clientesRoutes from './routes/clientesRoutes.js';
 import loginRoutes from './routes/loginRoutes.js';
+import ventasRoutes from './routes/ventasRoutes.js';
 import cors from 'cors';
 
 const app = express();
@@ -25,4 +27,6 @@ app.listen(PORT , () => {
 })
 
 app.use('/login', loginRoutes)
-app.use('/api/vendedores', clientesRoutes);
+app.use('/api/vendedores', vendedoresRoutes);
+app.use('/api/clientes', clientesRoutes);
+app.use('/api/ventas', ventasRoutes);

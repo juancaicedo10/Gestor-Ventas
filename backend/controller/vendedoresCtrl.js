@@ -33,8 +33,13 @@ const getSeller = asyncHandler(async (req, res) => {
     try {
         const pool = await sql.connect();
         const result = await pool.request().query('SELECT * FROM Usuarios.Vendedores');
-        var result2 = paginate(result.recordset, req.query.page, req.query.limit);
-        res.json(result2);
+
+        if(req.query.page && req.query.limit) {
+            const paginateResult = paginate(result.recordset, req.query.page, req.query.limit);
+            res.json(paginateResult);
+        } else {
+        res.json(result.recordset);
+        }
     } catch (error) {
         res.status(500).json({ message: 'no hay vendedores' });
     }
@@ -83,7 +88,7 @@ const getSellsBySeller = asyncHandler(async (req, res) => {
     try {
         const pool = await sql.connect();
         const Id = req.params.id;
-        const result = await pool.request().query(`SELECT * FROM Usuarios.Ventas WHERE VendedorId = ${Id}`);
+        const result = await pool.request().query(`SELECT * FROM Financiero.Ventas WHERE VendedorId = ${Id}`);
         res.json(result.recordset);
     } catch (error) {
         res.status(500).json({ message: 'No se pueden obtener las ventas' });
