@@ -3,6 +3,9 @@ import sql from 'mssql';
 const router = express.Router();
 import asyncHandler from 'express-async-handler';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
+console.log(process.env.SECRET_KEY);
 
 router.post('/', asyncHandler(async (req, res) => {
     // Get the username and password from the request body
@@ -26,14 +29,14 @@ const vendedor = await pool.request()
     console.log(vendedor.recordset)
 
     if (Administrador.recordset.length > 0) {
-        const token = jwt.sign({ user: Administrador[0], role: 'Administrador' }, 'your-secret-key')
+        const token = jwt.sign({ user: Administrador[0], role: 'Administrador' }, process.env.SECRET_KEY)
         res.json({ token })
     }
     else if (vendedor.recordset.length > 0) {
-        const token = jwt.sign({ user: vendedor[0], role: 'Vendedor'}, 'your-secret-key')
+        const token = jwt.sign({ user: vendedor[0], role: 'Vendedor'}, process.env.SECRET_KEY)
         res.json({ token })
     }
-
+    console.log(process.env.SECRET_KEY);
     res.status(500).json({ message: 'Usuario no encontrado' })
 
 }))

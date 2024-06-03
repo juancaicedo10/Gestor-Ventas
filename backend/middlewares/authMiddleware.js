@@ -1,4 +1,6 @@
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+dotenv.config();
 
 function authMiddleware(req, res, next) {
     // Get the authorization header
@@ -21,7 +23,7 @@ function authMiddleware(req, res, next) {
     const token = parts[1];
 
     // Verify the token
-    jwt.verify(token, 'your-secret-key', (err, decoded) => {
+    jwt.verify(token, process.env.SECRET_KEY , (err, decoded) => {
         if (err) {
             return res.status(401).json({ message: 'Invalid token' });
         }

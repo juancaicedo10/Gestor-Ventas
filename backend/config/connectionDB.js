@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const config = {
-    user: 'sa',
-    password: '12345',
-    server: 'DESKTOP-3Q2RTTI',
-    database: 'VentaDB',
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    server: process.env.DB_SERVER,
+    database: process.env.DB_NAME,
     options: {
         encrypt: true, // If you're connecting to Azure SQL Database, set this to true
         trustServerCertificate: true
