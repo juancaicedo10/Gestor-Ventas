@@ -1,6 +1,5 @@
 import Sidebar from "./Sidebar";
-
-
+import PaginationButtons from "../helpers/paginator";
 function Ventas() {
   // Datos de ejemplo
   const cuotas = [1, 2, 3, 4, 5];
@@ -40,6 +39,7 @@ function Ventas() {
           </ul>
         </div>
       </section>
+      <PaginationButtons page={1}/>
     </div>
     </div>
   )

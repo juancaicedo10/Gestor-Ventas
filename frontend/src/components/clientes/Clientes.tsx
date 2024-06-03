@@ -6,6 +6,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import PaginationButtons from '../../helpers/paginator';
 
 function Clientes() {
     interface Client {
@@ -18,7 +19,7 @@ function Clientes() {
     const [clients, setClients] = useState<Client[]>([]);
 
     useEffect(() => {
-        axios.get("http://localhost:5000/api/clientes")
+        axios.get("http://localhost:5000/api/clientes?page=1&limit=3")
         .then((res) => setClients(res.data))
         .catch((err) => console.log(err));
     }, [])
@@ -75,6 +76,7 @@ function Clientes() {
             ))}
         </ul>
       </section>
+      <PaginationButtons page={1}/>
     </div>
     </section>
   )
