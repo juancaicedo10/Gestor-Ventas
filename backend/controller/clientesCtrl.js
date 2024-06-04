@@ -42,6 +42,17 @@ const getClientById = asyncHandler(async (req, res) => {
     }   
 });
 
+const getClientsBySeller = asyncHandler(async (req, res) => {
+    try{
+        const pool = await sql.connect();
+        const vendedorId = req.params.id;
+        const result = await pool.request().query(`SELECT * FROM Usuarios.Clientes WHERE VendedorId = ${vendedorId} AND Aprobado = 1`);
+        res.json(result.recordset);
+    } catch (error) {
+        res.status(500).json({ message: 'error al obtener los clientes' });
+    }
+});
+
 const getClientsToApprove = asyncHandler(async (req, res) => {
     try{
         const pool = await sql.connect();
@@ -97,4 +108,4 @@ const deleteClient = asyncHandler(async (req, res) => {
     res.json({ message: 'Cliente eliminado correctamente' });
 });
 
-export { createClient, getClients, getClientById, updateClient, deleteClient, getClientsToApprove, handleApproveClient };
+export { createClient, getClients, getClientsBySeller, getClientById, updateClient, deleteClient, getClientsToApprove, handleApproveClient };

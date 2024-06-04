@@ -8,9 +8,8 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
-import PersonIcon from '@mui/icons-material/Person';
 
-function Clientes() {
+function Vendedores() {
   interface Client {
     NombreCompleto: string;
     Correo: string;
@@ -20,11 +19,9 @@ function Clientes() {
 
   const [clients, setClients] = useState<Client[]>([]);
 
-  const user = decodeToken()?.user.ID;
-
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/clientes?page=1&limit=3")
+      .get("http://localhost:5000/api/vendedores")
       .then((res) => setClients(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -35,7 +32,7 @@ function Clientes() {
       <div className="flex flex-col justify-center text-3xl font-bold w-full ml-[80px]">
         <section className="flex">
           <h1 className="my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-green-400 w-full">
-            Clientes
+           { decodeToken()?.role === "Vendedor" ? "Tus Clientes" : "Clientes" }
           </h1>
           <button className="mx-4 text-green-700 self-end">
             <AddCircleIcon fontSize="large" />
@@ -49,7 +46,7 @@ function Clientes() {
                 key={Id}
               >
                 <div className="w-10/12 flex flex-col px-2 py-2">
-                  <PersonIcon fontSize="large" className="text-green-600" />
+                  <SellIcon fontSize="large" className="text-green-600" />
                   <h2 className="text-xl text-start my-3">
                     Informacion General:
                   </h2>
@@ -95,4 +92,4 @@ function Clientes() {
   );
 }
 
-export default Clientes;
+export default Vendedores;

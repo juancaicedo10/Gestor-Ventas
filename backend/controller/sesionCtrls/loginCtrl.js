@@ -21,13 +21,12 @@ const vendedor = await pool.request()
     .input('contraseña', sql.VarChar, contraseña)
     .query('SELECT * FROM Usuarios.Vendedores WHERE Correo = @correo AND Contraseña = @contraseña')
 
-
     if (Administrador.recordset.length > 0) {
-        const token = jwt.sign({ user: Administrador[0], role: 'Administrador' }, process.env.SECRET_KEY)
+        const token = jwt.sign({ user: Administrador.recordset[0], role: 'Administrador' }, process.env.SECRET_KEY)
         res.json({ token })
     }
     else if (vendedor.recordset.length > 0) {
-        const token = jwt.sign({ user: vendedor[0], role: 'Vendedor'}, process.env.SECRET_KEY)
+        const token = jwt.sign({ user: vendedor.recordset[0], role: 'Vendedor'}, process.env.SECRET_KEY)
         res.json({ token })
     }
     console.log(process.env.SECRET_KEY);

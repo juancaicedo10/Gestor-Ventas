@@ -7,6 +7,8 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import { Link } from 'react-router-dom';
 import LogoutIcon from '@mui/icons-material/Logout';
 import CloseIcon from '@mui/icons-material/Close';
+import decodeToken from "../utils/tokenDecored";
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 
 
 export default function Sidebar() {
@@ -19,7 +21,7 @@ export default function Sidebar() {
       </button>
       <ul className="text-2xl flex flex-col w-full">
         <li className="flex hover:text-white hover:bg-green-400 rounded-md m-2 p-2 cursor-pointer justify-start">
-          <Link to="/clientes" className="flex text-white justify-center items-center" onClick={() =>setShow(false)}>
+          <Link to="/vendedores" className="flex text-white justify-center items-center" onClick={() =>setShow(false)}>
             <SellIcon fontSize="large"/>
             <p hidden={!show} className="font-bold">Vendedores</p>
           </Link>
@@ -42,6 +44,14 @@ export default function Sidebar() {
           <p hidden={!show} className="font-bold">Panel de Control</p>
           </Link>
         </li>
+        { decodeToken().role === 'Administrador' &&
+        <li className="flex hover:text-white hover:bg-green-400 rounded-md m-2 p-2 cursor-pointer justify-start">
+          <Link to='/clientes/aprobar' className="flex text-white" onClick={() =>setShow(false)}>
+        <AdminPanelSettingsIcon fontSize="large"/>
+          <p hidden={!show} className="font-bold">Clientes por aprobar</p>
+          </Link>
+        </li>
+        }
         <li className="flex hover:text-white hover:bg-green-400 rounded-md m-2 p-2 cursor-pointer justify-start">
           <AccountCircleIcon fontSize="large"/>
           <p hidden={!show} className="font-bold">Perfil</p>

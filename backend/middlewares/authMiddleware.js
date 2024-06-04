@@ -27,17 +27,22 @@ function authMiddleware(req, res, next) {
         if (err) {
             return res.status(401).json({ message: 'Invalid token' });
         }
-
-        // Store the user information and role in the request object for future use
-        req.user = decoded.user;
         req.role = decoded.role;
-
-        if (req.role !== 'Administrador') {
-            return res.status(403).json({ message: 'Solo los administradores estan permitidos' });
-        }
-
         next();
     });
 }
 
-export default authMiddleware;
+function authorize(...allowedRoles) {
+    return (req, res, next) => {
+        if (!allowedRoles.includes(req.role)) {
+            console.log(req.role);
+            return res.status(403).json({ message: 'No tienes permiso para acceder a este recurso' });
+        }
+        next();
+    }
+
+}
+
+
+
+export { authMiddleware , authorize } ;
