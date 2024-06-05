@@ -34,7 +34,7 @@ function Clientes() {
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold w-full ml-[80px]">
         <section className="flex">
-          <h1 className="my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-green-400 w-full">
+          <h1 className="text-blue-700 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
             Clientes
           </h1>
           <button className="mx-4 text-green-700 self-end">
@@ -49,7 +49,7 @@ function Clientes() {
                 key={Id}
               >
                 <div className="w-10/12 flex flex-col px-2 py-2">
-                  <PersonIcon fontSize="large" className="text-green-600" />
+                  <PersonIcon fontSize="large" className="text-blue-700" />
                   <h2 className="text-xl text-start my-3">
                     Informacion General:
                   </h2>
@@ -72,7 +72,7 @@ function Clientes() {
                     </li>
                   </div>
                 </div>
-                {decodeToken() === "Administrador" && (
+                {decodeToken()?.role === "Administrador" && (
                   <div className="h-full flex items-center justify-start mx-2">
                     <button className="text-black">
                       <VisibilityIcon fontSize="medium" />

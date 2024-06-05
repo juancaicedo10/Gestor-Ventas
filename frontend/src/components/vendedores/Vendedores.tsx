@@ -30,16 +30,16 @@ function Vendedores() {
     <section className="flex w-full">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold w-full ml-[80px]">
-        <section className="flex">
-          <h1 className="my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-green-400 w-full">
-           { decodeToken()?.role === "Vendedor" ? "Tus Clientes" : "Clientes" }
-          </h1>
-          <button className="mx-4 text-green-700 self-end">
-            <AddCircleIcon fontSize="large" />
-          </button>
-        </section>
-        <section className="w-full">
-          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 place-items-start rounded-md">
+          <header className="flex justify-center w-[97%]">
+            <h1 className="my-2 text-3xl text-blue-400 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-400 w-full">
+              vendedores
+            </h1>
+            <button className="mx-4 text-blue-300">
+              <AddCircleIcon fontSize="large" />
+            </button>
+          </header>
+        <section className="w-full min-h-lvh">
+          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li
                 className="w-11/12 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"

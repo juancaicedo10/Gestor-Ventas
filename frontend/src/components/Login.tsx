@@ -22,15 +22,15 @@ function Login() {
     }
   }
     return (
-      <div className='w-full h-dvh flex flex-col items-center justify-center'>
-        <h1 className='text-green-400 font-bold text-3xl sm:text-4xl md:text-3xl lg:text-5xl'>Bienvenido</h1>
-        <form action="" className='flex flex-col items-center w-full h-3/4 rounded-md border' onSubmit={handleSubmit}>
+      <div className='w-full h-lvh flex justify-center items-center'>
+        <form action="" className='md:w-1/2 lg:w-1/3 flex flex-col items-center justify-center w-full h-1/2 rounded-md border-2 shadow-lg' onSubmit={handleSubmit}>
+        <h1 className='text-blue-600 font-extrabold text-4xl sm:text-4xl md:text-3xl lg:text-7xl py-4'>Bienvenido</h1>
           <label htmlFor="correo" className='text-lg'>Correo Electronico</label>
-          <input type="email" name="correo" id="correo" className='my-2 py-2 border-2 w-[90%]'/>
+          <input type="email" name="correo" id="correo" className='my-2 py-4 border-2 w-[90%] rounded-md'/>
           <label htmlFor="password" className='text-lg'>Contraseña</label>
-          <input type="password" name="contraseña" id="contraseña" className='my-2 py-2 border-2 w-[90%]
+          <input type="password" name="contraseña" id="contraseña" className='my-2 py-4 border-2 w-[90%] rounded-md
           '/>
-          <button type="submit" className='bg-green-400 text-white font-bold py-2 px-4 rounded-lg'>Iniciar Sesion</button>
+          <button type="submit" className='bg-blue-700 hover:bg-blue-800 text-white font-bold py-4 px-4 rounded-lg'>Iniciar Sesion</button>
         </form>
       </div>
     );

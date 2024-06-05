@@ -45,12 +45,12 @@ const HandleApprove = async (id: number, approval : {aprobado: boolean}) => {
     <section>
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[80px]">
-        <h1 className="my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-green-400 w-full">
+        <h1 className="text-blue-400 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
           Clientes por aprobar
         </h1>
         <ul className="flex flex-col items-start w-full">
             {clientsToApprove.map((client) => (
-                <li className="w-11/12 flex items-center justify-between py-4 my-2 rounded-md border-2">
+                <li className="w-11/12 flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105">
                 <div className="flex items-center">
                   <PersonIcon fontSize="large" />
                   <h2 className="text-xl font-normal">{ client.NombreCompleto }</h2>
