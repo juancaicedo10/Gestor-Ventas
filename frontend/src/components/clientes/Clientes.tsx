@@ -8,7 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
-import PersonIcon from '@mui/icons-material/Person';
+import PersonIcon from "@mui/icons-material/Person";
 
 function Clientes() {
   interface Client {
@@ -34,22 +34,22 @@ function Clientes() {
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold w-full ml-[80px]">
         <section className="flex">
-          <h1 className="text-blue-700 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
+          <h1 className="text-blue-800 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
             Clientes
           </h1>
-          <button className="mx-4 text-green-700 self-end">
+          <button className="mx-4 text-blue-700 self-end">
             <AddCircleIcon fontSize="large" />
           </button>
         </section>
         <section className="w-full">
-          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 place-items-start rounded-md">
+          <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li
                 className="w-11/12 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
                 key={Id}
               >
                 <div className="w-10/12 flex flex-col px-2 py-2">
-                  <PersonIcon fontSize="large" className="text-blue-700" />
+                  <PersonIcon fontSize="large" className="text-blue-800" />
                   <h2 className="text-xl text-start my-3">
                     Informacion General:
                   </h2>

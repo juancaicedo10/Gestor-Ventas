@@ -1,21 +1,50 @@
-import { Routes, Route } from 'react-router-dom';
-import Home from './components/Login';
-import './App.css';
-import Clientes from './components/clientes/Clientes';
-import Ventas from './components/Ventas';
-import Vendedores from './components/vendedores/Vendedores';
-import clientesAprobar from './components/clientes/clientesAprobar';
+import { Routes, Route } from "react-router-dom";
+import Login from "./components/Login";
+import "./App.css";
+import Clientes from "./components/clientes/Clientes";
+import Ventas from "./components/Ventas";
+import Vendedores from "./components/vendedores/Vendedores";
+import ProtectedRoute from "./components/routes/protectedRoutes";
+import ClientesAprobar from "./components/clientes/clientesAprobar";
 
 function App() {
   return (
     <>
-    <Routes>
-      <Route path="/login" element={<Home />} />
-      <Route path='/clientes' Component={Clientes} />
-      <Route path='/clientes/aprobar' Component={clientesAprobar}/>
-      <Route path='/vendedores' Component={Vendedores}/>
-      <Route path='/ventas' Component={Ventas}/>
-    </Routes>
+      <Routes>
+        <Route path="/login" element={<Login/>}/>
+        <Route
+          path="/clientes"
+          element={
+            <ProtectedRoute>
+              <Clientes />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ventas"
+          element={
+            <ProtectedRoute>
+              <Ventas />
+            </ProtectedRoute>
+          }
+          />
+        <Route
+          path="/vendedores"
+          element={
+            <ProtectedRoute>
+              <Vendedores />
+            </ProtectedRoute>
+          }
+          />
+        <Route
+          path="/clientes/aprobar"
+          element={
+            <ProtectedRoute>
+              <ClientesAprobar />
+            </ProtectedRoute>
+          }
+          />
+      </Routes>
     </>
   );
 }
