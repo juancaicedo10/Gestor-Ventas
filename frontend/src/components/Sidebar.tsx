@@ -101,10 +101,16 @@ export default function Sidebar() {
           </li>
         )}
         <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
-          <AccountCircleIcon fontSize="large" />
+        <AccountCircleIcon fontSize="large" />
+          <Link 
+          to='/perfil'
+          className="flex text-white"
+          onClick={() => setShow(false)}
+          >
           <p hidden={!show} className="font-normal">
             Perfil
           </p>
+          </Link>
         </li>
       </ul>
       <li onClick={() => handleLogout()}>

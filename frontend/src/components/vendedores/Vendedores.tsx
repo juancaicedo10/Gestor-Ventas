@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
+import { Link } from "react-router-dom";
 
 function Vendedores() {
   interface Client {
@@ -66,6 +67,10 @@ function Vendedores() {
                     <li className="flex">
                       <h3 className="font-bold">Telefono :</h3>
                       <p> {client.Telefono}</p>
+                    </li>
+                    <li className="flex">
+                      <h3 className="font-bold">Ventas:</h3>
+                      <Link to='/ventas' className="border-b text-blue-700">Mostrar ventas</Link>
                     </li>
                   </div>
                 </div>

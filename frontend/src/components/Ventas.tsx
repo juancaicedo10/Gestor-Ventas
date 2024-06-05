@@ -17,42 +17,190 @@ function Ventas() {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="w-full">
-        <h1 className="text-center font-bold my-2 text-2xl">Ventas</h1>
-        <section className="grid grid-cols-4 gap-4">
-          <div className="flex flex-col items-center">
-            <h1 className="text-xl text-center">Cuota</h1>
-            <ul className="list-none">
-              {cuotas.map((cuota, index) => (
-                <li key={index}>{cuota}</li>
+      <div className="w-full flex flex-col items-center ml-12">
+        <h1 className="text-center font-bold my-2 text-2xl">
+          Juan Caicedo Ventas
+        </h1>
+        <li className="grid w-10/12 sm:w-10/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex flex-col justify-center items-center border m-2 bg-white">
+          <h1 className="bg-blue-700 text-white font-normal py-1 rounded-t-md px-4 w-full">
+            Numero Venta: <span className="font-bold">00001</span>
+          </h1>
+          <p className="p-2">
+            <span className="font-semibold">Descripcion</span> Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Error eaque aliquid eveniet
+            corrup
+          </p>
+          <ul className="flex flex-col w-full p-2">
+            <li>
+              <span className="font-semibold">Vendedor:</span> juanito
+            </li>
+            <li>
+              <span className="font-semibold">Cliente:</span>
+              Pepito
+            </li>
+            <li>
+            <span className="font-semibold">Periodicidad</span>: quincenal
+          </li>
+          </ul>
+          <ul className="grid grid-cols-2 w-full py-2 ">
+            <li className="text-center flex flex-col">
+              <span className="font-semibold">Valor Venta:</span>
+               2000$</li>
+            <li className="text-center">
+              <span className="font-semibold flex flex-col">N Cuotas</span>
+               10</li>
+          </ul>
+          <h3 className="text-blue-500 font-bold">Detalle de Cuotas</h3>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th>Cuota</th>
+                <th>Valor</th>
+                <th>% Interes</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cuotas.map((cuota, idx) => (
+                <tr key={idx}>
+                  <td className="text-center">{cuota}</td>
+                  <td className="text-center">{valores[idx]}</td>
+                  <td className="text-center">{intereses[idx]}</td>
+                  <td className="text-center">{fechas[idx]}</td>
+                </tr>
               ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-center">
-            <h1 className="text-xl text-center">Valor</h1>
-            <ul className="list-none">
-              {valores.map((valor, index) => (
-                <li key={index}>{valor}</li>
+            </tbody>
+          </table>
+          <h4 className="py-2">
+            Venta Activa:{" "}
+            <span className="text-white font-semibold rounded-md bg-green-700 px-2">
+              Si
+            </span>
+          </h4>
+          <h5 className="py-2">Saldo Morativo total: 300%</h5>
+        </div>
+        </li>
+        <li className="grid w-10/12 sm:w-10/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex flex-col justify-center items-center border">
+          <h1 className="bg-blue-700 text-white font-normal py-1 rounded-t-md px-4 w-full">
+            Numero Venta: 00001
+          </h1>
+          <p className="p-2">
+            <span className="font-semibold">Descripcion</span> Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Error eaque aliquid eveniet
+            corrup
+          </p>
+          <ul className="flex flex-col w-full p-2">
+            <li>
+              <span className="font-semibold">Vendedor:</span> juanito
+            </li>
+            <li>
+              <span className="font-semibold">Cliente:</span>
+              Pepito
+            </li>
+            <li>
+            <span className="font-semibold">Periodicidad</span>: quincenal
+          </li>
+          </ul>
+          <ul className="grid grid-cols-2 w-full py-2 ">
+            <li className="text-center flex flex-col">
+              <span className="font-semibold">ValorVenta:</span>
+               2000$</li>
+            <li className="text-center">
+              <span className="font-semibold flex flex-col">N Cuotas</span>
+               10</li>
+          </ul>
+          <h3 className="text-blue-500 font-bold">Detalle de Cuotas</h3>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th>Cuota</th>
+                <th>Valor</th>
+                <th>% Interes</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cuotas.map((cuota, idx) => (
+                <tr key={idx}>
+                  <td className="text-center">{cuota}</td>
+                  <td className="text-center">{valores[idx]}</td>
+                  <td className="text-center">{intereses[idx]}</td>
+                  <td className="text-center">{fechas[idx]}</td>
+                </tr>
               ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-center">
-            <h1 className="text-xl text-center">Interes</h1>
-            <ul className="list-none">
-              {intereses.map((interes, index) => (
-                <li key={index}>{interes}</li>
+            </tbody>
+          </table>
+          <h4>
+            Venta Activa:{" "}
+            <span className="text-white font-semibold rounded-md bg-green-700 px-2">
+              Si
+            </span>
+          </h4>
+          <h5>Saldo Morativo total: 300%</h5>
+        </div>
+        </li>
+        <li className="grid w-10/12 sm:w-10/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="flex flex-col justify-center items-center border">
+          <h1 className="bg-blue-700 text-white font-normal py-1 rounded-t-md px-4 w-full">
+            Numero Venta: 00001
+          </h1>
+          <p className="p-2">
+            <span className="font-semibold">Descripcion</span> Lorem ipsum dolor
+            sit amet consectetur adipisicing elit. Error eaque aliquid eveniet
+            corrup
+          </p>
+          <ul className="flex flex-col w-full p-2">
+            <li>
+              <span className="font-semibold">Vendedor:</span> juanito
+            </li>
+            <li>
+              <span className="font-semibold">Cliente:</span>
+              Pepito
+            </li>
+            <li>
+            <span className="font-semibold">Periodicidad</span>: quincenal
+          </li>
+          </ul>
+          <ul className="grid grid-cols-2 w-full py-2 ">
+            <li className="text-center flex flex-col">
+              <span className="font-semibold">ValorVenta:</span>
+               2000$</li>
+            <li className="text-center">
+              <span className="font-semibold flex flex-col">N Cuotas</span>
+               10</li>
+          </ul>
+          <h3 className="text-blue-500 font-bold">Detalle de Cuotas</h3>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th>Cuota</th>
+                <th>Valor</th>
+                <th>% Interes</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {cuotas.map((cuota, idx) => (
+                <tr key={idx}>
+                  <td className="text-center">{cuota}</td>
+                  <td className="text-center">{valores[idx]}</td>
+                  <td className="text-center">{intereses[idx]}</td>
+                  <td className="text-center">{fechas[idx]}</td>
+                </tr>
               ))}
-            </ul>
-          </div>
-          <div className="flex flex-col items-center">
-            <h1 className="text-xl text-center">Fecha</h1>
-            <ul className="list-none">
-              {fechas.map((fecha, index) => (
-                <li key={index}>{fecha}</li>
-              ))}
-            </ul>
-          </div>
-        </section>
+            </tbody>
+          </table>
+          <h4>
+            Venta Activa:{" "}
+            <span className="text-white font-semibold rounded-md bg-green-700 px-2">
+              Si
+            </span>
+          </h4>
+          <h5>Saldo Morativo total: 300%</h5>
+        </div>
+        </li>
         <PaginationButtons page={1} />
       </div>
     </div>

@@ -6,6 +6,7 @@ import Ventas from "./components/Ventas";
 import Vendedores from "./components/vendedores/Vendedores";
 import ProtectedRoute from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
+import Perfil from "./components/perfil";
 
 function App() {
   return (
@@ -44,6 +45,9 @@ function App() {
             </ProtectedRoute>
           }
           />
+          <Route 
+          path="/perfil"
+          element={<Perfil/>}/>
       </Routes>
     </>
   );
