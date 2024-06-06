@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import decodeToken from "../utils/tokenDecored"
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import Sidebar from "./Sidebar";
 
 
 function VentasByVendedor() {
@@ -34,10 +35,11 @@ function VentasByVendedor() {
 
     console.log(ventas);
     return (
-
-    <div>
+  <section className="flex w-full">
+    <Sidebar />
+    <div className="w-full ml-16 bg-red-200">
       {ventas.map((venta) => (
-              <li className="grid w-10/12 sm:w-10/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
+              <li className="grid sm:w-11/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
               <div className="flex flex-col justify-center items-center border m-2 bg-white">
                 <h1 className="bg-blue-700 text-white font-normal py-1 rounded-t-md px-4 w-full">
                   Numero Venta: <span className="font-bold">{ venta.NumeroVenta }</span>
@@ -70,6 +72,7 @@ function VentasByVendedor() {
       ))
       }
       </div>
+  </section>
     )
     }
 

@@ -7,7 +7,7 @@ const PrivateRoute = ({ children } : { children: JSX.Element } ) => {
     const user = localStorage.getItem("user");
     console.log(auth)
     console.log(user)
-    return auth ? children : <Navigate to="/login" replace />;
+    return auth ? children : <Navigate to="/" replace />;
 }
 
 const AdminRoute = ({ children } : { children: JSX.Element } ) => {

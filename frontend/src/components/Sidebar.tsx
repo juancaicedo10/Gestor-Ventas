@@ -18,13 +18,13 @@ export default function Sidebar() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     localStorage.removeItem("role");
-    navigate("/login");
+    navigate("/");
   };
 
   console.log(localStorage.getItem("user"), "user")
   return (
     <aside
-      className={`z-50 h-dvh flex fixed md:mr-9 flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
+      className={`z-50 h-full flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
         show ? "w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4" : "w-16"
       }`}
     >

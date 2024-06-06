@@ -30,22 +30,17 @@ function Clientes() {
   }, []);
 
   return (
-    <section className="flex w-full">
+    <section className="w-full">
       <Sidebar />
-      <div className="flex flex-col justify-center text-3xl font-bold w-full ml-[80px]">
-        <section className="flex">
+      <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
           <h1 className="text-blue-800 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
             Clientes
           </h1>
-          <button className="mx-4 text-blue-700 self-end">
-            <AddCircleIcon fontSize="large" />
-          </button>
-        </section>
-        <section className="w-full">
+        <section className="w-full px-2">
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li
-                className="w-11/12 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
+                className="w-full min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
                 key={Id}
               >
                 <div className="w-10/12 flex flex-col px-2 py-2">
