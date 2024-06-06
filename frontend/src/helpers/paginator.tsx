@@ -7,6 +7,8 @@ interface PaginationButtonsProps {
   
   export default function PaginationButtons({ page  } : PaginationButtonsProps) {
     return (
-      <Pagination count={10} page={page} />
+      <div className='w-full flex justify-center my-2'>
+        <Pagination count={10} page={page} />
+      </div>
     );
   }

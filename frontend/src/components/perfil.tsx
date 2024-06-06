@@ -1,6 +1,6 @@
 import { useState } from "react";
 import decodeToken from "../utils/tokenDecored"
-import Sidebar from "./Sidebar"
+import Sidebar from "./Sidebar";
 function perfil() {
     const [name, setName] = useState<string>(decodeToken().user.Nombre || '');
     const [correo, setCorreo] = useState<string>(decodeToken().user.CorreoElectronico || '');
