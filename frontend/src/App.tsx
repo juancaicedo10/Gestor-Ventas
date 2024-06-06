@@ -48,6 +48,10 @@ function App() {
           <Route 
           path="/perfil"
           element={<Perfil/>}/>
+          <Route 
+          path="/ventas/:id"
+          element={<Ventas/>}
+          />
       </Routes>
     </>
   );

@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 
 function Vendedores() {
   interface Client {
+    ID: number;
     NombreCompleto: string;
     Correo: string;
     NumeroDocumento: string;
@@ -70,7 +71,7 @@ function Vendedores() {
                     </li>
                     <li className="flex">
                       <h3 className="font-bold">Ventas:</h3>
-                      <Link to='/ventas' className="border-b text-blue-700">Mostrar ventas</Link>
+                      <Link to={`/ventas/${client.ID}`} className="border-b text-blue-700">Mostrar ventas</Link>
                     </li>
                   </div>
                 </div>

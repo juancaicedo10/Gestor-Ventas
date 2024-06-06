@@ -33,6 +33,20 @@ const getSaleById = AsyncHandler(async(req, res) => {
     res.json(result.recordset[0]);
 });
 
+const getAllSalesByVendedor = AsyncHandler(async(req, res) => {
+    const pool = await sql.connect();
+    const VendedorId = req.params.id;
+    const result = await pool.request().query(`SELECT * FROM Financiero.Ventas WHERE VendedorId = ${VendedorId}`);
+    res.json(result.recordset);
+})
+
+const getSaleByVendedor = AsyncHandler(async (req, res) => {
+    const pool = await sql.connect();
+    const VendedorId = req.params.id;
+    const result = await pool.request().query(`SELECT * FROM Financiero.Ventas WHERE VendedorId = ${VendedorId} AND Id = ${req.params.id}`);
+    res.json(result.recordset);
+})
+
 const getAllSales = AsyncHandler(async (req, res) => {
     const pool = await sql.connect();
     const result = await pool.request().query('SELECT * FROM Financiero.Ventas');
@@ -68,6 +82,8 @@ export {
     abonoCuota,
     getSaleById,
     getAllSales,
+    getAllSalesByVendedor,
+    getSaleByVendedor,
     updateSale,
     deleteSale
 };

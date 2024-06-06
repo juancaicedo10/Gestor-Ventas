@@ -21,6 +21,7 @@ export default function Sidebar() {
     navigate("/login");
   };
 
+  console.log(localStorage.getItem("user"), "user")
   return (
     <aside
       className={`z-50 h-dvh flex fixed md:mr-9 flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
