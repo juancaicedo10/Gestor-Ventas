@@ -1,10 +1,10 @@
-import  express  from 'express';
-import { connectToDB } from './config/connectionDB.js';
-import vendedoresRoutes from './routes/VendedoresRoutes.js';
-import clientesRoutes from './routes/clientesRoutes.js';
-import loginRoutes from './routes/loginRoutes.js';
-import ventasRoutes from './routes/ventasRoutes.js';
-import cors from 'cors';
+const express = require('express');
+const connectToDB  = require('./config/connectionDB.js');
+const vendedoresRoutes = require('./routes/vendedoresRoutes.js');
+const clientesRoutes = require('./routes/clientesRoutes.js');
+const loginRoutes = require('./routes/loginRoutes.js');
+const ventasRoutes = require('./routes/ventasRoutes.js');
+const cors = require('cors');
 
 const app = express();
 app.use(cors());

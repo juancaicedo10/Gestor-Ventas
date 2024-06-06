@@ -1,5 +1,5 @@
-import express from 'express'
-import { createSale, deleteSale, getSaleById, getAllSales, updateSale, abonoCuota, getAllSalesByVendedor } from '../controller/ventasCtrl.js'
+const express = require('express');
+const { createSale, deleteSale, getSaleById, getAllSales, updateSale, abonoCuota, getAllSalesByVendedor } = require('../controller/ventasCtrl.js');
 
 const router = express.Router()
 
@@ -11,4 +11,4 @@ router.put('/:id', updateSale);
 router.delete('/:id', deleteSale);
 router.post('/abono', abonoCuota);
 
-export default router;
+module.exports = router;

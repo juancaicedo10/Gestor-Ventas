@@ -1,9 +1,9 @@
-import express from 'express';
-import asyncHandler from 'express-async-handler';
-import sql from 'mssql';
-import { paginate } from '../utils/pagination.js';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
+const express = require('express');
+const asyncHandler = require('express-async-handler');
+const sql = require('mssql');
+const dotenv = require('dotenv');
+const jwt = require('jsonwebtoken');
+const { paginate } = require('../utils/pagination.js');
 dotenv.config();
 
 const createSeller = asyncHandler(async (req, res) => {
@@ -90,4 +90,4 @@ const getSellsBySeller = asyncHandler(async (req, res) => {
 });
 
 
-export { createSeller, getSeller, getSellerById, updateSeller, deleteSeller, getSellsBySeller };
+module.exports = { createSeller, getSeller, getSellerById, updateSeller, deleteSeller, getSellsBySeller };

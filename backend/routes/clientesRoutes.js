@@ -1,6 +1,6 @@
-import { Router } from "express";
-import { createClient, getClients, getClientById, getClientsBySeller, getClientsToApprove, handleApproveClient, updateClient, deleteClient } from "../controller/clientesCtrl.js";
-import { authMiddleware, authorize } from "../middlewares/authMiddleware.js";
+const { Router } = require("express");
+const { createClient, getClients, getClientById, getClientsBySeller, getClientsToApprove, handleApproveClient, updateClient, deleteClient } = require("../controller/clientesCtrl.js");
+const { authMiddleware, authorize }  = require("../middlewares/authMiddleware.js");
 
 
 const router = Router();
@@ -14,4 +14,4 @@ router.put('/aprobar/:id', authMiddleware, authorize('Administrador'), handleApp
 router.put('/:id', authMiddleware , authorize('Administrador') ,updateClient);
 router.delete('/:id', authMiddleware, authorize('Administrador'), deleteClient);
 
-export default router;
+module.exports = router;

@@ -1,7 +1,6 @@
-import sql from 'mssql';
-import AsyncHandler from 'express-async-handler';
-import { generarNumeroVentas } from '../utils/NumeroVentas.js';
-
+const sql = require('mssql');
+const AsyncHandler  = require('express-async-handler');
+const { generarNumeroVentas } = require('../utils/NumeroVentas.js');
 
 const createSale = AsyncHandler( async (req, res) => {
     const pool = await sql.connect();
@@ -80,7 +79,7 @@ const deleteSale = AsyncHandler(async (req, res) => {
 });
 
 // Export your controller functions
-export {
+module.exports = {
     createSale,
     abonoCuota,
     getSaleById,

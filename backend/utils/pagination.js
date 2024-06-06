@@ -1,4 +1,4 @@
-export function paginate(data, page, limit) {
+module.exports = function paginate(data, page, limit) {
     const startIndex = (parseInt(page) - 1) * limit;
     const endIndex = page * limit;
 

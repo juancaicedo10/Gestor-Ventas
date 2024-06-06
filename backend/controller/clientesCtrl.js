@@ -1,6 +1,6 @@
-import express from 'express';
-import asyncHandler from 'express-async-handler';
-import sql from 'mssql';
+const express = require('express');
+const asyncHandler = require('express-async-handler');
+const sql = require('mssql');
 
 const createClient = asyncHandler(async (req, res) => {
     try {
@@ -108,4 +108,4 @@ const deleteClient = asyncHandler(async (req, res) => {
     res.json({ message: 'Cliente eliminado correctamente' });
 });
 
-export { createClient, getClients, getClientsBySeller, getClientById, updateClient, deleteClient, getClientsToApprove, handleApproveClient };
+module.exports = { createClient, getClients, getClientsBySeller, getClientById, updateClient, deleteClient, getClientsToApprove, handleApproveClient };

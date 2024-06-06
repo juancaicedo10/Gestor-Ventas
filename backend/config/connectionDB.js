@@ -1,5 +1,5 @@
-import sql from 'mssql';
-import dotenv from 'dotenv';
+const sql = require('mssql');
+const dotenv = require('dotenv');
 dotenv.config();
 
 const config = {
@@ -14,7 +14,7 @@ const config = {
 };
 //changes
 
-export async function connectToDB() {
+module.exports = async function connectToDB() {
     try {
         await sql.connect(config);
         console.log('Connected to the database');

@@ -1,7 +1,8 @@
-import asyncHandler from 'express-async-handler';
-import jwt from 'jsonwebtoken';
-import dotenv from 'dotenv';
-import sql from 'mssql';
+const asyncHandler = require('express-async-handler');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
+const sql = require('mssql');
+
 dotenv.config();
 
     const login = asyncHandler(async (req, res) => {
@@ -33,4 +34,4 @@ const vendedor = await pool.request()
     res.status(500).json({ message: 'Usuario no encontrado' })
 })
 
-export { login }
+module.exports = { login }
