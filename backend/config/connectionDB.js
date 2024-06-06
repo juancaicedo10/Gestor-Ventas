@@ -12,6 +12,7 @@ const config = {
         trustServerCertificate: true
     }
 };
+//changes
 
 export async function connectToDB() {
     try {
