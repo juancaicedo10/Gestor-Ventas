@@ -38,6 +38,7 @@ function VentasByVendedor() {
   <section className="flex w-full">
     <Sidebar />
     <div className="w-full ml-16 bg-red-200">
+      <h1>Ventas realizadas por:  <br /> { ventas[0]?.NombreVendedor }</h1>
       {ventas.map((venta) => (
               <li className="grid sm:w-11/12 md:grid-cols-2 lg:grid-cols-3 gap-5">
               <div className="flex flex-col justify-center items-center border m-2 bg-white">

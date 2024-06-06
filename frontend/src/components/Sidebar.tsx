@@ -77,13 +77,13 @@ export default function Sidebar() {
         </li>
         <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
           <Link
-            to="/ventas"
+            to="/cuotas"
             className="flex text-white"
             onClick={() => setShow(false)}
           >
             <AttachMoneyIcon fontSize="large" />
             <p hidden={!show} className="font-normal">
-              Panel de Control
+              Cuotas
             </p>
           </Link>
         </li>

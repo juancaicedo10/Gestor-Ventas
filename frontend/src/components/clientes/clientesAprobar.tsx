@@ -56,7 +56,7 @@ function clientesAprobar() {
         </h1>
         <ul className="flex flex-col items-start w-full">
           {clientsToApprove.map((client) => (
-            <li className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105">
+            <li className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105" key={client.Id}>
               <div className="flex items-center">
                 <PersonIcon fontSize="large" />
                 <h2 className="text-xl font-normal">{client.NombreCompleto}</h2>

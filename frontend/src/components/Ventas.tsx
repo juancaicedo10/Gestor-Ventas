@@ -37,12 +37,12 @@ function Ventas() {
     <section className="w-full">
       <Sidebar />
       <div className="ml-[64px]">
-        <h1 className="text-center font-bold text-2xl">Juan Caicedo Ventas</h1>
+        <h1 className="text-center font-bold text-2xl">Ventas</h1>
         <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
           {ventas.map((venta) => (
             <li>
               <div className="flex flex-col justify-center items-center border m-2 bg-white">
-                <h1 className="bg-blue-700 text-white font-normal py-1 rounded-t-md px-4 w-full">
+                <h1 className="bg-blue-900 text-white font-normal py-1 rounded-t-md px-4 w-full">
                   Numero Venta:{" "}
                   <span className="font-bold">{venta.NumeroVenta}</span>
                 </h1>
