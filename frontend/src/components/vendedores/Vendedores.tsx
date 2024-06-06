@@ -36,10 +36,10 @@ function Vendedores() {
       <Sidebar />
       <div className="text-3xl font-bold ml-[64px] px-2">
         <header className="flex justify-center">
-          <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-400 w-full">
+          <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-800 w-full">
             vendedores
           </h1>
-          <button className="mx-4 text-blue-300">
+          <button className="mx-4 text-blue-800">
             <AddCircleIcon fontSize="large" />
           </button>
         </header>
@@ -78,7 +78,7 @@ function Vendedores() {
                     <h3 className="font-bold">Ventas:</h3>
                     <Link
                       to={`/ventas/vendedor/${client.Id}`}
-                      className="border-b text-blue-700"
+                      className="text-blue-700"
                     >
                       Mostrar ventas
                     </Link>

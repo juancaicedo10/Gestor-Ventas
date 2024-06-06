@@ -34,11 +34,11 @@ function Clientes() {
   return (
     <section className="w-full overflow-y-hidden">
       <Sidebar />
-      <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-          <h1 className="text-blue-800 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
+      <div className="flex px-2 flex-col justify-center text-3xl font-bold ml-[64px]">
+      <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-800 w-full">
             Clientes
           </h1>
-        <section className="w-full px-2">
+        <section className="w-full">
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li

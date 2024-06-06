@@ -80,7 +80,7 @@ function Ventas() {
                 <h3 className="text-blue-500 font-bold">Detalle de Cuotas</h3>
                 <table className="w-full">
                   <thead>
-                    <tr>
+                    <tr className="text-center">
                       <th>Cuota</th>
                       <th>Valor</th>
                       <th>% Interes</th>

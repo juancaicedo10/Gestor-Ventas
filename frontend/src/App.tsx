@@ -8,6 +8,7 @@ import { PrivateRoute } from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
 import VentasByVendedor from "./components/VentasByVendedor";
+import Cuotas from '../src/components/Cuotas'
 
 function App() {
   return (
@@ -52,6 +53,14 @@ function App() {
           <Route 
           path="/ventas/vendedor/:id"
           element={<VentasByVendedor/>}
+          />
+          <Route
+          path="/cuotas"
+          element={
+            <PrivateRoute>
+              <Cuotas />
+            </PrivateRoute>
+          }
           />
       </Routes>
     </>

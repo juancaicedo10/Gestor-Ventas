@@ -10,6 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import decodeToken from "../utils/tokenDecored";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useNavigate } from "react-router-dom";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -39,7 +40,7 @@ export default function Sidebar() {
         )}
       </button>
       <ul className="text-2xl flex flex-col w-full">
-        <li className="flex hover:text-white hover:bg-blue-300 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
+        <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
           <Link
             to="/vendedores"
             className="flex text-white justify-center items-center"
@@ -51,7 +52,7 @@ export default function Sidebar() {
             </p>
           </Link>
         </li>
-        <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
+        <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
           <Link
             to="/clientes"
             className="flex text-white"
@@ -63,7 +64,7 @@ export default function Sidebar() {
             </p>
           </Link>
         </li>
-        <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
+        <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
           <Link
             to="/ventas"
             className="flex text-white"
@@ -75,20 +76,20 @@ export default function Sidebar() {
             </p>
           </Link>
         </li>
-        <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
+        <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
           <Link
             to="/cuotas"
             className="flex text-white"
             onClick={() => setShow(false)}
           >
-            <AttachMoneyIcon fontSize="large" />
+            <AccountBalanceIcon fontSize="large" />
             <p hidden={!show} className="font-normal">
               Cuotas
             </p>
           </Link>
         </li>
         {decodeToken().role === "Administrador" && (
-          <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
+          <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start">
             <Link
               to="/clientes/aprobar"
               className="flex text-white"
@@ -101,13 +102,13 @@ export default function Sidebar() {
             </Link>
           </li>
         )}
-        <li className="flex hover:text-white hover:bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start">
-        <AccountCircleIcon fontSize="large" />
+        <li className="flex hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden">
           <Link 
           to='/perfil'
           className="flex text-white"
           onClick={() => setShow(false)}
           >
+          <AccountCircleIcon fontSize="large" />
           <p hidden={!show} className="font-normal">
             Perfil
           </p>
