@@ -6,13 +6,6 @@ function Ventas() {
   const valores = [100, 200, 300, 400, 500];
   const intereses = [10, 20, 30, 40, 50];
   const fechas = ["1/01/22", "1/01/22", "1/01/22", "1/01/22", "1/01/22"];
-  const estados = [
-    "Pagado",
-    "Pendiente",
-    "Pendiente",
-    "Pendiente",
-    "Pendiente",
-  ];
 
   return (
     <div className="flex">

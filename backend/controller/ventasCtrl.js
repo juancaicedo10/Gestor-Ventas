@@ -28,15 +28,19 @@ const abonoCuota = AsyncHandler( async (req, res) => {
 const getSaleById = AsyncHandler(async(req, res) => {
     const pool = await sql.connect();
     const Id = req.params.id;
-    const result = await pool.request().query(`SELECT * FROM Financiero.Ventas WHERE Id = ${Id}`);
-
+    const result = await pool.request()
+    .input('Id', sql.Int, Id)
+    .execute('Financiero.ObtenerVentasPorId');
+    console.log(result);
     res.json(result.recordset[0]);
 });
 
 const getAllSalesByVendedor = AsyncHandler(async(req, res) => {
     const pool = await sql.connect();
     const VendedorId = req.params.id;
-    const result = await pool.request().query(`SELECT * FROM Financiero.Ventas WHERE VendedorId = ${VendedorId}`);
+    const result = await pool.request()
+    .input('VendedorId', sql.Int, VendedorId)
+    .execute('Financiero.ObtenerVentasPorVendedor');
     res.json(result.recordset);
 })
 
@@ -49,24 +53,23 @@ const getSaleByVendedor = AsyncHandler(async (req, res) => {
 
 const getAllSales = AsyncHandler(async (req, res) => {
     const pool = await sql.connect();
-    const result = await pool.request().query('SELECT * FROM Financiero.Ventas');
+    const result = await pool.request().query('Financiero.ObtenerVentas');
     res.json(result.recordset);
 });
 
 const updateSale = AsyncHandler(async (req, res) => {
     const pool = await sql.connect();
-
+    const Id = req.params.id;
     await pool.request()
-    .input('IdCliente', sql.Int, req.body.IdCliente)
-    .input('IdVendedor', sql.Int, req.body.IdVendedor)
+    .input('ClienteId', sql.Int, req.body.IdCliente)
+    .input('VendedorId', sql.Int, req.body.IdVendedor)
     .input('ValorVenta', sql.Decimal, req.body.ValorVenta)
     .input('FechaInicio', sql.Date, req.body.FechaInicio)
     .input('FechaFin', sql.Date, req.body.FechaFin)
     .input('NumeroCuotas', sql.Int, req.body.NumeroCuotas)
     .input('NumeroVenta', sql.VarChar, req.body.NumeroVenta)
     .Input('SaldoMoraTotal', sql.Decimal, req.body.SaldoMoraTotal)
-    .query('UPDATE Usuarios.Ventas SET IdCliente = @IdCliente, IdVendedor = @IdVendedor, ValorVenta = @ValorVenta, FechaInicio = @FechaInicio, FechaFin = @FechaFin, NumeroCuotas = @NumeroCuotas, NumeroVenta = @NumeroVenta, SaldoMoraTotal = @SaldoMoraTotal WHERE Id = ${Id}');
-    const Id = req.params.id;
+    .query(`UPDATE Usuarios.Ventas SET ClienteId = @ClienteId, VendedorId = @VendedorId, ValorVenta = @ValorVenta, FechaInicio = @FechaInicio, FechaFin = @FechaFin, NumeroCuotas = @NumeroCuotas, NumeroVenta = @NumeroVenta, SaldoMoraTotal = @SaldoMoraTotal WHERE Id = ${Id}`);
 });
 
 const deleteSale = AsyncHandler(async (req, res) => {

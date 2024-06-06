@@ -1,4 +1,5 @@
 import { Navigate } from "react-router-dom";
+import decodeToken from "../../utils/tokenDecored";
 
 
 const PrivateRoute = ({ children } : { children: JSX.Element } ) => {
@@ -9,4 +10,9 @@ const PrivateRoute = ({ children } : { children: JSX.Element } ) => {
     return auth ? children : <Navigate to="/login" replace />;
 }
 
-export default PrivateRoute
+const AdminRoute = ({ children } : { children: JSX.Element } ) => {
+    const Admin = decodeToken()?.role;
+    return Admin ? children : <Navigate to="/" replace />;
+}
+
+export { PrivateRoute, AdminRoute }

@@ -11,7 +11,7 @@ import decodeToken from "../../utils/tokenDecored";
 import { Link } from "react-router-dom";
 
 function Vendedores() {
-  interface Client {
+  interface Vendedor {
     ID: number;
     NombreCompleto: string;
     Correo: string;
@@ -19,12 +19,14 @@ function Vendedores() {
     Telefono: string;
   }
 
-  const [clients, setClients] = useState<Client[]>([]);
+  const [vendedores, setVendedores] = useState<Vendedor[]>([]);
+
+  console.log(vendedores);
 
   useEffect(() => {
     axios
       .get("http://localhost:5000/api/vendedores")
-      .then((res) => setClients(res.data))
+      .then((res) => setVendedores(res.data))
       .catch((err) => console.log(err));
   }, []);
 
@@ -42,7 +44,7 @@ function Vendedores() {
         </header>
         <section className="w-full min-h-lvh">
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
-            {clients.map((client, Id) => (
+            {vendedores.map((client, Id) => (
               <li
                 className="w-11/12 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
                 key={Id}

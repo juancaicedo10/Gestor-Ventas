@@ -4,9 +4,10 @@ import "./App.css";
 import Clientes from "./components/clientes/Clientes";
 import Ventas from "./components/Ventas";
 import Vendedores from "./components/vendedores/Vendedores";
-import ProtectedRoute from "./components/routes/protectedRoutes";
+import { PrivateRoute } from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
+import VentasByVendedor from "./components/VentasByVendedor";
 
 function App() {
   return (
@@ -16,41 +17,41 @@ function App() {
         <Route
           path="/clientes"
           element={
-            <ProtectedRoute>
+            <PrivateRoute>
               <Clientes />
-            </ProtectedRoute>
+            </PrivateRoute>
           }
         />
         <Route
           path="/ventas"
           element={
-            <ProtectedRoute>
+            <PrivateRoute>
               <Ventas />
-            </ProtectedRoute>
+            </PrivateRoute>
           }
           />
         <Route
           path="/vendedores"
           element={
-            <ProtectedRoute>
+            <PrivateRoute>
               <Vendedores />
-            </ProtectedRoute>
+            </PrivateRoute>
           }
           />
         <Route
           path="/clientes/aprobar"
           element={
-            <ProtectedRoute>
+            <PrivateRoute>
               <ClientesAprobar />
-            </ProtectedRoute>
+            </PrivateRoute>
           }
           />
           <Route 
           path="/perfil"
           element={<Perfil/>}/>
           <Route 
-          path="/ventas/:id"
-          element={<Ventas/>}
+          path="/ventas/vendedor/:id"
+          element={<VentasByVendedor/>}
           />
       </Routes>
     </>
