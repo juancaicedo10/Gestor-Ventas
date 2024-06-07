@@ -6,6 +6,7 @@ const loginRoutes = require('./routes/loginRoutes.js');
 const ventasRoutes = require('./routes/ventasRoutes.js');
 const cors = require('cors');
 const asyncHandler = require('express-async-handler');
+const sql = require('mssql');
 
 const app = express();
 app.use(cors());
