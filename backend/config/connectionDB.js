@@ -7,7 +7,10 @@ const config = {
     password: process.env.DB_PASSWORD,
     server: process.env.DB_SERVER,
     database: process.env.DB_NAME,
-    port: parseInt(process.env.DB_PORT),
+    port: parseInt(process.env.DB_PORT) || 1433,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeout: 2000,
     options: {
         encrypt: true, // If you're connecting to Azure SQL Database, set this to true
         trustServerCertificate: true,

@@ -21,7 +21,7 @@ function Clientes() {
 
   useEffect(() => {
     axios
-      .get("https://proyecto-cristian.vercel.app/api/clientes?page=1&limit=3")
+      .get("https://gestor-ventas.vercel.app/api/clientes?page=1&limit=3")
       .then((res) => setClients(res.data))
       .catch((err) => console.log(err));
   }, []);
