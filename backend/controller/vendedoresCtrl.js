@@ -35,7 +35,7 @@ const getSeller = asyncHandler(async (req, res) => {
         res.json(result.recordset);
         }
     } catch (error) {
-        res.status(500).json({ message: 'no hay vendedores' });
+        res.status(500).json({ message: 'no hay vendedores', error });
     }
 });
 
