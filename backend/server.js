@@ -27,7 +27,7 @@ app.get('/test-db', async (req, res) => {
       res.status(200).send(result.recordset);
     } catch (err) {
       console.error('Database connection error:', err);
-      res.status(500).send('Database connection error');
+      res.status(500).send('Database connection error', err);
     }
   });
 
