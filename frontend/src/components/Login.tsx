@@ -15,7 +15,7 @@ function Login() {
     };
     console.log(data);
     try {
-      const response = await axios.post("https://proyecto-cristian-3n3fv0e7g-jayz1xs-projects.vercel.app/login", data);
+      const response = await axios.post("https://proyecto-cristian.vercel.app/login", data);
       console.log("Login correcto");
       localStorage.setItem("token", response.data.token);
       navigate("/clientes");

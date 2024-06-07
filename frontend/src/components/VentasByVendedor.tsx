@@ -28,7 +28,7 @@ function VentasByVendedor() {
 
     console.log(id);
     useEffect(() => {
-        axios.get(`https://proyecto-cristian-3n3fv0e7g-jayz1xs-projects.vercel.app/api/ventas/vendedor/${id}`)
+        axios.get(`https://proyecto-cristian.vercel.app/api/ventas/vendedor/${id}`)
         .then(res => setVentas(res.data))
         .catch(err => console.log(err))
     }, [])

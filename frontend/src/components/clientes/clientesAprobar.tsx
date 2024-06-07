@@ -21,7 +21,7 @@ function clientesAprobar() {
 
   useEffect(() => {
     axios
-      .get("https://proyecto-cristian-3n3fv0e7g-jayz1xs-projects.vercel.app/api/clientes/aprobar", {
+      .get("https://proyecto-cristian.vercel.app/api/clientes/aprobar", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

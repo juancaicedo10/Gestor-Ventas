@@ -26,7 +26,7 @@ function Clientes() {
 
   useEffect(() => {
     axios
-      .get("https://proyecto-cristian-3n3fv0e7g-jayz1xs-projects.vercel.app/api/clientes?page=1&limit=3")
+      .get("https://proyecto-cristian.vercel.app/api/clientes?page=1&limit=3")
       .then((res) => setClients(res.data))
       .catch((err) => console.log(err));
   }, []);
