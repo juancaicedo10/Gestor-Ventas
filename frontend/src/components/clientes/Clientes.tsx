@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import SellIcon from "@mui/icons-material/Sell";
 import Sidebar from "../Sidebar";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
 import PersonIcon from "@mui/icons-material/Person";
-import EditNoteIcon from '@mui/icons-material/EditNote';
 import Dropdown from "../../utils/DropDown";
 
 function Clientes() {
@@ -21,8 +18,6 @@ function Clientes() {
   }
 
   const [clients, setClients] = useState<Client[]>([]);
-
-  const user = decodeToken()?.user.ID;
 
   useEffect(() => {
     axios

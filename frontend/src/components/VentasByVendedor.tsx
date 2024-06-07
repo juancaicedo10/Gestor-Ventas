@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import decodeToken from "../utils/tokenDecored"
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import Sidebar from "./Sidebar";

@@ -5,7 +5,6 @@ function perfil() {
     const [name, setName] = useState<string>(decodeToken().user.Nombre || '');
     const [correo, setCorreo] = useState<string>(decodeToken().user.CorreoElectronico || '');
     const [Direccion, setDireccion] = useState<string>(decodeToken().user.Direccion || '');
-    const [hidden, setHidden] = useState<boolean>(true);
     const [password, setPassword] = useState<string>(decodeToken().user.Contraseña ||'');
     console.log(decodeToken())
   return (
