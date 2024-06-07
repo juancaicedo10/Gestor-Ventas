@@ -9,7 +9,8 @@ const config = {
     database: process.env.DB_NAME,
     options: {
         encrypt: true, // If you're connecting to Azure SQL Database, set this to true
-        trustServerCertificate: true
+        trustServerCertificate: true,
+        enableArithAbort: true
     }
 };
 //changes
