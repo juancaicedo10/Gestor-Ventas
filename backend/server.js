@@ -33,7 +33,7 @@ app.listen(PORT , () => {
 
 app.get('/db',  asyncHandler(async(req, res) => {
     try {
-        const pool = sql.connect();
+        const pool = await sql.connect();
         const result = await pool.request().query('SELECT * FROM Usuarios.Vendedores');
         res.status(200).json(result.recordset);
     } catch (error) {
