@@ -26,7 +26,7 @@ function Vendedores() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/vendedores")
+      .get("https://proyecto-cristian-3n3fv0e7g-jayz1xs-projects.vercel.app/api/vendedores")
       .then((res) => setVendedores(res.data))
       .catch((err) => console.log(err));
   }, []);

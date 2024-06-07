@@ -20,16 +20,6 @@ app.get('/', (req, res) => {
     res.send('API is running...');
 })
 
-app.get('/test-db', async (req, res) => {
-    try {
-      const pool = await sql.connect(config);
-      const result = await pool.request().query('SELECT 1 AS number');
-      res.status(200).send(result.recordset);
-    } catch (err) {
-      console.error('Database connection error:', err);
-      res.status(500).send('Database connection error', err);
-    }
-  });
 
 const PORT = process.env.PORT || 5000;
 
