@@ -37,7 +37,7 @@ const DB_PORT = process.env.DB_PORT;
 
 app.get('/db',  asyncHandler(async(req, res) => {
     try {
-        const pool = await sql.connect();
+        const pool = await sql.connect("Server=tcp:projectbackend.database.windows.net,1433;Initial Catalog=VentaDB;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;Authentication=Active Directory Default");
         const result = await pool.request().query('SELECT * FROM Usuarios.Vendedores');
         res.status(200).json(result.recordset);
     } catch (error) {
