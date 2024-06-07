@@ -7,6 +7,8 @@ const ventasRoutes = require('./routes/ventasRoutes.js');
 const cors = require('cors');
 const asyncHandler = require('express-async-handler');
 const sql = require('mssql');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 app.use(cors());
