@@ -27,11 +27,13 @@ app.get('/', (req, res) => {
 app.get
 
 
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 5000;
 
 app.listen(PORT , () => {
     console.log(`Server is running on port ${PORT}`);
 })
+
+const DB_PORT = process.env.DB_PORT;
 
 app.get('/db',  asyncHandler(async(req, res) => {
     try {
@@ -39,7 +41,7 @@ app.get('/db',  asyncHandler(async(req, res) => {
         const result = await pool.request().query('SELECT * FROM Usuarios.Vendedores');
         res.status(200).json(result.recordset);
     } catch (error) {
-        res.status(500).json({ message: 'Error connecting to the database' , error: error.message, port: PORT});
+        res.status(500).json({ message: 'Error connecting to the database' , error: error.message, port: DB_PORT});
     }
 }))
 
