@@ -17,7 +17,7 @@ const Dropdown = () => {
           <div className="py-1" role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
             <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900" role="menuitem">Modificar</a>
             <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900" role="menuitem">Eliminar</a>
-            <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900" role="menuitem">Ver</a>
+            <a href="#" className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900" role="menuitem">Compras</a>
           </div>
         </div>
       )}

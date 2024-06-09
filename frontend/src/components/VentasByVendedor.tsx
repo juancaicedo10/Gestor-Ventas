@@ -27,7 +27,7 @@ function VentasByVendedor() {
 
     console.log(id);
     useEffect(() => {
-        axios.get(`https://gestor-ventas.vercel.app/api/ventas/vendedor/${id}`)
+        axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`)
         .then(res => setVentas(res.data))
         .catch(err => console.log(err))
     }, [])

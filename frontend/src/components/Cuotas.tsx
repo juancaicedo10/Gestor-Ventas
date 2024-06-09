@@ -9,9 +9,11 @@ function Cuotas() {
   return (
     <div>
       <Sidebar />
-      <div className="ml-[67px] px-2">
-        <h1>Cuotas para la venta: Zapatos</h1>
-        <table className="w-full border border-black">
+      <div className="ml-[67px]">
+        <h1 className="font-bold text-blue-900 py-2 text-4xl border-b shadow-md bg-white text-center w-full">Cuotas para la venta: <span className="font-semibold text-blue-700">
+          Zapatos Nike Originales
+          </span> </h1>
+        <table className="w-full border border-black my-4">
           <thead>
             <tr className="border border-black">
               <th>Cuota</th>

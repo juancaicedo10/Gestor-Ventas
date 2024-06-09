@@ -2,6 +2,10 @@ import Sidebar from "./Sidebar";
 import PaginationButtons from "../helpers/paginator";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import PersonIcon from "@mui/icons-material/Person";
+import SellIcon from "@mui/icons-material/Sell";
+import { Link } from "react-router-dom";
+
 function Ventas() {
   // Datos de ejemplo
   const cuotas = [1, 2, 3, 4, 5];
@@ -28,83 +32,102 @@ function Ventas() {
   console.log(ventas);
   useEffect(() => {
     axios
-      .get("https://gestor-ventas.vercel.app/api/ventas")
+      .get("https://backendgestorventas.azurewebsites.net/api/ventas")
       .then((res) => setVentas(res.data))
       .catch((err) => console.log(err));
   }, []);
 
   return (
-    <section className="w-full">
+    <section>
       <Sidebar />
       <div className="ml-[64px]">
-        <h1 className="text-center font-bold text-2xl">Ventas</h1>
-        <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <h1 className="text-center font-bold text-5xl w-full py-2 bg-white border-b shadow-md text-blue-900">
+          Ventas
+        </h1>
+        <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
           {ventas.map((venta) => (
             <li>
-              <div className="flex flex-col justify-center items-center border m-2 bg-white">
-                <h1 className="bg-blue-900 text-white font-normal py-1 rounded-t-md px-4 w-full">
-                  Numero Venta:{" "}
-                  <span className="font-bold">{venta.NumeroVenta}</span>
-                </h1>
-                <p className="p-2">
-                  <span className="font-semibold">Descripcion</span> Lorem ipsum
-                  dolor sit amet consectetur adipisicing elit. Error eaque
-                  aliquid eveniet corrup
+              <div className="flex flex-col border m-2 bg-white p-2">
+                <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center">
+                  <SellIcon fontSize="large" className="text-white" />
+                  <h1 className="text-2xl pb-2 text-center">
+                    <span className="font-bold">Venta:</span> Zapatos Nike
+                    originales
+                  </h1>
+                  <p className="text-gray-300 text-lg mx-3 text-center">
+                    <span className="font-medium">Cliente:</span> Juan Esteban
+                    Caicedo Valencia
+                  </p>
+                </header>
+                <p className="rounded-md border-2 p-2 mt-2 text-sm">
+                  <span className="font-bold text-xl">Descripcion: <br /></span> Lorem
+                  ipsum dolor sit amet consectetur adipisicing elit. Error eaque
+                  aliquid eveniet corrup Lorem ipsum dolor sit amet consectetur
+                  adipisicing eli
                 </p>
-                <ul className="flex flex-col w-full p-2">
-                  <li>
-                    <span className="font-semibold">Vendedor:</span>{" "}
-                    {venta.NombreVendedor}
-                  </li>
-                  <li>
-                    <span className="font-semibold">Cliente:</span>{" "}
-                    {venta.NombreCliente}
-                  </li>
-                  <li>
-                    <span className="font-semibold">Periodicidad</span>:{" "}
-                    {venta.Periodicidad}
-                  </li>
+                <ul className="flex flex-col rounded-md border-2 p-2 text-sm my-2">
+                <h4 className="text-xl font-bold pb-2">Detalles:</h4>
+                <li className="p-1">
+                <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Numero Venta:</span>{" "}
+                      {'000001'}
+                    </li>
+                    <li className="p-1">
+                      <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Vendedor:</span>{" "}
+                      {venta.NombreVendedor}
+                    </li>
+                    <li className="p-1">
+                    <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Cliente:</span>{" "}
+                      {venta.NombreCliente}
+                    </li>
+                    <li className="p-1">
+                    <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Periodicidad</span>:{" "}
+                      {venta.Periodicidad}
+                    </li>
+                    <li className="p-1">
+                    <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Fecha Inicio:</span>{" "}
+                      {venta.FechaInicio}
+                    </li>
+                    <li className="p-1 text-blue-800 flex items-center">
+                    <SellIcon fontSize="small"/>
+                      <span className="font-semibold">Fecha Fin:</span>{" "}
+                      <p className="text-black">
+                      {venta.FechaFin}
+                      </p>
+                    </li>
                 </ul>
-                <ul className="grid grid-cols-2 w-full py-2 ">
-                  <li className="text-center flex flex-col">
+                <h4 className="font-bold text-xl">Datos Financieros:</h4>
+                <ul className="grid grid-cols-2 rounded-md border-2 p-2 w-full py-2 ">
+                <li>
+                <div className="text-start flex flex-col">
                     <span className="font-semibold">Valor Venta:</span>
-                    {venta.ValorVenta}
-                  </li>
-                  <li className="text-center">
+                    {venta.ValorVenta}$
+                  </div>
+                  <div className="text-start">
                     <span className="font-semibold flex flex-col">
                       N Cuotas
                     </span>
                     {venta.NumeroCuotas}
-                  </li>
+                  </div>
+                </li>
+                <li>
+                <div className="text-start flex flex-col">
+                    <span className="font-semibold">Abonado:</span>
+                    {venta.SaldoMoraTotal}$
+                  </div>
+                  <div className="text-start">
+                    <span className="font-semibold flex flex-col">
+                      Cuotas Pagadas
+                    </span>
+                    {venta.NumeroCuotas}
+                  </div>
+                </li>
                 </ul>
-                <h3 className="text-blue-500 font-bold">Detalle de Cuotas</h3>
-                <table className="w-full">
-                  <thead>
-                    <tr className="text-center">
-                      <th>Cuota</th>
-                      <th>Valor</th>
-                      <th>% Interes</th>
-                      <th>Fecha</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {cuotas.map((cuota, idx) => (
-                      <tr key={idx}>
-                        <td className="text-center">{cuota}</td>
-                        <td className="text-center">{valores[idx]}</td>
-                        <td className="text-center">{intereses[idx]}</td>
-                        <td className="text-center">{fechas[idx]}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <h4 className="py-2">
-                  Venta Activa:{" "}
-                  <span className="text-white font-semibold rounded-md bg-green-700 px-2">
-                    Si
-                  </span>
-                </h4>
-                <h5 className="py-2">Saldo Morativo total: 300%</h5>
+                <Link to='/'>Cuotas Detalles</Link>
               </div>
             </li>
           ))}

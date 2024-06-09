@@ -8,6 +8,11 @@ import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
 import PersonIcon from "@mui/icons-material/Person";
 import Dropdown from "../../utils/DropDown";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import PinDropIcon from '@mui/icons-material/PinDrop';
+import EmailIcon from '@mui/icons-material/Email';
+import PhoneIcon from '@mui/icons-material/Phone';
+import SellIcon from '@mui/icons-material/Sell';
 
 function Clientes() {
   interface Client {
@@ -15,13 +20,14 @@ function Clientes() {
     Correo: string;
     NumeroDocumento: string;
     Telefono: string;
+    Direccion: string;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
 
   useEffect(() => {
     axios
-      .get("https://gestor-ventas.vercel.app/api/clientes?page=1&limit=3")
+      .get("https://backendgestorventas.azurewebsites.net/api/clientes?page=1&limit=3")
       .then((res) => setClients(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -29,11 +35,11 @@ function Clientes() {
   return (
     <section className="w-full overflow-y-hidden">
       <Sidebar />
-      <div className="flex px-2 flex-col justify-center text-3xl font-bold ml-[64px]">
-      <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-800 w-full">
+      <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
+      <h1 className="mb-2 py-1 text-3xl text-blue-900 md:text-4xl lg:text-6xl text-center border-b shadow-md bg-gray-50 w-full">
             Clientes
           </h1>
-        <section className="w-full">
+        <section className="w-full px-2">
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li
@@ -41,49 +47,56 @@ function Clientes() {
                 key={Id}
               >
                 <div className="flex flex-col">
-                <section className="w-full flex items-center justify-between">
-                <PersonIcon fontSize="large" className="text-blue-800" />
+                <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
+                <PersonIcon fontSize="large" className="text-white" />
+                <span>
+                <h1 className="font-normal text-xl">{ client.NombreCompleto }</h1>
+                <p className="text-gray-300 font-light py-2 text-lg">CC. { client.NumeroDocumento }</p>
+                </span>
                 {
                   decodeToken()?.role === "Administrador" && (
                     <Dropdown />
                   )
                 }
                 </section>
-                <h2 className="text-xl text-start my-3">
-                    Informacion General:
-                  </h2>
                   <div className="text-lg font-light flex flex-col">
-                    <li className="flex">
-                      <h3 className="font-bold">Nombre:</h3>
+                    <li className="flex items-center my-1">
+                      <ShoppingCartIcon className="text-blue-800"/>
+                      <span className="mx-4">
+                      <h3 className="font-bold">Producto:</h3>
                       <p>{client.NombreCompleto}</p>
+                      </span>
                     </li>
-                    <li className="flex">
-                      <h3 className="font-bold">Correo:</h3>
+                    <li className="flex items-center my-1">
+                      <PinDropIcon className="text-blue-800"/>
+                      <span className="mx-4">
+                      <h3 className="font-bold">Direccion:</h3>
+                      <p>Trans 42F N-42C#18{client.Direccion}</p>
+                      </span>
+                    </li>
+                    <li className="flex items-center my-1">
+                      <EmailIcon className="text-blue-800"/>
+                      <span className="mx-4">
+                      <h3 className="font-bold">Email:</h3>
                       <p>{client.Correo}</p>
+                      </span>
                     </li>
-                    <li className="flex">
-                      <h3 className="font-bold">NIT : </h3>
-                      <p> {client.NumeroDocumento}</p>
+                    <li className="flex items-center my-1">
+                      <PhoneIcon className="text-blue-800"/>
+                      <span className="mx-4">
+                      <h3 className="font-bold">Telefono:</h3>
+                      <p>{client.Telefono}</p>
+                      </span>
                     </li>
-                    <li className="flex">
-                      <h3 className="font-bold">Telefono :</h3>
-                      <p> {client.Telefono}</p>
+                    <li className="flex items-center my-1">
+                      <SellIcon className="text-blue-800"/>
+                      <span className="mx-4">
+                      <h3 className="font-bold">Valor Deuda:</h3>
+                      <p>${'0'}</p>
+                      </span>
                     </li>
                   </div>
                 </div>
-                {decodeToken()?.role === "Administrador" && (
-                  <div className="h-full flex items-center justify-start mx-2">
-                    <button className="text-black">
-                      <VisibilityIcon fontSize="medium" />
-                    </button>
-                    <button className="text-blue-500">
-                      <EditIcon fontSize="medium" />
-                    </button>
-                    <button className="text-red-500">
-                      <DeleteIcon fontSize="medium" />
-                    </button>
-                  </div>
-                )}
               </li>
             ))}
           </ul>

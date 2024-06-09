@@ -21,7 +21,7 @@ function clientesAprobar() {
 
   useEffect(() => {
     axios
-      .get("https://gestor-ventas.vercel.app/api/clientes/aprobar", {
+      .get("https://backendgestorventas.azurewebsites.net/api/clientes/aprobar", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

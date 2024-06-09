@@ -23,7 +23,7 @@ function Vendedores() {
 
   useEffect(() => {
     axios
-      .get("https://proyecto-cristian.vercel.app/api/vendedores")
+      .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
       .then((res) => setVendedores(res.data))
       .catch((err) => console.log(err));
   }, []);
@@ -34,13 +34,13 @@ function Vendedores() {
       <div className="text-3xl font-bold ml-[64px] px-2">
         <header className="flex justify-center">
           <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-800 w-full">
-            vendedores
+            Vendedores
           </h1>
           <button className="mx-4 text-blue-800">
             <AddCircleIcon fontSize="large" />
           </button>
         </header>
-        <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 place-items-center rounded-md">
+        <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 place-items-center rounded-md min-h-svh">
           {vendedores.map((client) => (
             <li
               className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
