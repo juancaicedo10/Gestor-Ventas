@@ -21,11 +21,14 @@ function clientesAprobar() {
 
   useEffect(() => {
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/clientes/aprobar", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get(
+        "https://backendgestorventas.azurewebsites.net/api/clientes/aprobar",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => setClientsToApprove(res.data))
       .catch((err) => console.log(err));
   }, [refresh]);
@@ -50,13 +53,16 @@ function clientesAprobar() {
   return (
     <section className="w-full">
       <Sidebar />
-      <div className="flex flex-col justify-center text-3xl font-bold ml-[64px] px-2">
-        <h1 className="text-blue-800 my-2 text-2xl md:text-4xl lg:text-6xl text-start border-b-2 py-2 border-blue-400 w-full">
+      <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
+        <h1 className="mb-2 py-1 text-3xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
           Clientes por aprobar
         </h1>
         <ul className="flex flex-col items-start w-full">
           {clientsToApprove.map((client) => (
-            <li className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105" key={client.Id}>
+            <li
+              className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105"
+              key={client.Id}
+            >
               <div className="flex items-center">
                 <PersonIcon fontSize="large" />
                 <h2 className="text-xl font-normal">{client.NombreCompleto}</h2>

@@ -5,6 +5,7 @@ import axios from "axios";
 import PersonIcon from "@mui/icons-material/Person";
 import SellIcon from "@mui/icons-material/Sell";
 import { Link } from "react-router-dom";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
 
 function Ventas() {
   // Datos de ejemplo
@@ -28,6 +29,9 @@ function Ventas() {
   }
 
   const [ventas, setVentas] = useState<Venta[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   console.log(ventas);
   useEffect(() => {
@@ -41,9 +45,14 @@ function Ventas() {
     <section>
       <Sidebar />
       <div className="ml-[64px]">
-        <h1 className="text-center font-bold text-5xl w-full py-2 bg-white border-b shadow-md text-blue-900">
-          Ventas
-        </h1>
+      <header className="flex justify-center w-full border-b shadow-md bg-white">
+          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center py-2 w-full font-bold">
+            Ventas
+          </h1>
+          <button className="mx-4 text-blue-900">
+            <AddCircleIcon fontSize="large" onClick={toggleModal}/>
+          </button>
+        </header>
         <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
           {ventas.map((venta) => (
             <li>

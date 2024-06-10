@@ -7,6 +7,7 @@ import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
 import { Link } from "react-router-dom";
 import Dropdown from "../../utils/DropDown";
+import Modal from "../ModalTest";
 
 function Vendedores() {
   interface Vendedor {
@@ -18,6 +19,9 @@ function Vendedores() {
   }
 
   const [vendedores, setVendedores] = useState<Vendedor[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   console.log(vendedores);
 
@@ -31,15 +35,16 @@ function Vendedores() {
   return (
     <section className="w-full overflow-y-hidden">
       <Sidebar />
-      <div className="text-3xl font-bold ml-[64px] px-2">
-        <header className="flex justify-center">
-          <h1 className="my-2 text-3xl text-blue-800 md:text-4xl lg:text-6xl text-start border-b-4 py-2 border-blue-800 w-full">
+      <div className="text-3xl font-bold ml-[64px]">
+        <header className="flex justify-center w-full border-b shadow-md bg-white">
+          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center py-2 w-full">
             Vendedores
           </h1>
-          <button className="mx-4 text-blue-800">
-            <AddCircleIcon fontSize="large" />
+          <button className="mx-4 text-blue-900">
+            <AddCircleIcon fontSize="large" onClick={(toggleModal)}/>
           </button>
         </header>
+        <Modal isOpen={isModalOpen} onClose={toggleModal} />
         <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 md:gap-4 place-items-center rounded-md min-h-svh">
           {vendedores.map((client) => (
             <li

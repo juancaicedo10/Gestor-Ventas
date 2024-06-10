@@ -13,6 +13,8 @@ import PinDropIcon from '@mui/icons-material/PinDrop';
 import EmailIcon from '@mui/icons-material/Email';
 import PhoneIcon from '@mui/icons-material/Phone';
 import SellIcon from '@mui/icons-material/Sell';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import NuevoClienteModal from "../../utils/NuevoClienteModal";
 
 function Clientes() {
   interface Client {
@@ -24,6 +26,9 @@ function Clientes() {
   }
 
   const [clients, setClients] = useState<Client[]>([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   useEffect(() => {
     axios
@@ -36,10 +41,16 @@ function Clientes() {
     <section className="w-full overflow-y-hidden">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-      <h1 className="mb-2 py-1 text-3xl text-blue-900 md:text-4xl lg:text-6xl text-center border-b shadow-md bg-gray-50 w-full">
+      <header className="flex justify-center w-full border-b shadow-md bg-white">
+          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center py-2 w-full">
             Clientes
           </h1>
+          <button className="mx-4 text-blue-900">
+            <AddCircleIcon fontSize="large" onClick={toggleModal}/>
+          </button>
+        </header>
         <section className="w-full px-2">
+          <NuevoClienteModal isOpen={isModalOpen} onClose={toggleModal}/>
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {clients.map((client, Id) => (
               <li

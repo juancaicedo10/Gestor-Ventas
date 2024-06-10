@@ -1,12 +1,28 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import decodeToken from "../utils/tokenDecored"
 import Sidebar from "./Sidebar";
+import axios from "axios";
+
 function perfil() {
     const [name, setName] = useState<string>(decodeToken().user.Nombre || '');
     const [correo, setCorreo] = useState<string>(decodeToken().user.CorreoElectronico || '');
     const [Direccion, setDireccion] = useState<string>(decodeToken().user.Direccion || '');
     const [password, setPassword] = useState<string>(decodeToken().user.Contraseña ||'');
-    console.log(decodeToken())
+
+    const Id = decodeToken().user.Id;
+    const role = decodeToken().role;
+
+
+    useEffect(() => {
+      axios.put(`https://backendgestorventas.azurewebsites.net/api/usuarios/${Id}`, {
+        Nombre: name,
+        CorreoElectronico: correo,
+        Direccion: Direccion,
+        Contraseña: password
+      }).then(res => console.log(res)).catch(err => console.log(err))
+        .catch(err => console.log(err));
+    }, []);
+
   return (
     <section>
         <Sidebar />
@@ -20,7 +36,7 @@ function perfil() {
             <label htmlFor="" className="font-normal text-lg">Telefono</label>
             <input type="tel" className="py-2 border-2 rounded-md mb-2" value={Direccion} onChange={(e) => setDireccion(e.target.value)}/>
             <label htmlFor="" className="font-normal text-lg">Contraseña</label>
-            <input type="password" className="py-2 border-2 rounded-md" value={password} onChange={(e) => setPassword(e.target.value)}/>
+            <input type="text" className="py-2 border-2 rounded-md" value={password} onChange={(e) => setPassword(e.target.value)}/>
             <button className="px-4 rounded-md text-white font-semibold bg-blue-900 my-4 py-4 text-xl">Actualizar</button>
             </form>
         </div>

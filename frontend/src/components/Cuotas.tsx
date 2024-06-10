@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
+import axios from "axios";
 
 function Cuotas() {
   const cuotas = [1, 2, 3, 4, 5];
@@ -6,6 +8,25 @@ function Cuotas() {
   const intereses = ["10%", "20%", "30%", "40%", "50%"];
   const fechas = ["1/01/22", "1/01/22", "1/01/22", "1/01/22", "1/01/22"];
   const pagos = ["Si", "Si", "Si", "No", "No", "No"];
+
+  interface Abono {
+    Id: number;
+    Cuota: number;
+    Valor: number;
+    Interes: string;
+    Fecha: string;
+    Abonado: string;
+  }
+
+  const [abonos, setAbonos] = useState<Abono[]>([]);
+
+  useEffect(() => {
+    axios.get("https://backendgestorventas.azurewebsites.net/api/cuotas")
+    .then((res) => setAbonos(res.data))
+    .catch((err) => console.log(err));
+  }, [])
+
+
   return (
     <div>
       <Sidebar />

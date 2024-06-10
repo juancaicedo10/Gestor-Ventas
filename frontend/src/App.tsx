@@ -8,13 +8,17 @@ import { PrivateRoute } from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
 import VentasByVendedor from "./components/VentasByVendedor";
-import Cuotas from '../src/components/Cuotas'
+import Cuotas from "../src/components/Cuotas";
+import ModalTest from "./components/ModalTest";
+import Alerts from "./utils/Alerts";
+import VentasAprobar from "./components/ventasAprobar";
+import PanelAdministracion from "./components/PanelAdministracion";
 
 function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<Login/>}/>
+        <Route path="/" element={<Login />} />
         <Route
           path="/clientes"
           element={
@@ -30,7 +34,7 @@ function App() {
               <Ventas />
             </PrivateRoute>
           }
-          />
+        />
         <Route
           path="/vendedores"
           element={
@@ -38,7 +42,7 @@ function App() {
               <Vendedores />
             </PrivateRoute>
           }
-          />
+        />
         <Route
           path="/clientes/aprobar"
           element={
@@ -46,22 +50,34 @@ function App() {
               <ClientesAprobar />
             </PrivateRoute>
           }
-          />
-          <Route 
-          path="/perfil"
-          element={<Perfil/>}/>
-          <Route 
-          path="/ventas/vendedor/:id"
-          element={<VentasByVendedor/>}
-          />
-          <Route
+        />
+        <Route path="/perfil" element={<Perfil />} />
+        <Route path="/ventas/vendedor/:id" element={<VentasByVendedor />} />
+        <Route
           path="/cuotas"
           element={
             <PrivateRoute>
               <Cuotas />
             </PrivateRoute>
           }
-          />
+        />
+        <Route
+          path="/ventas/aprobar"
+          element={
+            <PrivateRoute>
+              <VentasAprobar />
+            </PrivateRoute>
+          }
+        />
+        <Route 
+        path="/administracion"
+        element={
+          <PrivateRoute>
+            <PanelAdministracion />
+          </PrivateRoute>
+        }
+        />
+        <Route path="/alerts" element={<Alerts />} />
       </Routes>
     </>
   );
