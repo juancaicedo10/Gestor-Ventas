@@ -54,13 +54,13 @@ function clientesAprobar() {
     <section className="w-full">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-        <h1 className="mb-2 py-1 text-3xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
+        <h1 className="mb-2 py-4 text-3xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
           Clientes por aprobar
         </h1>
-        <ul className="flex flex-col items-start w-full">
+        <ul className="flex flex-col items-start w-full px-2">
           {clientsToApprove.map((client) => (
             <li
-              className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105"
+              className="w-full flex items-center justify-between py-4 my-2 rounded-md border-2 transform transition duration-500 ease-in-out hover:scale-x-105 bg-white"
               key={client.Id}
             >
               <div className="flex items-center">

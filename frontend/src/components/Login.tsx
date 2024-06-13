@@ -18,6 +18,7 @@ function Login() {
       const response = await axios.post("https://backendgestorventas.azurewebsites.net/login", data);
       console.log("Login correcto");
       localStorage.setItem("token", response.data.token);
+      console.log(response.data)
       navigate("/clientes");
     } catch (error) {
       setError("Correo o contraseña incorrectos");

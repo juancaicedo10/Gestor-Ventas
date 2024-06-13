@@ -4,18 +4,18 @@ import Sidebar from "./Sidebar";
 import axios from "axios";
 
 function perfil() {
-    const [name, setName] = useState<string>(decodeToken().user.Nombre || '');
+    const [name, setName] = useState<string>(decodeToken().user.NombreCompleto || '');
     const [correo, setCorreo] = useState<string>(decodeToken().user.CorreoElectronico || '');
     const [Direccion, setDireccion] = useState<string>(decodeToken().user.Direccion || '');
     const [password, setPassword] = useState<string>(decodeToken().user.Contraseña ||'');
 
     const Id = decodeToken().user.Id;
-    const role = decodeToken().role;
+    const role = decodeToken().user.role;
 
 
     useEffect(() => {
       axios.put(`https://backendgestorventas.azurewebsites.net/api/usuarios/${Id}`, {
-        Nombre: name,
+        NombreCompleto: name,
         CorreoElectronico: correo,
         Direccion: Direccion,
         Contraseña: password
@@ -26,9 +26,9 @@ function perfil() {
   return (
     <section>
         <Sidebar />
-        <div className="flex items-center justify-center h-dvh ml-12">
-            <form action="" className="flex flex-col w-full md:w-1/2 lg:w-1/3 rounded-md shadow-md border p-8 bg-white">
-            <h1 className="text-center font-bold text-5xl text-blue-800">Tu Perfil</h1>
+        <div className="flex items-center justify-center h-dvh ml-[64px]">
+            <form action="" className="flex flex-col w-full md:w-1/2 lg:w-1/3 rounded-md shadow-md border p-8 bg-white mx-2">
+            <h1 className="text-center font-bold text-4xl text-blue-800">Tu Perfil</h1>
             <label htmlFor="" className="font-normal text-lg">Nombre</label>
             <input type="text" className="py-2 border-2 rounded-md mb-2" value={name} onChange={(e) => setName(e.target.value)}/>
             <label htmlFor="" className="font-normal text-lg">Correo</label>

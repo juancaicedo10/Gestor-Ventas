@@ -9,7 +9,7 @@ import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
 import VentasByVendedor from "./components/VentasByVendedor";
 import Cuotas from "../src/components/Cuotas";
-import ModalTest from "./components/ModalTest";
+import ModalTest from "./components/ModalDeleteClient";
 import Alerts from "./utils/Alerts";
 import VentasAprobar from "./components/ventasAprobar";
 import PanelAdministracion from "./components/PanelAdministracion";

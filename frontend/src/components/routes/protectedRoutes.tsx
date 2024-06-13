@@ -1,5 +1,6 @@
 import { Navigate } from "react-router-dom";
 import decodeToken from "../../utils/tokenDecored";
+import { userInfo } from "os";
 
 
 const PrivateRoute = ({ children } : { children: JSX.Element } ) => {
@@ -11,7 +12,7 @@ const PrivateRoute = ({ children } : { children: JSX.Element } ) => {
 }
 
 const AdminRoute = ({ children } : { children: JSX.Element } ) => {
-    const Admin = decodeToken()?.role;
+    const Admin = decodeToken()?.user.role;
     return Admin ? children : <Navigate to="/" replace />;
 }
 

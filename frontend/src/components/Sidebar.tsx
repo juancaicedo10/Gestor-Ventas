@@ -22,7 +22,7 @@ export default function Sidebar() {
     navigate("/");
   };
 
-  console.log(localStorage.getItem("user"), "user");
+  console.log(decodeToken().user.role);
   return (
     <aside
       className={`z-50 h-full flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
@@ -72,7 +72,7 @@ export default function Sidebar() {
             Ventas
           </p>
         </Link>
-        {decodeToken().role === "Administrador" && (
+        {decodeToken()?.user.role === "Administrador" && (
           <>
             <Link
               to="/clientes/aprobar"
