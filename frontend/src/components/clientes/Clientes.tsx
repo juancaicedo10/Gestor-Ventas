@@ -17,6 +17,7 @@ import NuevoClienteModal from "../../utils/Clientes/NuevoClienteModal";
 import ModificarClienteModal from "../../utils/Clientes/ModificarClienteModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ModalTest from "../ModalDeleteClient";
+import Spinner from "../../utils/Spinner";
 
 function Clientes() {
   interface Client {
@@ -31,10 +32,10 @@ function Clientes() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isDeleteRequest, setIsDeleteRequest] = useState<boolean>(false);
   const [Id, setId] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
@@ -49,12 +50,19 @@ function Clientes() {
   };
 
   const getClients = () => {
+    setIsLoading(true);
     axios
       .get(
         "https://backendgestorventas.azurewebsites.net/api/clientes?page=1&limit=3"
       )
-      .then((res) => setClients(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => 
+        {setClients(res.data)
+         setIsLoading(false);
+        })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -73,12 +81,13 @@ function Clientes() {
             <AddCircleIcon fontSize="large" onClick={toggleModal} />
           </button>
         </header>
-        <section className="w-full px-2">
+        <section className={`w-full px-2 ${isLoading ? 'flex items-center justify-center h-screen' : ''}`}>
           <NuevoClienteModal
             isOpen={isModalOpen}
             onClose={toggleModal}
             getClients={getClients}
           />
+          {isLoading ? <Spinner isLoading={isLoading}/> : 
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {isEditModalOpen && (
               <ModificarClienteModal
@@ -212,6 +221,7 @@ function Clientes() {
               );
             })}
           </ul>
+}
         </section>
         <PaginationButtons page={1} />
       </div>

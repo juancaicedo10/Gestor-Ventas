@@ -13,6 +13,7 @@ import ModalTest from "./components/ModalDeleteClient";
 import Alerts from "./utils/Alerts";
 import VentasAprobar from "./components/ventasAprobar";
 import PanelAdministracion from "./components/PanelAdministracion";
+import Spinner from "./utils/Spinner";
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
         }
         />
         <Route path="/alerts" element={<Alerts />} />
+        <Route path="/spinner" element={<Spinner isLoading={true}/>} />
       </Routes>
     </>
   );

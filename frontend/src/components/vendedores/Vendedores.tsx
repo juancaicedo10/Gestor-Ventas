@@ -17,6 +17,8 @@ import NuevoVendedorModal from "../../utils/vendedores/NuevoVendedorModal";
 import ModificarVendedorModal from "../../utils/vendedores/ModificarVendedorModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import VendedorDeleteModal from "../ModalDeleteVendedor";
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import Spinner from "../../utils/Spinner";
 
 function Vendedores() {
   // Definiciones de estado e interfaces
@@ -34,6 +36,7 @@ function Vendedores() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isDeleteRequest, setIsDeleteRequest] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [Id, setId] = useState<number>(0);
 
   // Funciones para manejar los modales
@@ -58,10 +61,17 @@ function Vendedores() {
 
   // Función para obtener la lista de vendedores
   const getVendedores = () => {
+    setIsLoading(true);
     axios
       .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
-      .then((res) => setVendedores(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => {
+        setVendedores(res.data)
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -80,12 +90,14 @@ function Vendedores() {
             <AddCircleIcon fontSize="large" onClick={toggleModal} />
           </button>
         </header>
+      <div className={`w-full flex items-center justify-center ${isLoading ? 'h-screen' : '' } `}>
+        { isLoading ? <Spinner isLoading={isLoading}/> : 
         <section className="w-full px-2">
           <NuevoVendedorModal
             isOpen={isModalOpen}
             onClose={toggleModal}
             getClients={getVendedores}
-          />
+          /> 
           <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
             {isEditModalOpen && (
               <ModificarVendedorModal
@@ -179,13 +191,6 @@ function Vendedores() {
                     </section>
                     <div className="text-lg font-light flex flex-col">
                       <li className="flex items-center my-1">
-                        <ShoppingCartIcon className="text-blue-800" />
-                        <span className="mx-4">
-                          <h3 className="font-bold">Producto:</h3>
-                          <p>Nombre producto</p>
-                        </span>
-                      </li>
-                      <li className="flex items-center my-1">
                         <PinDropIcon className="text-blue-800" />
                         <span className="mx-4">
                           <h3 className="font-bold">Direccion:</h3>
@@ -209,8 +214,15 @@ function Vendedores() {
                       <li className="flex items-center my-1">
                         <SellIcon className="text-blue-800" />
                         <span className="mx-4">
-                          <h3 className="font-bold">Valor Deuda:</h3>
-                          <p>${"0"}</p>
+                          <h3 className="font-bold">Ventas totales:</h3>
+                          <p>{"0"}</p>
+                        </span>
+                      </li>
+                      <li className="flex items-center my-1">
+                        <StorefrontIcon className="text-blue-800" />
+                        <span className="mx-4">
+                          <h3 className="font-bold">Ventas totales:</h3>
+                          <p className="text-blue-600">Ir a las ventas</p>
                         </span>
                       </li>
                     </div>
@@ -220,6 +232,8 @@ function Vendedores() {
             })}
           </ul>
         </section>
+        }
+      </div>
         <PaginationButtons page={1} />
       </div>
     </section>
