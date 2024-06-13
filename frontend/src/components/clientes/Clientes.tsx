@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../Sidebar";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
 import PersonIcon from "@mui/icons-material/Person";
@@ -108,7 +105,7 @@ function Clientes() {
             {clients.map((client) => {
               return (
                 <li
-                  className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
+                  className="w-full p-2 min-h-[420px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
                   key={client.Id}
                 >
                   <div className="flex flex-col">
@@ -189,7 +186,7 @@ function Clientes() {
                         <PinDropIcon className="text-blue-800" />
                         <span className="mx-4">
                           <h3 className="font-bold">Direccion:</h3>
-                          <p>Trans 42F N-42C#18{client.Direccion}</p>
+                          <p>{client.Direccion}</p>
                         </span>
                       </li>
                       <li className="flex items-center my-1">

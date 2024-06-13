@@ -10,7 +10,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import decodeToken from "../utils/tokenDecored";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useNavigate } from "react-router-dom";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -22,23 +21,35 @@ export default function Sidebar() {
     navigate("/");
   };
 
-  console.log(decodeToken().user.role);
+  console.log(decodeToken().user);
   return (
     <aside
       className={`z-50 h-full flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
         show ? "w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4" : "w-16"
       }`}
     >
-      <button
-        className="w-full flex items-center justify-center p-2 text-3xl text-white font-extrabold"
-        onClick={() => setShow(!show)}
-      >
-        {show ? (
-          <CloseIcon fontSize="large" className="relative right-0" />
-        ) : (
-          <ArrowForwardIosIcon fontSize="large" />
-        )}
-      </button>
+      <header className="flex justify-between items-center">
+        <div
+          className={` text-white font-bold text-center p-2 pl-5 overflow-hidden ${
+            !show && "hidden"
+          }`}
+        >
+          <h2 className="text-start text-xl w-full font-semibold overflow-hidden">{decodeToken()?.user.NombreCompleto.split(" ")
+                            .slice(0, 2)
+                            .join(" ")}</h2>
+          <h3 className="text-start font-light text-gray-300 overflow-hidden">{decodeToken()?.user.role}</h3>
+        </div>
+        <button
+          className={`flex items-center justify-center p-2 text-3xl text-white font-extrabold ${!show ? 'w-full' : 'w-1/4'}`}
+          onClick={() => setShow(!show)}
+        >
+          {show ? (
+            <CloseIcon fontSize="large" className="relative right-0" />
+          ) : (
+            <ArrowForwardIosIcon fontSize="large" />
+          )}
+        </button>
+      </header>
       <ul className="text-2xl flex flex-col w-full">
         <Link
           to="/vendedores"
@@ -117,15 +128,16 @@ export default function Sidebar() {
           </p>
         </Link>
       </ul>
-      <Link to='/'
-      className="flex mt-auto text-white hover:text-white bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
-      onClick={() => handleLogout()}>
-      
-          <LogoutIcon fontSize="large" />
-          <p hidden={!show} className="font-normal">
-            Cerrar Sesion
-          </p>
-        </Link>
+      <Link
+        to="/"
+        className="flex mt-auto text-white hover:text-white bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+        onClick={() => handleLogout()}
+      >
+        <LogoutIcon fontSize="large" />
+        <p hidden={!show} className="font-semibold text-2xl">
+          Cerrar Sesion
+        </p>
+      </Link>
     </aside>
   );
 }

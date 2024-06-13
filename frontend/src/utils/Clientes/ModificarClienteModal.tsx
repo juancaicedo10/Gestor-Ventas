@@ -69,7 +69,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
             NumeroDocumento: cedula,
             TipoDocumento: 1,
             Telefono: telefono,
-            Correo: correo
+            Correo: correo,
+            Direccion: direccion
           },
           {
             headers: {

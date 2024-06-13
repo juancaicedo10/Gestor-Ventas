@@ -22,7 +22,10 @@ function Cuotas() {
 
   useEffect(() => {
     axios.get("https://backendgestorventas.azurewebsites.net/api/cuotas")
-    .then((res) => setAbonos(res.data))
+    .then((res) => {
+      setAbonos(res.data)
+      console.log(abonos)
+    })
     .catch((err) => console.log(err));
   }, [])
 

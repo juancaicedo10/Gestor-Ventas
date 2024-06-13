@@ -5,9 +5,11 @@ import { useNavigate } from "react-router-dom";
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState<any>("");
+  const [isLoading ,setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setIsLoading(true);
     const form = new FormData(e.target);
     const data = {
       correo: form.get("correo"),
@@ -23,6 +25,8 @@ function Login() {
     } catch (error) {
       setError("Correo o contraseña incorrectos");
       console.error("Error en el login", error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,9 +73,11 @@ function Login() {
         {error && <p className="text-red-500 w-full">{error}</p>}
         <button
           type="submit"
-          className="w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4"
+          className={`w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4 ${isLoading ? 'bg-gray-400 hover:bg-gray-500 cursor-not-allowed' 
+            : 'bg-blue-800 hover:bg-blue-900 text-white'}`}
+          disabled={isLoading}
         >
-          Iniciar Sesion
+         { isLoading ? 'Cargado...' : 'Iniciar Sesion' }
         </button>
       </form>
     </div>

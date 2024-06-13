@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import decodeToken from '../tokenDecored';
 
 interface ModalProps {
   isOpen: boolean;
@@ -13,7 +12,9 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({ isOpen, onClose, getClients 
   const [correo, setCorreo] = useState('');
   const [telefono, setTelefono] = useState('');
   const [cedula, setCedula] = useState('');
+  const [contraseña, setContraseña] = useState('23232323');
   const [direccion, setDireccion] = useState('');
+  const [oficinaId, setOficinaId] = useState(1);
 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -22,6 +23,8 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({ isOpen, onClose, getClients 
     if (event.target.name === 'telefono') setTelefono(event.target.value);
     if (event.target.name === 'cedula') setCedula(event.target.value);
     if (event.target.name === 'direccion') setDireccion(event.target.value);
+    if (event.target.name === 'contraseña') setContraseña(event.target.value);
+    if (event.target.name === 'oficinaId') setOficinaId(parseInt(event.target.value));
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -34,7 +37,9 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({ isOpen, onClose, getClients 
         "TipoDocumento": 1,
         "Telefono": telefono,
         "Correo": correo,
-        "Contraseña": "12121212"
+        "Contraseña": contraseña,
+        "Direccion": direccion,
+        "OficinaId": oficinaId
         }, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

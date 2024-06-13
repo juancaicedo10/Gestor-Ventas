@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../Sidebar";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
-import PersonIcon from "@mui/icons-material/Person";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -50,10 +45,6 @@ function Vendedores() {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  const toggleCloseConfirmation = (Id: number) => {
-    setId(Id);
-    setIsDeleteRequest(!isDeleteRequest);
-  };
 
   const closeDeleteModal = () => {
     setIsDeleteRequest(false);
@@ -201,7 +192,7 @@ function Vendedores() {
                             <PinDropIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Direccion:</h3>
-                              <p>Trans 42F N-42C#18{vendedor.Direccion}</p>
+                              <p>{vendedor.Direccion}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">

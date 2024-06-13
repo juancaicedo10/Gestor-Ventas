@@ -34,7 +34,8 @@ const NuevoClienteModal: React.FC<ModalProps> = ({ isOpen, onClose, getClients }
         "TipoDocumento": 1,
         "Telefono": telefono,
         "Correo": correo,
-        "Contraseña": "12121212"
+        "Contraseña": "12121212",
+        "Direccion": direccion
         }, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

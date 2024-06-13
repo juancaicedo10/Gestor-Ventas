@@ -19,6 +19,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
   const [telefono, setTelefono] = useState("");
   const [cedula, setCedula] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [oficinaId, setOficinaId] = useState(1);
 
   const getVendedor = async () => {
     try {
@@ -37,6 +38,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
           setTelefono(response.data.Telefono);
           setCedula(response.data.NumeroDocumento);
           setDireccion(response.data.Direccion);
+          setOficinaId(response.data.OficinaId);
           console.log(response.data);
         });
     } catch (error) {
@@ -69,7 +71,9 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
             NumeroDocumento: cedula,
             TipoDocumento: 1,
             Telefono: telefono,
-            Correo: correo
+            Correo: correo,
+            Direccion: direccion,
+            OficinaId: oficinaId
           },
           {
             headers: {

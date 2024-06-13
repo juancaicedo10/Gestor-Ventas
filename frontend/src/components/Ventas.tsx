@@ -12,10 +12,6 @@ import Spinner from "../utils/Spinner";
 
 function Ventas() {
   // Datos de ejemplo
-  const cuotas = [1, 2, 3, 4, 5];
-  const valores = [100, 200, 300, 400, 500];
-  const intereses = [10, 20, 30, 40, 50];
-  const fechas = ["1/01/22", "1/01/22", "1/01/22", "1/01/22", "1/01/22"];
 
   interface Venta {
     Id: number;

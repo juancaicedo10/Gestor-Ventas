@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Spinner from "../../utils/Spinner";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -18,8 +19,9 @@ function clientesAprobar() {
     []
   );
   const [refresh, setRefresh] = useState(false);
-
+  const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
+    setIsLoading(true);
     axios
       .get(
         "https://backendgestorventas.azurewebsites.net/api/clientes/aprobar",
@@ -29,8 +31,13 @@ function clientesAprobar() {
           },
         }
       )
-      .then((res) => setClientsToApprove(res.data))
-      .catch((err) => console.log(err));
+      .then((res) => {setClientsToApprove(res.data)
+        setIsLoading(false)
+      })
+      .catch((err) => {
+        console.log(err)
+        setIsLoading(false)
+      });
   }, [refresh]);
 
   const HandleApprove = async (id: number, approval: { aprobado: boolean }) => {
@@ -57,6 +64,8 @@ function clientesAprobar() {
         <h1 className="mb-2 py-4 text-3xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
           Clientes por aprobar
         </h1>
+      <section className={`${isLoading && 'flex items-center justify-center'} h-dvh`}>
+      {isLoading ?  <Spinner isLoading={isLoading}/> : (
         <ul className="flex flex-col items-start w-full px-2">
           {clientsToApprove.map((client) => (
             <li
@@ -84,6 +93,8 @@ function clientesAprobar() {
             </li>
           ))}
         </ul>
+        )}
+      </section>
       </div>
     </section>
   );

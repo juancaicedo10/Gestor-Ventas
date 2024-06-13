@@ -10,11 +10,9 @@ function perfil() {
     const [password, setPassword] = useState<string>(decodeToken().user.Contraseña ||'');
 
     const Id = decodeToken().user.Id;
-    const role = decodeToken().user.role;
-
 
     useEffect(() => {
-      axios.put(`https://backendgestorventas.azurewebsites.net/api/usuarios/${Id}`, {
+      axios.put(`https://backendgestorventas.azurewebsites.net/api/vendedores/${Id}`, {
         NombreCompleto: name,
         CorreoElectronico: correo,
         Direccion: Direccion,
