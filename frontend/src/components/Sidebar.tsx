@@ -50,10 +50,10 @@ export default function Sidebar() {
           )}
         </button>
       </header>
-      <ul className="text-2xl flex flex-col w-full">
+      <ul className="text-xl md:text-2xl flex flex-col w-full">
         <Link
           to="/vendedores"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <SellIcon fontSize="large" />
@@ -64,7 +64,7 @@ export default function Sidebar() {
 
         <Link
           to="/clientes"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <PeopleIcon fontSize="large" />
@@ -75,7 +75,7 @@ export default function Sidebar() {
 
         <Link
           to="/ventas"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <AttachMoneyIcon fontSize="large" />
@@ -87,7 +87,7 @@ export default function Sidebar() {
           <>
             <Link
               to="/clientes/aprobar"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <AdminPanelSettingsIcon fontSize="large" />
@@ -97,7 +97,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/ventas/aprobar"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <AdminPanelSettingsIcon fontSize="large" />
@@ -107,7 +107,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/administracion"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <AdminPanelSettingsIcon fontSize="large" />
@@ -119,7 +119,7 @@ export default function Sidebar() {
         )}
         <Link
           to="/perfil"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <AccountCircleIcon fontSize="large" />

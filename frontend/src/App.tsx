@@ -54,7 +54,7 @@ function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/ventas/vendedor/:id" element={<VentasByVendedor />} />
         <Route
-          path="/cuotas"
+          path="/cuotas/:id"
           element={
             <PrivateRoute>
               <Cuotas />

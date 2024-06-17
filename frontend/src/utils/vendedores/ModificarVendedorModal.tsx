@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Spinner from "../Spinner";
 
 interface ModalProps {
   isOpen: boolean;
@@ -20,9 +21,11 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
   const [cedula, setCedula] = useState("");
   const [direccion, setDireccion] = useState("");
   const [oficinaId, setOficinaId] = useState(1);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getVendedor = async () => {
     try {
+      setIsLoading(true);
       await axios
         .get(
           `https://backendgestorventas.azurewebsites.net/api/vendedores/${Id}`,
@@ -39,10 +42,12 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
           setCedula(response.data.NumeroDocumento);
           setDireccion(response.data.Direccion);
           setOficinaId(response.data.OficinaId);
+          setIsLoading(false);
           console.log(response.data);
         });
     } catch (error) {
       console.error("Error obteniendo cliente:", error);
+      setIsLoading(false);
     }
   };
 
@@ -118,6 +123,12 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   &times;
                 </button>
               </header>
+            <section className={`${isLoading && 'w-full flex justify-center items-center min-h-[420px]'}`}>
+              {isLoading ? (
+                  <Spinner isLoading={isLoading} />
+              ) : 
+              (
+                <>
               <label className="block">
                 <span className="text-gray-700">Nombre:</span>
                 <input
@@ -125,7 +136,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   name="nombre"
                   value={nombre}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md shadow-sm border border-black py-2 text-sm"
+                  className="block mb-1 w-full rounded-md border border-gray-400 p-2 text-sm"
                 />
               </label>
               <label className="block">
@@ -135,7 +146,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   name="telefono"
                   value={telefono}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm py-1 text-sm"
+                  className="block mb-1 w-full rounded-md border border-gray-400 p-2 text-sm "
                 />
               </label>
               <label className="block">
@@ -145,7 +156,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   name="correo"
                   value={correo}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm py-1 text-sm"
+                  className="block mb-1 w-full rounded-md border border-gray-400 p-2 text-sm"
                 />
               </label>
               <label className="block">
@@ -155,7 +166,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   name="cedula"
                   value={cedula}
                   onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-black shadow-sm py-1"
+                  className="block mb-1 w-full rounded-md border border-gray-400 p-2 text-sm"
                 />
               </label>
               <label className="block">
@@ -165,7 +176,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                   name="direccion"
                   value={direccion}
                   onChange={handleChange}
-                  className="text-base mt-1 block w-full rounded-md border border-black shadow-sm py-1"
+                  className="block w-full rounded-md border border-gray-400 p-2 text-sm"
                 />
               </label>
 
@@ -175,6 +186,10 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
               >
                 Modificar Vendedor
               </button>
+              </>
+              )
+            }
+            </section>
             </form>
           </div>
         </div>

@@ -1,66 +1,76 @@
 import { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
 import axios from "axios";
+import { useParams } from "react-router-dom";
+
+interface Cuota {
+  Id: number;
+  NumeroCuota: number;
+  ValorCuota: number;
+  FechaPago: string;
+  Pagada: boolean;
+}
 
 function Cuotas() {
-  const cuotas = [1, 2, 3, 4, 5];
-  const valores = [100, 200, 300, 400, 500];
-  const intereses = ["10%", "20%", "30%", "40%", "50%"];
-  const fechas = ["1/01/22", "1/01/22", "1/01/22", "1/01/22", "1/01/22"];
-  const pagos = ["Si", "Si", "Si", "No", "No", "No"];
+  const [cuotas, setCuotas] = useState<Cuota[]>([]);
+  const Id = useParams()?.id;
 
-  interface Abono {
-    Id: number;
-    Cuota: number;
-    Valor: number;
-    Interes: string;
-    Fecha: string;
-    Abonado: string;
-  }
-
-  const [abonos, setAbonos] = useState<Abono[]>([]);
+  console.log(cuotas);
 
   useEffect(() => {
-    axios.get("https://backendgestorventas.azurewebsites.net/api/cuotas")
-    .then((res) => {
-      setAbonos(res.data)
-      console.log(abonos)
-    })
-    .catch((err) => console.log(err));
-  }, [])
-
+    axios
+      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/${Id}`)
+      .then((res) => {
+        setCuotas(res.data);
+        console.log(cuotas);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <div>
       <Sidebar />
       <div className="ml-[67px]">
-        <h1 className="font-bold text-blue-900 py-2 text-2xl border-b shadow-md bg-white text-center w-full">Cuotas para la venta: <span className="font-semibold text-blue-700">
-          Zapatos Nike Originales
-          </span> </h1>
-        <table className="w-full border border-black my-4">
+      <header className="shadow-md bg-white flex items-center w-full">
+        <h1 className="font-bold text-blue-900 py-2 text-lg text-start">
+          Cuotas para la venta:{" "} 
+          <span className="font-semibold text-blue-700">
+            Zapatos Nike Originales
+          </span>{" "}
+        </h1>
+        <button className="text-xs">Registrar abono</button>
+      </header>
+        <table className="w-full px-2 border border-black my-4">
           <thead>
-            <tr className="border border-black">
-              <th>Cuota</th>
-              <th>Valor</th>
-              <th>% Interes</th>
-              <th>Fecha</th>
+            <tr className="border border-gray-400 text-sm text-blue-800">
+              <th className="border-r border-gray-400 py-2">#</th>
+              <th className="border-r border-gray-400">Valor</th>
+              <th className="border-r border-gray-400">Fecha</th>
               <th>Abonado</th>
             </tr>
           </thead>
           <tbody>
             {cuotas.map((cuota, idx) => (
               <tr key={idx} className="border border-gray-400">
-                <td className="text-center py-4">{cuota}</td>
-                <td className="text-center">{valores[idx]}</td>
-                <td className="text-center">{intereses[idx]}</td>
-                <td className="text-center">{fechas[idx]}</td>
+                <td className="text-center border-r border-gray-400 py-4 px-1 text-sm">{cuota.NumeroCuota}</td>
+                <td className="text-center border-r border-gray-400 px-1 text-sm">
+                  {new Intl.NumberFormat("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                  }).format(cuota.ValorCuota)}
+                </td>
+                <td className="text-center border-r px-1 border-gray-400 text-sm">
+                  {new Date(cuota.FechaPago).toLocaleDateString("es-CO")}
+                </td>
                 <td className="text-center">
                   <span
                     className={` ${
-                      pagos[idx] === "Si" ? "bg-green-200 text-green-500 px-2" : "bg-red-200 text-red-500 px-1"
+                      cuota.Pagada
+                        ? "bg-green-200 text-green-500 px-2 text-sm rounded-sm"
+                        : "bg-red-200 text-red-500 px-1 text-sm rounded-sm"
                     }`}
                   >
-                    {pagos[idx]}
+                    {cuota.Pagada ? "Si" : "No"}
                   </span>
                 </td>
               </tr>

@@ -152,6 +152,7 @@ function Clientes() {
                                     className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                     onClick={() => {
                                       toggleEditModal(client.Id);
+                                      setOpenDropdownId(null);
                                     }}
                                   >
                                     Modificar
@@ -160,6 +161,7 @@ function Clientes() {
                                     className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                     onClick={() => {
                                       toggleCloseConfirmation(client.Id);
+                                      setOpenDropdownId(null);
                                     }}
                                   >
                                     Eliminar

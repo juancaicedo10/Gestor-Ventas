@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Spinner from "../Spinner";
 
 interface ModalProps {
   isOpen: boolean;
@@ -19,9 +20,11 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const [telefono, setTelefono] = useState("");
   const [cedula, setCedula] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const getClient = async () => {
     try {
+      setIsLoading(true);
       await axios
         .get(
           `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
@@ -37,10 +40,12 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           setTelefono(response.data.Telefono);
           setCedula(response.data.NumeroDocumento);
           setDireccion(response.data.Direccion);
+          setIsLoading(false);
           console.log(response.data);
         });
     } catch (error) {
       console.error("Error obteniendo cliente:", error);
+      setIsLoading(false);
     }
   };
 
@@ -70,7 +75,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
             TipoDocumento: 1,
             Telefono: telefono,
             Correo: correo,
-            Direccion: direccion
+            Direccion: direccion,
           },
           {
             headers: {
@@ -115,63 +120,75 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                   &times;
                 </button>
               </header>
-              <label className="block">
-                <span className="text-gray-700">Nombre:</span>
-                <input
-                  type="text"
-                  name="nombre"
-                  value={nombre}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md shadow-sm border border-black py-2 text-sm"
-                />
-              </label>
-              <label className="block">
-                <span className="text-gray-700">Telefono:</span>
-                <input
-                  type="phone"
-                  name="telefono"
-                  value={telefono}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm py-1 text-sm"
-                />
-              </label>
-              <label className="block">
-                <span className="text-gray-700">Correo:</span>
-                <input
-                  type="email"
-                  name="correo"
-                  value={correo}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-gray-400 shadow-sm py-1 text-sm"
-                />
-              </label>
-              <label className="block">
-                <span className="text-gray-700">Cedula:</span>
-                <input
-                  type="text"
-                  name="cedula"
-                  value={cedula}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border border-black shadow-sm py-1"
-                />
-              </label>
-              <label className="block">
-                <span className="text-gray-700">Direccion:</span>
-                <input
-                  type="text"
-                  name="direccion"
-                  value={direccion}
-                  onChange={handleChange}
-                  className="text-base mt-1 block w-full rounded-md border border-black shadow-sm py-1"
-                />
-              </label>
-
-              <button
-                type="submit"
-                className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+              <section
+                className={`${
+                  isLoading &&
+                  "w-full min-h-[420px] flex items-center justify-center"
+                }`}
               >
-                Modificar Vendedor
-              </button>
+                {isLoading ? (
+                  <Spinner isLoading={isLoading} />
+                ) : (
+                  <>
+                    <label className="block">
+                      <span className="text-gray-700">Nombre:</span>
+                      <input
+                        type="text"
+                        name="nombre"
+                        value={nombre}
+                        onChange={handleChange}
+                        className="mb-1 block w-full rounded-md border border-gray-400 p-2 text-sm"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-gray-700">Telefono:</span>
+                      <input
+                        type="phone"
+                        name="telefono"
+                        value={telefono}
+                        onChange={handleChange}
+                        className="mb-1 block w-full rounded-md border border-gray-400 p-2 text-sm"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-gray-700">Correo:</span>
+                      <input
+                        type="email"
+                        name="correo"
+                        value={correo}
+                        onChange={handleChange}
+                        className="mb-1 block w-full rounded-md border border-gray-400 p-2 text-sm"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-gray-700">Cedula:</span>
+                      <input
+                        type="text"
+                        name="cedula"
+                        value={cedula}
+                        onChange={handleChange}
+                        className="mb-1 block w-full rounded-md border border-gray-400 p-2 text-sm"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="text-gray-700">Direccion:</span>
+                      <input
+                        type="text"
+                        name="direccion"
+                        value={direccion}
+                        onChange={handleChange}
+                        className="mb-1 block w-full rounded-md border border-gray-400 p-2 text-sm"
+                      />
+                    </label>
+                    <button
+                      type="submit"
+                      className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+                    >
+                      Modificar Cliente
+                    </button>
+                  </>
+                )}
+              </section>
             </form>
           </div>
         </div>

@@ -164,6 +164,7 @@ function Vendedores() {
                                         onClick={() => {
                                           setId(vendedor.Id);
                                           setIsEditModalOpen(true);
+                                          setOpenDropdownId(null);
                                         }}
                                       >
                                         Modificar
@@ -173,6 +174,7 @@ function Vendedores() {
                                         onClick={() => {
                                           setId(vendedor.Id);
                                           setIsDeleteRequest(true);
+                                          setOpenDropdownId(null);
                                         }}
                                       >
                                         Eliminar
@@ -220,7 +222,7 @@ function Vendedores() {
                             <StorefrontIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
-                            <Link to='/cuotas'>
+                            <Link to={`/ventas/vendedor/${vendedor.Id}`}>
                             <p className="text-blue-600 hover:text-blue-900 cursor-pointer">Ir a las ventas</p>
                             </Link>
                             </span>

@@ -4,6 +4,11 @@ export default {
   theme: {
     extend: {},
   },
+  variants: {
+    extend: {
+      BorderColor: ['focus'],
+    },
+  },
   plugins: [],
 }
 
