@@ -11,3 +11,18 @@ body {
   font-style: normal;
   background-color: rgb(242, 242, 255);
 }
+
+
+input::-ms-reveal {
+  display: none;
+}
+
+input::-ms-clear {
+  display: none;
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid;
+  border-color: #4A90E2;
+}

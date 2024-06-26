@@ -1,11 +1,15 @@
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState<any>("");
-  const [isLoading ,setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>("");
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -15,12 +19,15 @@ function Login() {
       correo: form.get("correo"),
       contraseña: form.get("contraseña"),
     };
-    console.log(data);
+
     try {
-      const response = await axios.post("https://backendgestorventas.azurewebsites.net/login", data);
+      const response = await axios.post(
+        "https://backendgestorventas.azurewebsites.net/login",
+        data
+      );
       console.log("Login correcto");
       localStorage.setItem("token", response.data.token);
-      console.log(response.data)
+      console.log(response.data);
       navigate("/clientes");
     } catch (error) {
       setError("Correo o contraseña incorrectos");
@@ -34,6 +41,7 @@ function Login() {
     if (e.target.value === "") {
       setError(null);
     }
+    setPassword(e.target.value);
   };
   return (
     <div className="w-full h-lvh flex flex-col justify-center items-center px-2">
@@ -61,23 +69,43 @@ function Login() {
         <label htmlFor="password" className="text-lg w-full">
           Contraseña
         </label>
-        <input
-          type="password"
-          name="contraseña"
-          id="contraseña"
-          onChange={handleChange}
-          className={`p-2 border-2 w-full rounded-md ${
-            error ? "border-red-500" : ""
-          }`}
-        />
+        <div className="flex w-full relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="contraseña"
+            id="contraseña"
+            onChange={handleChange}
+            className={`p-2 border-2 w-full rounded-md ${
+              error ? "border-red-500" : ""
+            }`}
+          />
+          <button
+            className="absolute right-0 p-2"
+            onClick={(e) => {
+              e.preventDefault();
+              setShowPassword(!showPassword);
+            }}
+          >
+            {password.length > 0 ? (
+              showPassword ? (
+                <VisibilityIcon />
+              ) : (
+                <VisibilityOffIcon />
+              )
+            ) : null}
+          </button>
+        </div>
         {error && <p className="text-red-500 w-full">{error}</p>}
         <button
           type="submit"
-          className={`w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4 ${isLoading ? 'bg-gray-400 hover:bg-gray-500 cursor-not-allowed' 
-            : 'bg-blue-800 hover:bg-blue-900 text-white'}`}
+          className={`w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4 ${
+            isLoading
+              ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
+              : "bg-blue-800 hover:bg-blue-900 text-white"
+          }`}
           disabled={isLoading}
         >
-         { isLoading ? 'Cargado...' : 'Iniciar Sesion' }
+          {isLoading ? "Cargado..." : "Iniciar Sesion"}
         </button>
       </form>
     </div>

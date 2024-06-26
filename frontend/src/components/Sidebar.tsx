@@ -115,6 +115,15 @@ export default function Sidebar() {
                 Panel de administracion
               </p>
             </Link>
+            <Link 
+            to='/gastos'
+            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            >
+              <AdminPanelSettingsIcon fontSize="large" />
+              <p hidden={!show} className="font-normal">
+                Gastos
+              </p>
+            </Link>
           </>
         )}
         <Link

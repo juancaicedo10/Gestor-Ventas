@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import Sidebar from "../Sidebar";
-import PaginationButtons from "../../helpers/paginator";
 import decodeToken from "../../utils/tokenDecored";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
@@ -25,6 +24,7 @@ function Vendedores() {
     NumeroDocumento: string;
     Telefono: string;
     Direccion: string;
+    VentasTotales: number;
   }
 
   const [vendedores, setVendedores] = useState<Client[]>([]);
@@ -44,7 +44,6 @@ function Vendedores() {
     setId(Id);
     setIsEditModalOpen(!isEditModalOpen);
   };
-
 
   const closeDeleteModal = () => {
     setIsDeleteRequest(false);
@@ -75,7 +74,7 @@ function Vendedores() {
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex justify-center w-full border-b shadow-md bg-white mb-4">
-          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center py-2 w-full">
+          <h1 className="text-2xl text-blue-900 md:text-4xl md:text-center lg:text-6xl text-start p-2 w-full">
             Vendedores
           </h1>
           <button className="mx-4 text-blue-900">
@@ -96,7 +95,7 @@ function Vendedores() {
                 onClose={toggleModal}
                 getClients={getVendedores}
               />
-              <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md">
+              <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md overflow-hidden min-h-screen">
                 {isEditModalOpen && (
                   <ModificarVendedorModal
                     Id={Id}
@@ -215,16 +214,18 @@ function Vendedores() {
                             <SellIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
-                              <p>{"0"}</p>
+                              <p>{ vendedor.VentasTotales }</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
                             <StorefrontIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
-                            <Link to={`/ventas/vendedor/${vendedor.Id}`}>
-                            <p className="text-blue-600 hover:text-blue-900 cursor-pointer">Ir a las ventas</p>
-                            </Link>
+                              <Link to={`/ventas/vendedor/${vendedor.Id}`}>
+                                <p className="text-blue-600 hover:text-blue-900 cursor-pointer">
+                                  Ir a las ventas
+                                </p>
+                              </Link>
                             </span>
                           </li>
                         </div>
@@ -236,7 +237,6 @@ function Vendedores() {
             </section>
           )}
         </div>
-        <PaginationButtons page={1} />
       </div>
     </section>
   );

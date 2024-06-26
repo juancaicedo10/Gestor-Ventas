@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
+import decodeToken from "../tokenDecored"; // Importa CSSProperties desde React
 
 interface Seller {
   Id: number;
@@ -13,14 +14,16 @@ interface Client {
 }
 
 interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    getVentas : () => void;
-  }
+  isOpen: boolean;
+  onClose: () => void;
+  getVentas: () => void;
+}
 
-const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) => {
-
-
+const CrearVentaModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  getVentas,
+}) => {
   const [selectedSeller, setSelectedSeller] = useState<
     string | number | undefined
   >(undefined);
@@ -37,6 +40,17 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
   const [fechaInicio, setFechaInicio] = useState<string>("");
   const [detallesVenta, setDetallesVenta] = useState<string>("");
   const [valorSeguro, setValorSeguro] = useState<number>(0);
+
+ // const [isSellerValid, setIsSellerValid] = useState<boolean>(true);
+  // const [isClientValid, setIsClientValid] = useState<boolean>(true);
+  const [isValorVentaValid, setIsValorVentaValid] = useState<boolean>(true);
+  const [isNumeroCuotasValid, setIsNumeroCuotasValid] = useState<boolean>(true);
+  const [isPeriodicidadValid, setIsPeriodicidadValid] = useState<boolean>(true);
+  const [isTasaInteresValid, setIsTasaInteresValid] = useState<boolean>(true);
+  const [isFechaInicioValid, setIsFechaInicioValid] = useState<boolean>(true);
+  const [isDetallesVentaValid, setIsDetallesVentaValid] =
+    useState<boolean>(true);
+ // const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
 
   console.log(setValorSeguro);
 
@@ -80,6 +94,35 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
   const handleCreateSell = (e: any) => {
     e.preventDefault();
 
+    let isValid = true;
+
+    if (!valorVenta) {
+      setIsValorVentaValid(false);
+      isValid = false;
+    }
+    if (!numeroCuotas) {
+      setIsNumeroCuotasValid(false);
+      isValid = false;
+    }
+    if (!periodicidad) {
+      setIsPeriodicidadValid(false);
+      isValid = false;
+    }
+    if (!tasaInteres) {
+      setIsTasaInteresValid(false);
+      isValid = false;
+    }
+    if (!fechaInicio) {
+      setIsFechaInicioValid(false);
+      isValid = false;
+    }
+    if (!detallesVenta) {
+      setIsDetallesVentaValid(false);
+      isValid = false;
+    }
+
+    if (!isValid) return;
+
     const venta = {
       ClienteId: selectedClient,
       VendedorId: selectedSeller,
@@ -115,6 +158,26 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
     getClients();
   }, []);
 
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedSeller("");
+      setSelectedClient("");
+      setValorVenta(0);
+      setNumeroCuotas(0);
+      setPeriodicidad(0);
+      setTasaInteres(0);
+      setFechaInicio("");
+      setDetallesVenta("");
+      setValorSeguro(0);
+      setIsValorVentaValid(true);
+      setIsNumeroCuotasValid(true);
+      setIsPeriodicidadValid(true);
+      setIsTasaInteresValid(true);
+      setIsFechaInicioValid(true);
+      setIsDetallesVentaValid(true);
+    }
+  }, [isOpen]);
+
   const SellersOptions = sellers.map((seller) => ({
     value: seller.Id,
     label: seller.NombreCompleto,
@@ -136,6 +199,8 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
       setSelectedClient(Number(clientId));
     }
   };
+
+  console.log(decodeToken().user);
 
   return (
     <div>
@@ -162,21 +227,40 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
             >
               {" "}
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                <h3
-                  className="text-3xl leading-6 font-bold text-blue-900"
-                  id="modal-title"
-                >
-                  Crear Venta
-                </h3>
+                <header className="flex w-full items-center justify-between">
+                  <h3
+                    className="text-3xl leading-6 font-bold text-blue-900"
+                    id="modal-title"
+                  >
+                    Crear Venta
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="text-4xl text-gray-500 hover:text-gray-900"
+                  >
+                    &times;
+                  </button>
+                </header>
                 <div className="mt-4 w-full mb-2">
                   <label htmlFor="seller">Vendedor:</label>
                   <Select
                     id="seller"
                     options={SellersOptions}
+                    defaultValue={
+                      decodeToken()?.user?.role === "Vendedor"
+                        ? SellersOptions.find(
+                            (option) => option.value === decodeToken()?.user?.Id
+                          )
+                        : null
+                    }
                     onChange={(selectedOption) =>
                       handleSelectSeller(selectedOption?.value.toString())
                     }
                     isSearchable
+                    isDisabled={decodeToken()?.user?.role === "Vendedor"}
+                    maxMenuHeight={170}
+                    menuPlacement="auto"
                   />
                 </div>
                 <div className="mb-2">
@@ -188,6 +272,8 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
                       handleSelectClient(selectedOption?.value.toString())
                     }
                     isSearchable
+                    maxMenuHeight={170}
+                    menuPlacement="auto"
                   />
                 </div>
                 <section className="grid grid-cols-2 gap-4">
@@ -195,19 +281,37 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
                     <label htmlFor="">Valor venta: </label>
                     <input
                       type="number"
-                      className="p-2 rounded-md border w-full"
-                      onChange={(e) => setValorVenta(Number(e.target.value))}
+                      className={`p-2 rounded-md border w-full ${
+                        !isValorVentaValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setValorVenta(Number(e.target.value));
+                        setIsValorVentaValid(true);
+                      }}
                     />
+                    {!isValorVentaValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </div>
                   <div>
-                    <label htmlFor="" className="">
-                      N Cuotas:{" "}
-                    </label>
+                    <label htmlFor="numero cuotas">N Cuotas:</label>
                     <input
                       type="number"
-                      className="p-2 rounded-md border w-full"
-                      onChange={(e) => setNumeroCuotas(Number(e.target.value))}
+                      className={`p-2 rounded-md border w-full ${
+                        !isNumeroCuotasValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setNumeroCuotas(Number(e.target.value));
+                        setIsNumeroCuotasValid(true);
+                      }}
                     />
+                    {!isNumeroCuotasValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </div>
                 </section>
                 <div className="grid grid-cols-2 gap-4 mb-2">
@@ -215,52 +319,93 @@ const CrearVentaModal:React.FC<ModalProps> = ({ isOpen, onClose, getVentas }) =>
                     <label htmlFor="periodicidad">Periodicidad:</label>
                     <input
                       type="number"
-                      className="p-2 rounded-md border w-full"
-                      onChange={(e) => setPeriodicidad(Number(e.target.value))}
+                      className={`p-2 rounded-md border w-full ${
+                        !isPeriodicidadValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setPeriodicidad(Number(e.target.value));
+                        setIsPeriodicidadValid(true);
+                      }}
                     />
+                    {!isPeriodicidadValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </section>
                   <section>
                     <label htmlFor="">% Tasa interes:</label>
                     <input
                       type="number"
-                      className="p-2 rounded-md border w-full"
-                      onChange={(e) => setTasaInteres(Number(e.target.value))}
+                      className={`p-2 rounded-md border w-full ${
+                        !isTasaInteresValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setTasaInteres(Number(e.target.value));
+                        setIsTasaInteresValid(true);
+                      }}
+                    />
+                    {!isTasaInteresValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </section>
+                  <section>
+                    <label htmlFor="">Valor Seguro</label>
+                    <input
+                      type="text"
+                      className={`p-2 rounded-md border w-full`}
                     />
                   </section>
+                  <section>
+                    <label htmlFor="">Fecha Inicio:</label>
+                    <input
+                      type="date"
+                      className={`p-2 rounded-md border w-full ${
+                        !isFechaInicioValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setFechaInicio(e.target.value);
+                        setIsFechaInicioValid(true);
+                      }}
+                    />
+                    {!isFechaInicioValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </section>
                 </div>
-                <div>
-                  <label htmlFor="">Fecha Inicio:</label>
-                  <input
-                    type="date"
-                    className="p-2 rounded-md border w-full"
-                    onChange={(e) => setFechaInicio(e.target.value)}
-                  />
-                </div>
-                <div>
-                  <label htmlFor="">Detalles venta:</label>
-                  <textarea
-                    name=""
-                    id=""
-                    cols={10}
-                    rows={6}
-                    className="p-2 rounded-md border w-full focus:border-blue-500"
-                    onChange={(e) => setDetallesVenta(e.target.value)}
-                  ></textarea>
-                </div>
-              </div>
+              <label htmlFor="">Detalles venta:</label>
+              <textarea
+                name=""
+                id=""
+                cols={10}
+                rows={4}
+                className={`p-2 rounded-md border w-full ${
+                  !isDetallesVentaValid ? "border-red-500" : ""
+                }`}
+                style={{ resize: "none" }}
+                onChange={(e) => {
+                  setDetallesVenta(e.target.value);
+                  setIsDetallesVentaValid(true);
+                }}
+              ></textarea>
+              {!isDetallesVentaValid && (
+                <p className="text-red-500 text-xs">
+                  Este campo es obligatorio
+                </p>
+              )}
+                            </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Crear
-                </button>
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={onClose}
-                >
-                  Cancelar
+                  {decodeToken().user.role === "Administrador"
+                    ? "Crear Venta"
+                    : "Enviar Venta a aprobacion"}
                 </button>
               </div>
             </form>

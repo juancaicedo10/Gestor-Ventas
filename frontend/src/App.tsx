@@ -13,7 +13,7 @@ import Alerts from "./utils/Alerts";
 import VentasAprobar from "./components/ventasAprobar";
 import PanelAdministracion from "./components/PanelAdministracion";
 import Spinner from "./utils/Spinner";
-
+import Gastos from "./components/Gastos";
 function App() {
   return (
     <>
@@ -54,7 +54,7 @@ function App() {
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/ventas/vendedor/:id" element={<VentasByVendedor />} />
         <Route
-          path="/cuotas/:id"
+          path="/cuotas/:id/:numeroVenta"
           element={
             <PrivateRoute>
               <Cuotas />
@@ -74,6 +74,14 @@ function App() {
         element={
           <PrivateRoute>
             <PanelAdministracion />
+          </PrivateRoute>
+        }
+        />
+        <Route 
+        path="/gastos"
+        element={
+          <PrivateRoute>
+            <Gastos />
           </PrivateRoute>
         }
         />
