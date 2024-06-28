@@ -13,9 +13,7 @@ import decodeToken from "../utils/tokenDecored";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import Select from "react-select";
 import Spinner from "../utils/Spinner";
-
-
-
+import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
 
 interface Gasto {
   GastoId: number;
@@ -58,18 +56,21 @@ function Gastos() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
+  const [id, setId] = useState<number>(0);
+
   const toggleEditModal = (id: number) => {
-    console.log("Editando el tipo de gasto con id: ", id);
+    setId(id);
+    setIsEditModalOpen(!isEditModalOpen);
   };
 
   const toggleCloseConfirmation = (id: number) => {
-    console.log("Eliminando el tipo de gasto con id: ", id);
+    setIsEditModalOpen(!isEditModalOpen);
   };
 
   const toggleModal = () => setIsOpenModal(!isOpenModal);
 
   //const [vendedores, setVendedores] = useState([]);
-
 
   const getTiposGastos = async () => {
     setIsLoading(true);
@@ -80,7 +81,8 @@ function Gastos() {
         setIsLoading(false);
         console.log(res.data);
       })
-      .catch((err) => {console.log(err)
+      .catch((err) => {
+        console.log(err);
         setIsLoading(false);
       });
   };
@@ -95,7 +97,7 @@ function Gastos() {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
   };
@@ -110,7 +112,7 @@ function Gastos() {
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
   };
@@ -127,10 +129,10 @@ function Gastos() {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
-  }
+  };
 
   useEffect(() => {
     getTiposGastos();
@@ -140,8 +142,6 @@ function Gastos() {
   useEffect(() => {
     getGastos();
   }, [activeView === "gastosPorVendedor"]);
-
-
 
   const SellersOptions = vendedores.map((seller) => ({
     value: seller.Id,
@@ -153,7 +153,6 @@ function Gastos() {
       setSelectedSeller(Number(sellerId));
     }
   };
-
 
   console.log(gastos);
 
@@ -193,6 +192,12 @@ function Gastos() {
           onClose={toggleModal}
           getGastos={getTiposGastos}
         />
+        <ModificarTipoGastoModal
+          isOpen={isEditModalOpen}
+          onClose={() => toggleEditModal(id)}
+          getGastos={getTiposGastos}
+          Id={id}
+        />
         <div>
           {activeView === "tiposDeGastos" ? (
             <div className="px-4">
@@ -207,134 +212,20 @@ function Gastos() {
                   <AddCircleIcon fontSize="large" />
                 </button>
               </div>
-              { isLoading ? <div className="w-full h-[70vh] flex items-center justify-center">
-                <Spinner isLoading={isLoading}/>
-              </div> : 
-              <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {gastos.map((gasto) => (
-                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.GastoId}>
-                    <div className="w-full flex bg-blue-800 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
-                      <StoreIcon />
-                      <h4>{gasto.Nombre}</h4>
-                      {decodeToken()?.user.role === "Administrador" && (
-                          <div className="relative inline-block text-left">
-                            <div>
-                              <button
-                                type="button"
-                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm p-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-                                id="options-menu"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                onClick={() =>
-                                  setOpenDropdownId(
-                                    openDropdownId !== gasto.GastoId
-                                      ? gasto.GastoId
-                                      : null
-                                  )
-                                }
-                              >
-                                <EditNoteIcon fontSize="medium" />
-                              </button>
-                              {openDropdownId === gasto.GastoId && (
-                                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
-                                  <div
-                                    className="py-1"
-                                    role="menu"
-                                    aria-orientation="vertical"
-                                    aria-labelledby="options-menu"
-                                  >
-                                    <button
-                                      className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                      onClick={() => {
-                                        toggleEditModal(gasto.GastoId);
-                                        setOpenDropdownId(null);
-                                      }}
-                                    >
-                                      Modificar
-                                    </button>
-                                    <button
-                                      className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                      onClick={() => {
-                                        toggleCloseConfirmation(gasto.GastoId);
-                                        setOpenDropdownId(null);
-                                      }}
-                                    >
-                                      Eliminar
-                                    </button>
-                                  </div>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                    </div>
-                    <div className="flex items-center text-blue-800 py-2 break-words">
-                      <DescriptionIcon />
-                      <span className="px-2 w-[90%] text-wrap">
-                        <h6 className="font-semibold text-blue-800 text-lg">
-                          Descripcion:
-                        </h6>
-                        <p className="font-normal text-black">
-                          {gasto.Descripcion}
-                        </p>
-                      </span>
-                    </div>
-                    <div className="flex items-center text-blue-800 py-2">
-                      <SellIcon />
-                      <span className="px-2">
-                        <h6 className="font-semibold text-blue-800 text-lg">
-                          Monto Maximo:{" "}
-                        </h6>
-                        <p className="text-black font-normal">
-                          {gasto.MontoMaximo} $
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              }
-            </div>
-          ) : (
-            <div className="px-2 md:px-4">
-              <div className="w-full py-5 flex items-center justify-center">
-                <div className="md:w-1/2 flex bg-red-200 font-normal text-lg">
-                <Select
-                    id="seller"
-                    options={SellersOptions}
-                    placeholder="Seleccione un vendedor"
-                    onChange={(selectedOption) =>
-                      handleSelectSeller(selectedOption?.value.toString())
-                    }
-                    isSearchable
-                    isDisabled={decodeToken()?.user?.role === "Vendedor"}
-                    maxMenuHeight={170}
-                    menuPlacement="auto"
-                    className="w-full"
-                  />
-                  <button className="border-md text-white bg-blue-800 text-base px-2" onClick={() => getGastosByVendedor()}>Buscar</button>
+              {isLoading ? (
+                <div className="w-full h-[70vh] flex items-center justify-center">
+                  <Spinner isLoading={isLoading} />
                 </div>
-                <button className="flex h-full items-center justify-center text-white" onClick={toggleModal}>
-                  <AddCircleIcon fontSize="large" className="text-blue-800 absolute right-5"/>
-                </button>
-              </div>
-              <div>
-                <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center md:text-start">
-                  Gastos por vendedor:
-                </h4>
-                <NuevoGastoModal
-                  isOpen={isOpenModal}
-                  onClose={toggleModal}
-                  getGastos={getTiposGastos}
-                />
-                { isLoading ? <div className="w-full h-[70vh] flex items-center justify-center">
-                <Spinner isLoading={isLoading}/>
-                </div> : 
+              ) : (
                 <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {gastosPorVendedor.map((gasto) => (
-                    <li className="bg-white border rounded-md p-1 text-wrap break-words" key={gasto.Id} >
-                      <div className="w-full text-white bg-blue-800 rounded-md p-4 text-xl font-semibold flex justify-between">
-                        <h6 className="text-center">{gasto.NombreVendedor}</h6>
+                  {gastos.map((gasto) => (
+                    <li
+                      className="bg-white border rounded-md p-1 break-words"
+                      key={gasto.GastoId }
+                    >
+                      <div className="w-full flex bg-blue-800 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
+                        <StoreIcon />
+                        <h4>{gasto.Nombre}</h4>
                         {decodeToken()?.user.role === "Administrador" && (
                           <div className="relative inline-block text-left">
                             <div>
@@ -387,50 +278,191 @@ function Gastos() {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center my-2 text-blue-800">
-                        <SellIcon />
-                        <span className="mx-2">
-                          <h6>Nombre Gasto:</h6>
-                          <p className="font-normal text-black">
-                            {gasto.Nombre}
-                          </p>
-                        </span>
-                      </div>
-                      <div className="w-full flex items-center my-2 text-blue-800">
+                      <div className="flex items-center text-blue-800 py-2 break-words">
                         <DescriptionIcon />
-                        <span className="mx-2 w-[90%] break-words">
-                          <h6>Descripcion Gasto: </h6>
+                        <span className="px-2 w-[90%] text-wrap">
+                          <h6 className="font-semibold text-blue-800 text-lg">
+                            Descripcion:
+                          </h6>
                           <p className="font-normal text-black">
                             {gasto.Descripcion}
                           </p>
                         </span>
                       </div>
-                      <div className="flex items-center my-2 text-blue-800">
-                        <AttachMoneyIcon />
-                        <span className="mx-2">
-                          <h6>Valor del gasto:</h6>
-                          <p className="font-normal text-black">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(gasto.Monto)}
-                            $
-                          </p>
-                        </span>
-                      </div>
-                      <div className="flex items-center text-blue-800">
-                        <CalendarMonthIcon />
-                        <span className="mx-2">
-                          <h6>Fecha del gasto:</h6>
-                          <p className="font-normal text-black">
-                            {new Date(gasto.Fecha).toLocaleDateString("es-CO")}
+                      <div className="flex items-center text-blue-800 py-2">
+                        <SellIcon />
+                        <span className="px-2">
+                          <h6 className="font-semibold text-blue-800 text-lg">
+                            Monto Maximo:{" "}
+                          </h6>
+                          <p className="text-black font-normal">
+                            {gasto.MontoMaximo} $
                           </p>
                         </span>
                       </div>
                     </li>
                   ))}
                 </ul>
-}
+              )}
+            </div>
+          ) : (
+            <div className="px-2 md:px-4">
+              <div className="w-full py-5 flex items-center justify-center">
+                <div className="md:w-1/2 flex bg-red-200 font-normal text-lg">
+                  <Select
+                    id="seller"
+                    options={SellersOptions}
+                    placeholder="Seleccione un vendedor"
+                    onChange={(selectedOption) =>
+                      handleSelectSeller(selectedOption?.value.toString())
+                    }
+                    isSearchable
+                    isDisabled={decodeToken()?.user?.role === "Vendedor"}
+                    maxMenuHeight={170}
+                    menuPlacement="auto"
+                    className="w-full"
+                  />
+                  <button
+                    className="border-md text-white bg-blue-800 text-base px-2"
+                    onClick={() => getGastosByVendedor()}
+                  >
+                    Buscar
+                  </button>
+                </div>
+                <button
+                  className="flex h-full items-center justify-center text-white"
+                  onClick={toggleModal}
+                >
+                  <AddCircleIcon
+                    fontSize="large"
+                    className="text-blue-800 absolute right-5"
+                  />
+                </button>
+              </div>
+              <div>
+                <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center md:text-start">
+                  Gastos por vendedor:
+                </h4>
+                <NuevoGastoModal
+                  isOpen={isOpenModal}
+                  onClose={toggleModal}
+                  getGastos={getTiposGastos}
+                />
+                {isLoading ? (
+                  <div className="w-full h-[70vh] flex items-center justify-center">
+                    <Spinner isLoading={isLoading} />
+                  </div>
+                ) : (
+                  <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {gastosPorVendedor.map((gasto) => (
+                      <li
+                        className="bg-white border rounded-md p-1 text-wrap break-words"
+                        key={gasto.Id}
+                      >
+                        <div className="w-full text-white bg-blue-800 rounded-md p-4 text-xl font-semibold flex justify-between">
+                          <h6 className="text-center">
+                            {gasto.NombreVendedor}
+                          </h6>
+                          {decodeToken()?.user.role === "Administrador" && (
+                            <div className="relative inline-block text-left">
+                              <div>
+                                <button
+                                  type="button"
+                                  className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm p-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                                  id="options-menu"
+                                  aria-haspopup="true"
+                                  aria-expanded="true"
+                                  onClick={() =>
+                                    setOpenDropdownId(
+                                      openDropdownId !== gasto.GastoId
+                                        ? gasto.GastoId
+                                        : null
+                                    )
+                                  }
+                                >
+                                  <EditNoteIcon fontSize="medium" />
+                                </button>
+                                {openDropdownId === gasto.GastoId && (
+                                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
+                                    <div
+                                      className="py-1"
+                                      role="menu"
+                                      aria-orientation="vertical"
+                                      aria-labelledby="options-menu"
+                                    >
+                                      <button
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        onClick={() => {
+                                          toggleEditModal(gasto.GastoId);
+                                          setOpenDropdownId(null);
+                                        }}
+                                      >
+                                        Modificar
+                                      </button>
+                                      <button
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        onClick={() => {
+                                          toggleCloseConfirmation(
+                                            gasto.GastoId
+                                          );
+                                          setOpenDropdownId(null);
+                                        }}
+                                      >
+                                        Eliminar
+                                      </button>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center my-2 text-blue-800">
+                          <SellIcon />
+                          <span className="mx-2">
+                            <h6>Nombre Gasto:</h6>
+                            <p className="font-normal text-black">
+                              {gasto.Nombre}
+                            </p>
+                          </span>
+                        </div>
+                        <div className="w-full flex items-center my-2 text-blue-800">
+                          <DescriptionIcon />
+                          <span className="mx-2 w-[90%] break-words">
+                            <h6>Descripcion Gasto: </h6>
+                            <p className="font-normal text-black">
+                              {gasto.Descripcion}
+                            </p>
+                          </span>
+                        </div>
+                        <div className="flex items-center my-2 text-blue-800">
+                          <AttachMoneyIcon />
+                          <span className="mx-2">
+                            <h6>Valor del gasto:</h6>
+                            <p className="font-normal text-black">
+                              {new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(gasto.Monto)}
+                              $
+                            </p>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-blue-800">
+                          <CalendarMonthIcon />
+                          <span className="mx-2">
+                            <h6>Fecha del gasto:</h6>
+                            <p className="font-normal text-black">
+                              {new Date(gasto.Fecha).toLocaleDateString(
+                                "es-CO"
+                              )}
+                            </p>
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           )}
