@@ -68,7 +68,7 @@ function clientesAprobar() {
         <section className={`${isLoading && 'flex items-center justify-center'} h-dvh`}>
           {isLoading ?  <Spinner isLoading={isLoading}/> : (
             clientsToApprove.length === 0 ? 
-            <div className="flex items-center flex-col justify-center w-full h-full">
+            <div className="flex items-center flex-col justify-center w-full h-[70vh]">
               <img src={ClientsImage} alt="clientes image" />
               <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-blue-900">En este momento no hay ningun cliente por aprobar</h1> 
             </div>

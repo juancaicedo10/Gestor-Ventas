@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+<<<<<<< HEAD
 import NuevoTipoGastoModal from "../utils/Gastos/NuevoTipoGastoModal";
 import NuevoGastoModal from "../utils/Gastos/NuevoGastoModal";
 import decodeToken from "../utils/tokenDecored";
@@ -14,27 +15,23 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Select from "react-select";
 import Spinner from "../utils/Spinner";
 import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
+=======
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
 
 interface Gasto {
-  GastoId: number;
+  id: number;
   Nombre: string;
   Descripcion: string;
   MontoMaximo: number;
 }
 
 interface GastoPorVendedor {
-  Id: number;
   GastoId: number;
   Nombre: string;
   Descripcion: string;
-  Monto: number;
+  Valor: number;
   Fecha: string;
   NombreVendedor: string;
-}
-
-interface Vendedor {
-  Id: number;
-  NombreCompleto: string;
 }
 
 function Gastos() {
@@ -43,10 +40,10 @@ function Gastos() {
   >("tiposDeGastos");
 
   const [gastos, setGastos] = useState<Gasto[]>([]);
-  const [vendedores, setVendedores] = useState<Vendedor[]>([]);
   const [gastosPorVendedor, setGastosPorVendedor] = useState<
     GastoPorVendedor[]
   >([]);
+<<<<<<< HEAD
 
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -74,28 +71,36 @@ function Gastos() {
 
   const getTiposGastos = async () => {
     setIsLoading(true);
+=======
+  //const [vendedores, setVendedores] = useState([]);
+
+  useEffect(() => {
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
     axios
       .get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos")
       .then((res) => {
         setGastos(res.data);
-        setIsLoading(false);
         console.log(res.data);
       })
+<<<<<<< HEAD
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
       });
   };
+=======
+      .catch((err) => console.log(err));
+  }, []);
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
 
-  const getGastos = async () => {
-    setIsLoading(true);
+  useEffect(() => {
     axios
       .get("https://backendgestorventas.azurewebsites.net/api/gastos")
       .then((res) => {
         setGastosPorVendedor(res.data);
-        setIsLoading(false);
         console.log(res.data);
       })
+<<<<<<< HEAD
       .catch((err) => {
         console.log(err);
         setIsLoading(false);
@@ -156,6 +161,11 @@ function Gastos() {
 
   console.log(gastos);
 
+=======
+      .catch((err) => console.log(err));
+  }, [activeView === "gastosPorVendedor"]);
+
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
   return (
     <section>
       <Sidebar />
@@ -165,7 +175,7 @@ function Gastos() {
             Gastos
           </h1>
         </header>
-        <ul className="flex text-base font-normal rounded-lg w-full justify-end px-1 md:px-4 ">
+        <ul className="flex text-base font-normal rounded-lg w-full justify-end px-1 md:px-2 ">
           <li
             className={`w-full md:w-1/4 lg:w-1/6 cursor-pointer select-none px-2 py-2 text-sm md:text-base text-center ${
               activeView === "tiposDeGastos"
@@ -187,6 +197,7 @@ function Gastos() {
             Gastos por vendedor
           </li>
         </ul>
+<<<<<<< HEAD
         <NuevoTipoGastoModal
           isOpen={isOpenModal}
           onClose={toggleModal}
@@ -198,6 +209,8 @@ function Gastos() {
           getGastos={getTiposGastos}
           Id={id}
         />
+=======
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
         <div>
           {activeView === "tiposDeGastos" ? (
             <div className="px-4">
@@ -205,13 +218,11 @@ function Gastos() {
                 <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
                   Tipos de Gastos:
                 </h4>
-                <button
-                  className="mx-4 text-blue-900"
-                  onClick={() => setIsOpenModal(true)}
-                >
-                  <AddCircleIcon fontSize="large" />
-                </button>
+                <button className="mx-4 text-blue-900">
+            <AddCircleIcon fontSize="large" />
+          </button>
               </div>
+<<<<<<< HEAD
               {isLoading ? (
                 <div className="w-full h-[70vh] flex items-center justify-center">
                   <Spinner isLoading={isLoading} />
@@ -284,11 +295,83 @@ function Gastos() {
                           <h6 className="font-semibold text-blue-800 text-lg">
                             Descripcion:
                           </h6>
+=======
+              <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {gastos.map((gasto) => (
+                  <li className="bg-white border rounded-md p-1">
+                    <div className="w-full flex bg-blue-800 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
+                      <StoreIcon />
+                      <h4>{gasto.Nombre}</h4>
+                      <button>M</button>
+                    </div>
+                    <div className="flex items-center text-blue-800 py-2">
+                      <DescriptionIcon />
+                      <span className="px-2">
+                        <h6 className="font-semibold text-blue-800 text-lg">
+                          Descripcion:
+                        </h6>
+                        <p className="font-normal text-black">
+                          {gasto.Descripcion}
+                        </p>
+                      </span>
+                    </div>
+                    <div className="flex items-center text-blue-800 py-2">
+                      <SellIcon />
+                      <span className="px-2">
+                        <h6 className="font-semibold text-blue-800 text-lg">
+                          Monto Maximo:{" "}
+                        </h6>
+                        <p className="text-black font-normal">
+                          {gasto.MontoMaximo} $
+                        </p>
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div className="px-2 md:px-4">
+              <div className="w-full py-5 flex items-center justify-between bg-blue-800 rounded-md border border-black">
+                <input
+                  type="text"
+                  placeholder="nombre vendedor"
+                  className="font-normal text-xl p-2 w-full border-2 md:w-1/2 rounded-full border-blue-800"
+                />
+                   <button className="mx-4 text-white">
+            <AddCircleIcon fontSize="large" />
+          </button>
+              </div>
+              <div>
+                <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center md:text-start">
+                  Gastos por vendedor:
+                </h4>
+                <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {gastosPorVendedor.map((gasto) => (
+                    <li className="bg-white border rounded-md p-1">
+                      <div className="w-full text-white bg-blue-800 rounded-md p-4 text-xl font-semibold">
+                        <h6 className="text-center">{gasto.NombreVendedor}</h6>
+                      </div>
+                      <div className="flex items-center my-2 text-blue-800">
+                        <SellIcon />
+                        <span className="mx-2">
+                          <h6>Nombre Gasto:</h6>
+                          <p className="font-normal text-black">
+                            {gasto.Nombre}
+                          </p>
+                        </span>
+                      </div>
+                      <div className="flex items-center my-2 text-blue-800">
+                        <DescriptionIcon />
+                        <span className="mx-2">
+                          <h6>Descripcion Gasto: </h6>
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
                           <p className="font-normal text-black">
                             {gasto.Descripcion}
                           </p>
                         </span>
                       </div>
+<<<<<<< HEAD
                       <div className="flex items-center text-blue-800 py-2">
                         <SellIcon />
                         <span className="px-2">
@@ -297,12 +380,35 @@ function Gastos() {
                           </h6>
                           <p className="text-black font-normal">
                             {gasto.MontoMaximo} $
+=======
+                      <div className="flex items-center my-2 text-blue-800">
+                        <AttachMoneyIcon />
+
+                        <span className="mx-2">
+                          <h6>Valor del gasto:</h6>
+                          <p className="font-normal text-black">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(gasto.Valor)}
+                            $
+                          </p>
+                        </span>
+                      </div>
+                      <div className="flex items-center text-blue-800">
+                        <CalendarMonthIcon />
+                        <span className="mx-2">
+                          <h6>Fecha del gasto:</h6>
+                          <p className="font-normal text-black">
+                            {new Date(gasto.Fecha).toLocaleDateString("es-CO")}
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
                           </p>
                         </span>
                       </div>
                     </li>
                   ))}
                 </ul>
+<<<<<<< HEAD
               )}
             </div>
           ) : (
@@ -463,6 +569,8 @@ function Gastos() {
                     ))}
                   </ul>
                 )}
+=======
+>>>>>>> parent of ded1ad5a (chore: Update client approval page layout and remove unused code)
               </div>
             </div>
           )}
