@@ -43,6 +43,7 @@ function Login() {
     }
     setPassword(e.target.value);
   };
+
   return (
     <div className="w-full h-lvh flex flex-col justify-center items-center px-2">
       <h2 className="font-extrabold text-6xl py-5 text-blue-900">Bienvenido</h2>
@@ -85,6 +86,7 @@ function Login() {
               e.preventDefault();
               setShowPassword(!showPassword);
             }}
+            style={{ color: "#3B82F6" }}
           >
             {password.length > 0 ? (
               showPassword ? (
@@ -105,7 +107,7 @@ function Login() {
           }`}
           disabled={isLoading}
         >
-          {isLoading ? "Cargado..." : "Iniciar Sesion"}
+          {isLoading ? "Cargando..." : "Iniciar Sesion"}
         </button>
       </form>
     </div>
