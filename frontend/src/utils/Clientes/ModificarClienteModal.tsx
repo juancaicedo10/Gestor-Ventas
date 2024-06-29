@@ -84,6 +84,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     }
   };
 
+  console.log("nombre", nombre, "correo", correo, "telefono", telefono, "cedula", cedula, "direccion", direccion)
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
 
