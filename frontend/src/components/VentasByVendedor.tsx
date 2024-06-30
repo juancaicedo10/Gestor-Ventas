@@ -68,9 +68,9 @@ function VentasByVendedor() {
         </div>
       ) : (
         <section className="w-full">
-          <header className="w-full bg-white text-center border-b shadow-md">
-            <h1 className="text-3xl font-bold text-blue-900 py-4 text-center w-full">
-              Ventas de:{" "}
+          <header className="bg-white text-center border-b shadow-md ml-[65px]">
+            <h1 className="text-xl md:text-3xl font-bold text-blue-900 py-4 text-center">
+              Ventas de:{" "} <br />
               <span className="text-blue-600">{vendedor.NombreCompleto}</span>
             </h1>
           </header>
@@ -90,8 +90,7 @@ function VentasByVendedor() {
                         <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[200px]">
                           <SellIcon fontSize="large" className="text-white" />
                           <h1 className="text-xl pb-2 text-center">
-                            <span className="font-bold">Venta:</span> Zapatos
-                            Nike originales
+                            <span className="font-bold">Venta:</span> { venta.NumeroVenta }
                           </h1>
                           <p className="text-gray-300 text-lg mx-3 text-center">
                             <span className="font-medium">Cliente:</span>{" "}

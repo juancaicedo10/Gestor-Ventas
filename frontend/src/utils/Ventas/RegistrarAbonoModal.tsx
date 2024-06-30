@@ -110,6 +110,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
         )
         .then((response) => {
           setCuota(response.data);
+          setFechaPago(new Date(response.data.FechaPago).toISOString().split("T")[0])
           setIsLoading(false);
         });
     } catch (error) {
@@ -182,6 +183,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                       className={`p-2 rounded-md border w-full ${
                         !isValorAbonoValid ? "border-red-500" : ""
                       }`}
+                      placeholder="valor abono"
                       onChange={(e) => {
                         setValorAbono(Number(e.target.value));
                         setIsValorAbonoValid(true);
@@ -199,10 +201,10 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     </label>
                     <input
                       type="number"
-                      value={saldoMora}
                       className={`p-2 rounded-md border w-full ${
                         !isSaldoMoraValid ? "border-red-500" : ""
                       }`}
+                      placeholder="saldo interes"
                       onChange={(e) => {
                         setSaldoMora(Number(e.target.value));
                         setIsNumeroCuotasValid(true);
@@ -222,10 +224,8 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     className={`p-2 rounded-md border w-full ${
                       !isFechaPagoValid ? "border-red-500" : ""
                     }`}
-                    onChange={(e) => {
-                      setFechaPago(e.target.value);
-                      setIsFechaPagoValid(true);
-                    }}
+                    disabled
+                    value={fechaPago}
                   />
                   {!isFechaPagoValid && (
                     <p className="text-red-500 text-xs">
@@ -240,6 +240,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     id=""
                     cols={10}
                     rows={4}
+                    placeholder="detalles cuota"
                     className={`p-2 rounded-md border w-full ${
                       !isDetallesCuotaValid ? "border-red-500" : ""
                     }`}

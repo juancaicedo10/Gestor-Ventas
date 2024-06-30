@@ -122,16 +122,6 @@ export default function Sidebar() {
                 Ventas por aprobar
               </p>
             </Link>
-            <Link
-              to="/administracion"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <AdminPanelSettingsIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
-                Panel de administracion
-              </p>
-            </Link>
           </>
         )}
         <Link

@@ -15,7 +15,17 @@ interface Cuota {
   NumeroCuota: number;
   ValorCuota: number;
   FechaPago: string;
+  SaldoInteres: number;
   Pagada: boolean;
+}
+
+
+interface DatosVenta {
+  ValorVenta: number;
+  ValorCuotas: number;
+  MoraTotal: number;
+  TotalAbonado: number;
+
 }
 
 function Cuotas() {
@@ -25,6 +35,7 @@ function Cuotas() {
   const NumeroVenta = useParams()?.numeroVenta;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [cuotaId, setCuotaId] = useState<number>(0);
+  const [DatosVenta, setDatosVenta] = useState<DatosVenta | null>(null);
 
   console.log(cuotas);
 
@@ -40,12 +51,28 @@ function Cuotas() {
         console.log(err)
         setIsLoading(false);
       });
-    }
+  }
+
+  console.log(Id)
+
+  const getDatosVenta = async () => {
+    await axios
+      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`)
+      .then((res) => {
+        setDatosVenta(res.data);
+        console.log("oe:",res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  console.log("datos venta:", DatosVenta?.ValorVenta)
 
   useEffect(() => {
     getCuotas();
-  }
-  , []);
+    getDatosVenta();
+  }, []);
 
   return (
     isLoading ? (<div className="w-full h-screen flex items-center justify-center">
@@ -112,7 +139,7 @@ function Cuotas() {
                   }).format(0)}
                 </td>
                 <td className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
-                  { cuota.ValorCuota }$
+                  { cuota.SaldoInteres }$
                 </td>
                 <td className="text-center border-r border-black text-xs md:text-sm lg:text-lg px-1">
                   <span
@@ -131,38 +158,39 @@ function Cuotas() {
         </table>
         <table className="border-2 border-black bg-[#f7f7f7] shadow-sm w-1/2">
           <thead>
-            <tr className="text-white bg-blue-700">
-              <th className="py-2">Valor venta</th>
-              <th>Valor Cuotas</th>
-              <th>Mora Total</th>
-              <th>Total Abonado</th>
+            <tr className="text-white bg-blue-800 text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+              <th className="py-2 border-r border-black px-1">Valor venta</th>
+              <th className="border-r border-black px-1">Valor Cuotas</th>
+              <th className="border-r border-black px-1">Mora Total</th>
+              <th className="px-1">Total Abonado</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="text-center">
-              <td className="py-2 border-r border-black">
+            <tr className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+              <td className="py-2 border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
                   currency: "COP",
-                }).format(1000000)}
+
+                  }).format(DatosVenta?.ValorVenta || 0).replace(/,/g, '')}
               </td>
-              <td className="border-r border-black">
+              <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
                   currency: "COP",
-                }).format(1000000)}
+                }).format(DatosVenta?.ValorCuotas || 0)}
               </td>
-              <td className="border-r border-black">
+              <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
                   currency: "COP",
-                }).format(0)}
+                }).format(DatosVenta?.MoraTotal || 0)} 
               </td>
-              <td className="border-r border-black">
+              <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
                   currency: "COP",
-                }).format(0)}
+                }).format(Number(DatosVenta?.TotalAbonado || 0))}
               </td>
             </tr>
           </tbody>
