@@ -6,33 +6,45 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   getGastos: () => void;
+  GastoId: number;
 }
 
-const NuevoTipoGastoModal: React.FC<ModalProps> = ({
+const ModificarTipoGastoModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   getGastos,
+  GastoId,
 }) => {
-
-  // properties to create sell
-
   const [nombreGasto, setNombreGasto] = useState<string>("");
   const [descripcionGasto, setDescripcionGasto] = useState<string>("");
   const [montoMaximo, setMontoMaximo] = useState<number>(0);
 
-  // const [isSellerValid, setIsSellerValid] = useState<boolean>(true);
-  // const [isClientValid, setIsClientValid] = useState<boolean>(true);
-  ;
   const [isNombreGastoValid, setIsNombreGastoValid] = useState<boolean>(false);
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
   const [isMontoMaximoValid, setIsMontoMaximoValid] = useState<boolean>(false);
-  // const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
 
+  const getTipoGastoById = () => {
+    axios
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/gastos/tipos/${GastoId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
+      .then((response) => {
+        console.log(response.data)
+        setNombreGasto(response.data.Nombre);
+        setDescripcionGasto(response.data.Descripcion);
+        setMontoMaximo(response.data.MontoMaximo);
+      });
+  };
 
+  console.log("montoMaximo", montoMaximo);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-
 
     let isValid = true;
 
@@ -51,7 +63,6 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
 
     if (!isValid) return;
 
-
     const TipoGasto = {
       Nombre: nombreGasto,
       Descripcion: descripcionGasto,
@@ -59,11 +70,15 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/gastos/tipo", TipoGasto, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .put(
+        `https://backendgestorventas.azurewebsites.net/api/gastos/tipo/${GastoId}`,
+        TipoGasto,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getGastos();
@@ -84,9 +99,11 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
       setIsDescripcionValid(true);
       setIsMontoMaximoValid(true);
     }
-  }, [isOpen]);
 
-  // console.log(decodeToken().user);
+    if (isOpen) {
+      getTipoGastoById();
+    }
+  }, [isOpen]);
 
   return (
     <div>
@@ -118,7 +135,7 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                     className="text-3xl leading-6 font-bold text-blue-900"
                     id="modal-title"
                   >
-                    Crear Tipo de Gasto
+                    Modificar Tipo de gasto
                   </h3>
                   <button
                     type="button"
@@ -134,6 +151,8 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                       <label htmlFor="">Nombre del gasto: </label>
                       <input
                         type="text"
+                        name="nombreGasto"
+                        value={nombreGasto}
                         className={`p-2 rounded-md border w-full text-sm ${
                           !isNombreGastoValid ? "border-red-500" : ""
                         }`}
@@ -152,6 +171,8 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                       <label htmlFor="numero cuotas">Monto Maximo:</label>
                       <input
                         type="number"
+                        name="montoMaximo"
+                        value={montoMaximo}
                         className={`p-2 rounded-md border w-full text-sm ${
                           !isMontoMaximoValid ? "border-red-500" : ""
                         }`}
@@ -174,7 +195,8 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                     Descripcion del gasto:
                   </label>
                   <textarea
-                    name=""
+                    name="descripcionGasto"
+                    value={descripcionGasto}
                     id=""
                     cols={10}
                     rows={4}
@@ -199,7 +221,7 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  Crear Tipo de gasto
+                  Modificar Tipo Gasto
                 </button>
               </div>
             </form>
@@ -210,4 +232,4 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
   );
 };
 
-export default NuevoTipoGastoModal;
+export default ModificarTipoGastoModal;

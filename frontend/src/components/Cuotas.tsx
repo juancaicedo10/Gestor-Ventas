@@ -79,14 +79,23 @@ function Cuotas() {
               <th className="border-r border-black text-xs md:text-sm lg:text-lg"><SellIcon fontSize="inherit" />  Valor</th>
               <th className="border-r border-black text-xs md:text-sm lg:text-lg"><DateRangeIcon fontSize="inherit"/> Fecha</th>
               <th className="border-r border-black text-xs md:text-sm lg:text-lg"><SellIcon fontSize="inherit"/>Mora</th>
-              <th className="border-r border-black text-xs md:text-sm lg:text-lg"><PriceCheckIcon fontSize="medium"/></th>
-              <th className="px-1 text-center text-xs md:text-sm lg:text-lg">Abonar</th>
+              <th className="border-r border-black text-xs md:text-sm lg:text-lg">Interes</th>
+              <th className="px-1 text-center text-xs md:text-sm lg:text-lg"><PriceCheckIcon fontSize="medium"/></th>
             </tr>
           </thead>
           <tbody>
             {cuotas.map((cuota, idx) => (
               <tr key={idx} className="border border-black">
-                <td className="text-center border-r border-black py-4 px-1 text-xs md:text-sm lg:text-lg">{cuota.NumeroCuota}</td>
+                <td className="text-center border-r border-black py-4 px-1 text-xs md:text-sm lg:text-lg flex flex-col justify-center items-center">
+                {cuota.NumeroCuota}
+                <button className="text-xl text-blue-900" onClick={() => {
+                    setIsModalOpen(true);
+                    setCuotaId(cuota.Id);
+                  }}>
+
+                    <AddCircleIcon fontSize="inherit"/>
+                  </button>
+                </td>
                 <td className="text-center border-r border-black px-1 text-xs md:text-sm lg:text-lg">
                   {new Intl.NumberFormat("es-CO", {
                     style: "currency",
@@ -102,6 +111,9 @@ function Cuotas() {
                     currency: "COP",
                   }).format(0)}
                 </td>
+                <td className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+                  { cuota.ValorCuota }$
+                </td>
                 <td className="text-center border-r border-black text-xs md:text-sm lg:text-lg px-1">
                   <span
                     className={` ${
@@ -112,15 +124,6 @@ function Cuotas() {
                   >
                     {cuota.Pagada ? "Si" : "No"}
                   </span>
-                </td>
-                <td className="text-center text-xs">
-                  <button className="text-xl text-blue-900" onClick={() => {
-                    setIsModalOpen(true);
-                    setCuotaId(cuota.Id);
-                  }}>
-
-                    <AddCircleIcon fontSize="inherit"/>
-                  </button>
                 </td>
               </tr>
             ))}

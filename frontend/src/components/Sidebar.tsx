@@ -34,13 +34,20 @@ export default function Sidebar() {
             !show && "hidden"
           }`}
         >
-          <h2 className="text-start text-xl w-full font-semibold overflow-hidden">{decodeToken()?.user.NombreCompleto.split(" ")
-                            .slice(0, 2)
-                            .join(" ")}</h2>
-          <h3 className="text-start font-light text-gray-300 overflow-hidden">{decodeToken()?.user.role}</h3>
+          <h2 className="text-start text-xl w-full font-semibold overflow-hidden">
+            {decodeToken()
+              ?.user.NombreCompleto.split(" ")
+              .slice(0, 2)
+              .join(" ")}
+          </h2>
+          <h3 className="text-start font-light text-gray-300 overflow-hidden">
+            {decodeToken()?.user.role}
+          </h3>
         </div>
         <button
-          className={`flex items-center justify-center p-2 text-3xl text-white font-extrabold ${!show ? 'w-full' : 'w-1/4'}`}
+          className={`flex items-center justify-center p-2 text-3xl text-white font-extrabold ${
+            !show ? "w-full" : "w-1/4"
+          }`}
           onClick={() => setShow(!show)}
         >
           {show ? (
@@ -86,6 +93,16 @@ export default function Sidebar() {
         {decodeToken()?.user.role === "Administrador" && (
           <>
             <Link
+              to="/gastos"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            >
+              <AdminPanelSettingsIcon fontSize="large" />
+              <p hidden={!show} className="font-normal">
+                Gastos
+              </p>
+            </Link>
+
+            <Link
               to="/clientes/aprobar"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
@@ -113,15 +130,6 @@ export default function Sidebar() {
               <AdminPanelSettingsIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Panel de administracion
-              </p>
-            </Link>
-            <Link 
-            to='/gastos'
-            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-            >
-              <AdminPanelSettingsIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
-                Gastos
               </p>
             </Link>
           </>

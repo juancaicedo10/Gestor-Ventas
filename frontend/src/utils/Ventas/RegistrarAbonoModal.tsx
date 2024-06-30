@@ -195,7 +195,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   </div>
                   <div>
                     <label htmlFor="" className="">
-                      Saldo Mora:{" "}
+                      Saldo Interes:{" "}
                     </label>
                     <input
                       type="number"

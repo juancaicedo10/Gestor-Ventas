@@ -13,6 +13,7 @@ import decodeToken from "../utils/tokenDecored";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import Select from "react-select";
 import Spinner from "../utils/Spinner";
+import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
 import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 
 
@@ -60,6 +61,8 @@ function Gastos() {
 
   const [Id, setId] = useState<number>(0);
 
+  const [GastoId, setGastoId] = useState<number>(0);
+
   //modales del edit de gastos
 
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
@@ -78,17 +81,15 @@ function Gastos() {
 
   const [isOpenTIpoGastoModal, setIsOpenTipoGastoModal] = useState<boolean>(false);
 
-  const toggleTipoGastoModal = () => {
-    setIsOpenTipoGastoModal(!isOpenTIpoGastoModal);
-  };
-
   //modales del editado del gasto
 
   const [isOpenEditGastoModal, setIsOpenEditGastoModal] = useState<boolean>(false);
 
-  const toggleEditGastoModal = () => {
+  const toggleTipoGastoEditModal = (GastoId: number) => {
     setIsOpenEditGastoModal(!isOpenEditGastoModal);
-  };
+    setGastoId(GastoId);
+  }
+
 
 
 
@@ -186,11 +187,11 @@ function Gastos() {
             Gastos
           </h1>
         </header>
-        <ul className="flex text-base font-normal rounded-lg w-full justify-end px-1 md:px-4 ">
+        <ul className="flex text-base font-normal rounded-lg w-full justify-end px-1 md:px-0">
           <li
             className={`w-full md:w-1/4 lg:w-1/6 cursor-pointer select-none px-2 py-2 text-sm md:text-base text-center ${
               activeView === "tiposDeGastos"
-                ? "bg-blue-800 text-white"
+                ? "bg-blue-900 text-white"
                 : "bg-white text-black"
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("tiposDeGastos")}
@@ -200,7 +201,7 @@ function Gastos() {
           <li
             className={`w-full md:w-1/4 lg:w-1/6 cursor-pointer select-none px-2 py-2 text-sm md:text-base text-center ${
               activeView === "gastosPorVendedor"
-                ? "bg-blue-800 text-white"
+                ? "bg-blue-900 text-white"
                 : "bg-white text-black"
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("gastosPorVendedor")}
@@ -213,6 +214,12 @@ function Gastos() {
           onClose={() => setIsOpenTipoGastoModal(false)}
           getGastos={getTiposGastos}
         />
+        <ModificarTipoGastoModal
+          isOpen={isOpenEditGastoModal}
+          onClose={() => setIsOpenEditGastoModal(false)}
+          getGastos={getTiposGastos}
+          GastoId={GastoId}
+         />
         <div>
           {activeView === "tiposDeGastos" ? (
             <div className="px-4">
@@ -233,7 +240,7 @@ function Gastos() {
               <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {gastos.map((gasto) => (
                   <li className="bg-white border rounded-md p-1 break-words" key={gasto.GastoId}>
-                    <div className="w-full flex bg-blue-800 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
+                    <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
                       <StoreIcon />
                       <h4>{gasto.Nombre}</h4>
                       {decodeToken()?.user.role === "Administrador" && (
@@ -266,7 +273,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleEditModal(gasto.GastoId);
+                                        toggleTipoGastoEditModal(gasto.GastoId)
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -288,10 +295,10 @@ function Gastos() {
                           </div>
                         )}
                     </div>
-                    <div className="flex items-center text-blue-800 py-2 break-words">
+                    <div className="flex items-center text-blue-900 py-2 break-words">
                       <DescriptionIcon />
                       <span className="px-2 w-[90%] text-wrap">
-                        <h6 className="font-semibold text-blue-800 text-lg">
+                        <h6 className="font-semibold text-blue-900 text-lg">
                           Descripcion:
                         </h6>
                         <p className="font-normal text-black">
@@ -299,14 +306,17 @@ function Gastos() {
                         </p>
                       </span>
                     </div>
-                    <div className="flex items-center text-blue-800 py-2">
+                    <div className="flex items-center text-blue-900 py-2">
                       <SellIcon />
                       <span className="px-2">
-                        <h6 className="font-semibold text-blue-800 text-lg">
+                        <h6 className="font-semibold text-blue-900 text-lg">
                           Monto Maximo:{" "}
                         </h6>
                         <p className="text-black font-normal">
-                          {gasto.MontoMaximo} $
+                        {new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(gasto.MontoMaximo)}$
                         </p>
                       </span>
                     </div>
@@ -318,7 +328,7 @@ function Gastos() {
           ) : (
             <div className="px-2 md:px-4">
               <div className="w-full py-5 flex items-center justify-center">
-                <div className="md:w-1/2 flex bg-red-200 font-normal text-lg">
+                <div className="md:w-1/2 flex font-normal text-lg">
                 <Select
                     id="seller"
                     options={SellersOptions}
@@ -332,10 +342,10 @@ function Gastos() {
                     menuPlacement="auto"
                     className="w-full"
                   />
-                  <button className="border-md text-white bg-blue-800 text-base px-2" onClick={() => getGastosByVendedor()}>Buscar</button>
+                  <button className="border-md text-white bg-blue-900 text-base px-2" onClick={() => getGastosByVendedor()}>Buscar</button>
                 </div>
                 <button className="flex h-full items-center justify-center text-white" onClick={() => setIsOpenModal(true)}>
-                  <AddCircleIcon fontSize="large" className="text-blue-800 absolute right-5"/>
+                  <AddCircleIcon fontSize="large" className="text-blue-900 absolute right-5"/>
                 </button>
               </div>
               <div>
@@ -359,7 +369,7 @@ function Gastos() {
                 <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {gastosPorVendedor.map((gasto) => (
                     <li className="bg-white border rounded-md p-1 text-wrap break-words" key={gasto.Id} >
-                      <div className="w-full text-white bg-blue-800 rounded-md p-4 text-xl font-semibold flex justify-between">
+                      <div className="w-full text-white bg-blue-900 rounded-md p-4 text-xl font-semibold flex justify-between">
                         <h6 className="text-center">{gasto.NombreVendedor}</h6>
                         {decodeToken()?.user.role === "Administrador" && (
                           <div className="relative inline-block text-left">
