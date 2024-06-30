@@ -174,9 +174,9 @@ function Ventas() {
                             "es-ES"
                           )}
                         </li>
-                        <li className="p-1 text-blue-800 flex items-center">
+                        <li className="p-1 text-blue-900 flex items-center">
                           <DateRangeIcon fontSize="small" />
-                          <span className="font-semibold">Fecha Fin:</span>{" "}
+                          <span className="font-semibold text-blue-900">Fecha Fin:</span>{" "}
                           <p className="text-black">
                             {new Date(venta.FechaFin).toLocaleDateString(
                               "es-ES"

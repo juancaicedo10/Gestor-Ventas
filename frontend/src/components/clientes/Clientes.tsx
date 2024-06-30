@@ -22,6 +22,7 @@ function Clientes() {
     NumeroDocumento: string;
     Telefono: string;
     Direccion: string;
+    ValorDeuda: number;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
@@ -223,7 +224,10 @@ function Clientes() {
                           <SellIcon className="text-blue-800" />
                           <span className="mx-4">
                             <h3 className="font-bold">Valor Deuda:</h3>
-                            <p>${"0"}</p>
+                            <p>{new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(client.ValorDeuda)}</p>
                           </span>
                         </li>
                       </div>
