@@ -172,7 +172,7 @@ function Cuotas() {
                   style: "currency",
                   currency: "COP",
 
-                  }).format(DatosVenta?.ValorVenta || 0).replace(/,/g, '')}
+                  }).format(DatosVenta?.ValorVenta || 0)}
               </td>
               <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
