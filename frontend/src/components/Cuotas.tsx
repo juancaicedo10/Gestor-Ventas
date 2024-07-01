@@ -80,7 +80,7 @@ function Cuotas() {
       </div>) : (
     <div>
       <header className="shadow-md bg-white flex items-center text-blue-900">
-        <Link to='/clientes' className="w-1/4 absolute">
+        <Link to='/ventas' className="w-1/4 absolute">
           <ReplyIcon fontSize="large"/>
         </Link>
         <h1 className="font-semibold text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center w-full" >

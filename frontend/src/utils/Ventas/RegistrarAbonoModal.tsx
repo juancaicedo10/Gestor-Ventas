@@ -26,63 +26,62 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [isLoading, setIsLoading] = useState(true);
 
   const [valorAbono, setValorAbono] = useState<number>(0);
-  const [numeroCuota, setNumeroCuota] = useState<number>(0);
   const [fechaPago, setFechaPago] = useState<string>("");
-  const [detallesCuota, setDetallesCuota] = useState<string>("");
-  const [saldoMora, setSaldoMora] = useState<number>(0);
+  const [detallesAbono, setDetallesAbono] = useState<string>("");
+  const [saldoInteres, setSaldoInteres] = useState<number>(0);
   const [cuota, setCuota] = useState<Cuota | null>(null);
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
-  const [isNumeroCuotasValid, setIsNumeroCuotasValid] = useState(true);
   const [isFechaPagoValid, setIsFechaPagoValid] = useState(true);
-  const [isSaldoMoraValid, setIsSaldoMoraValid] = useState(true);
-  const [isDetallesCuotaValid, setIsDetallesCuotaValid] = useState(true);
+  const [isSaldoInteresValid, setIsSaldoInteresValid] = useState(true);
+  const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
 
-
-  console.log(isNumeroCuotasValid)
-  console.log(setNumeroCuota)
-  console.log(isLoading)
+  console.log(isLoading);
 
   const registrarAbono = async (e: any) => {
     e.preventDefault();
 
     let esValido = true;
+
     if (!valorAbono || valorAbono === 0) {
       setIsValorAbonoValid(false);
       esValido = false;
+      console.log("valor abono invalido", esValido)
     }
-    if (!numeroCuota || numeroCuota === 0) {
-      setIsNumeroCuotasValid(false);
-      esValido = false;
-    }
+
     if (!fechaPago) {
       setIsFechaPagoValid(false);
       esValido = false;
+      console.log("fecha pago invalido", esValido)
     }
 
-    if (!saldoMora) {
-      setIsSaldoMoraValid(false);
+    if (!saldoInteres) {
+      setIsSaldoInteresValid(false);
       esValido = false;
+      console.log("saldo interes invalid ", esValido)
     }
 
-    if (!detallesCuota) {
-      setIsDetallesCuotaValid(false);
+
+    if (!detallesAbono) {
+      setIsDetallesAbonoValid(false);
       esValido = false;
+      console.log("detalles abono invalido", esValido)
     }
 
-    if (!esValido) return;
 
-    try {
+    if (!esValido) {
+      return;
+    }
+
       await axios
         .post(
-          `https://backendgestorventas.azurewebsites.net/api/cuotas/abonar/${cuotaId}`,
+          `
+        http://localhost:5000/api/cuotas/cuota/abonar/${cuotaId}`,
           {
-            VentaId: 1,
-            ValorCuota: valorAbono,
-            NumeroCuota: numeroCuota,
-            FechaPago: fechaPago,
-            Pagada: false,
-            DetallesCuota: detallesCuota,
+            ValorAbono: valorAbono,
+            FechaAbono: fechaPago,
+            SaldoInteres: saldoInteres,
+            DetallesAbono: detallesAbono,
           },
           {
             headers: {
@@ -94,9 +93,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
           console.log("CUOTA CREADA EXITOSAMENTE");
           getCuotas();
         });
-    } catch (error) {
-      console.error("Error creando cuota:", error);
-    }
+    
   };
 
   console.log(registrarAbono);
@@ -202,15 +199,15 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     <input
                       type="number"
                       className={`p-2 rounded-md border w-full ${
-                        !isSaldoMoraValid ? "border-red-500" : ""
+                        !isSaldoInteresValid ? "border-red-500" : ""
                       }`}
                       placeholder="saldo interes"
                       onChange={(e) => {
-                        setSaldoMora(Number(e.target.value));
-                        setIsNumeroCuotasValid(true);
+                        setSaldoInteres(Number(e.target.value));
+                        setIsSaldoInteresValid(true);
                       }}
                     />
-                    {!isSaldoMoraValid && (
+                    {!isSaldoInteresValid && (
                       <p className="text-red-500 text-xs">
                         Este campo es obligatorio
                       </p>
@@ -234,7 +231,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <label htmlFor="">Detalles Cuota:</label>
+                  <label htmlFor="">Detalles Abono:</label>
                   <textarea
                     name=""
                     id=""
@@ -242,15 +239,15 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     rows={4}
                     placeholder="detalles cuota"
                     className={`p-2 rounded-md border w-full ${
-                      !isDetallesCuotaValid ? "border-red-500" : ""
+                      !isDetallesAbonoValid ? "border-red-500" : ""
                     }`}
                     style={{ resize: "none" }}
                     onChange={(e) => {
-                      setDetallesCuota(e.target.value);
-                      setIsDetallesCuotaValid(true);
+                      setDetallesAbono(e.target.value);
+                      setIsDetallesAbonoValid(true);
                     }}
                   ></textarea>
-                  {!isDetallesCuotaValid && (
+                  {!isDetallesAbonoValid && (
                     <p className="text-red-500 text-xs">
                       Este campo es obligatorio
                     </p>

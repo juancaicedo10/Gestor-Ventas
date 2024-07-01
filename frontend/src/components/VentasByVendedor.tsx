@@ -198,7 +198,10 @@ function VentasByVendedor() {
                                 <span className="font-semibold text-blue-900">
                                   Abonado:
                                 </span>
-                                {venta.ValorAbonado ? venta.ValorAbonado : 0}$
+                                {new Intl.NumberFormat("es-CO", {
+                                  style: "currency",
+                                  currency: "COP",
+                                }).format(venta.ValorAbonado)}$
                               </div>
                               <div className="text-start">
                                 <span className="font-semibold flex flex-col text-blue-900">

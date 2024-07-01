@@ -48,9 +48,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [isPeriodicidadValid, setIsPeriodicidadValid] = useState<boolean>(true);
   const [isTasaInteresValid, setIsTasaInteresValid] = useState<boolean>(true);
   const [isFechaInicioValid, setIsFechaInicioValid] = useState<boolean>(true);
+  const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
   const [isDetallesVentaValid, setIsDetallesVentaValid] =
     useState<boolean>(true);
- // const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
 
   console.log(setValorSeguro);
 
@@ -116,10 +116,18 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsFechaInicioValid(false);
       isValid = false;
     }
+
+    if (!valorSeguro) {
+      setIsValorSeguroValid(false);
+      isValid = false;
+    }
+
     if (!detallesVenta) {
       setIsDetallesVentaValid(false);
       isValid = false;
     }
+
+
 
     if (!isValid) return;
 
@@ -175,6 +183,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsTasaInteresValid(true);
       setIsFechaInicioValid(true);
       setIsDetallesVentaValid(true);
+      setIsValorSeguroValid(true);
     }
   }, [isOpen]);
 
@@ -355,7 +364,13 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     <label htmlFor="">Valor Seguro</label>
                     <input
                       type="text"
-                      className={`p-2 rounded-md border w-full`}
+                      className={`p-2 rounded-md border w-full ${
+                        !isValorSeguroValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setValorSeguro(Number(e.target.value));
+                        setIsValorSeguroValid(true);
+                      }}
                     />
                   </section>
                   <section>

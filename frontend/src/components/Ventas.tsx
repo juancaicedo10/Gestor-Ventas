@@ -27,6 +27,8 @@ function Ventas() {
     Periodicidad: string;
     CuotasPagadas: number;
     ValorAbonado: number;
+    ValorSeguro: number;
+    TasaInteres: number;
   }
 
   const [ventas, setVentas] = useState<Venta[]>([]);
@@ -205,17 +207,35 @@ function Ventas() {
                               </span>
                               {venta.NumeroCuotas}
                             </div>
+                            <div>
+                              <span className="font-semibold flex flex-col text-blue-900">
+                                valor Seguro:
+                              </span>
+                              {new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(venta.ValorSeguro)}$
+                            </div>
                           </li>
                           <li>
                             <div className="text-start flex flex-col">
                               <span className="font-semibold text-blue-900">Abonado:</span>
-                              {venta.ValorAbonado ? venta.ValorAbonado : 0}$
+                              {new Intl.NumberFormat("es-CO", {
+                                  style: "currency",
+                                  currency: "COP",
+                                }).format(venta.ValorAbonado)}$
                             </div>
                             <div className="text-start">
                               <span className="font-semibold flex flex-col text-blue-900">
                                 Pagadas:
                               </span>
                               {venta.CuotasPagadas}
+                            </div>
+                            <div>
+                              <span className="font-semibold flex flex-col text-blue-900">
+                                % Interes:
+                              </span>
+                              {venta.TasaInteres}%
                             </div>
                           </li>
                         </ul>
