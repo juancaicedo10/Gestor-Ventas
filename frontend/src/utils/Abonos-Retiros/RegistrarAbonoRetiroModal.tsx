@@ -15,7 +15,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   onClose,
   getGastos,
   selectedVendedor,
-  setSelectedVendedor
+  setSelectedVendedor,
 }) => {
   const [monto, setMonto] = useState<number>(0);
   const [descripcion, setDescripcion] = useState<string>("");
@@ -24,8 +24,10 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const [vendedores, setVendedores] = useState([]);
   const [isMontoValid, setIsMontoValid] = useState<boolean>(false);
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
+  const [isSellerValid, setIsSellerValid] = useState<boolean>(false);
+  const [isTipoValid, setIsTipoValid] = useState<boolean>(false);
 
-   console.log(selectedSeller);
+  console.log(selectedSeller);
 
   const Tipos = [
     {
@@ -40,11 +42,14 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas1.azurewebsites.net/api/vendedores", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get(
+        "https://backendgestorventas1.azurewebsites.net/api/vendedores",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setVendedores(res.data);
     } catch (err) {
       console.error(err);
@@ -69,20 +74,36 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
       setIsDescripcionValid(false);
     }
 
+    if (!selectedTipo || selectedTipo === "") {
+      isValid = false;
+      setIsTipoValid(false);
+    }
+
+    if (selectedSeller === 0 || !selectedSeller) {
+      isValid = false;
+      setIsSellerValid(false);
+    }
+
     if (!isValid) return;
 
     const AbonoRetiro = {
       Valor: monto,
       VendedorId: selectedSeller,
-      Descripcion: descripcion
+      Descripcion: descripcion,
     };
 
     axios
-      .post(`https://backendgestorventas1.azurewebsites.net/api/${selectedTipo === "Abono" ? "abonos" : "retiros"}`, AbonoRetiro, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .post(
+        `https://backendgestorventas1.azurewebsites.net/api/${
+          selectedTipo === "Abono" ? "abonos" : "retiros"
+        }`,
+        AbonoRetiro,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getGastos();
@@ -97,10 +118,14 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) {
-        setMonto(0);
-        setDescripcion("");
+      setMonto(0);
+      setDescripcion("");
       setIsMontoValid(true);
       setIsDescripcionValid(true);
+      setSelectedSeller(0);
+      setSelectedTipo("");
+      setIsSellerValid(true);
+      setIsTipoValid(true);
     }
   }, [isOpen]);
 
@@ -116,12 +141,14 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
   const handleSelectTipo = (TipoId: string | undefined) => {
     if (TipoId !== null) {
+      setIsTipoValid(true);
       setSelectedTipo(TipoId);
     }
   };
 
   const handleSelectSeller = (sellerId: string | undefined) => {
     if (sellerId !== null) {
+      setIsSellerValid(true);
       setSelectedSeller(Number(sellerId));
     }
   };
@@ -131,11 +158,17 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
       {isOpen && (
         <div className="fixed z-50 inset-0 overflow-y-auto">
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            <div className="fixed inset-0 transition-opacity" aria-hidden="true">
+            <div
+              className="fixed inset-0 transition-opacity"
+              aria-hidden="true"
+            >
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
 
-            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+            <span
+              className="hidden sm:inline-block sm:align-middle sm:h-screen"
+              aria-hidden="true"
+            >
               &#8203;
             </span>
             <form
@@ -145,7 +178,10 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
             >
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
-                  <h3 className="text-3xl leading-6 font-bold text-blue-900" id="modal-title">
+                  <h3
+                    className="text-3xl leading-6 font-bold text-blue-900"
+                    id="modal-title"
+                  >
                     Registrar Abono o Retiro
                   </h3>
                   <button
@@ -166,6 +202,11 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                       placeholder="Seleccione un tipo"
                       className="w-full"
                     />
+                    {!isTipoValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label htmlFor="">Vendedor: </label>
@@ -176,9 +217,19 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                       placeholder="Seleccione un vendedor"
                       className="w-full"
                     />
+                    {!isSellerValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label htmlFor="numero cuotas">{`Monto a ${selectedTipo === "Abono" ? 'Abonar': 'Retirar'}` }:</label>
+                    <label htmlFor="numero cuotas">
+                      {`Monto a ${
+                        selectedTipo === "Abono" ? "Abonar" : "Retirar"
+                      }`}
+                      :
+                    </label>
                     <input
                       type="number"
                       className={`p-2 rounded-md border w-full text-sm ${
@@ -199,7 +250,11 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                     htmlFor=""
                     className="block text-base md:text-lg font-normal text-gray-700"
                   >
-                    {`Descripcion del ${selectedTipo === "Abono" ? 'abono a realizar:' : 'retiro a realizar:'}`}
+                    {`Descripcion del ${
+                      selectedTipo === "Abono"
+                        ? "abono a realizar:"
+                        : "retiro a realizar:"
+                    }`}
                   </label>
                   <textarea
                     name=""
@@ -227,7 +282,11 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                 >
-                  {`${selectedTipo ? `Realizar ${selectedTipo}` : `Realizar ${selectedTipo}`}`}
+                  {`${
+                    selectedTipo
+                      ? `Realizar ${selectedTipo}`
+                      : `Realizar ${selectedTipo}`
+                  }`}
                 </button>
               </div>
             </form>

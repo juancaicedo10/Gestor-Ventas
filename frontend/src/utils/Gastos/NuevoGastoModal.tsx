@@ -20,24 +20,38 @@ interface ModalProps {
   refreshGastos: () => void;
 }
 
-const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos }) => {
-  const [selectedSeller, setSelectedSeller] = useState<number | undefined>(undefined);
-  const [selectedTipoGasto, setSelectedTipoGasto] = useState<number | undefined>(undefined);
+const NuevoGastoModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  refreshGastos,
+}) => {
+  const [selectedSeller, setSelectedSeller] = useState<number | undefined>(
+    undefined
+  );
+  const [selectedTipoGasto, setSelectedTipoGasto] = useState<
+    number | undefined
+  >(undefined);
   const [fecha, setFecha] = useState<string>("");
   const [monto, setMonto] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [isFechaValid, setIsFechaValid] = useState<boolean>(true);
   const [isMontoValid, setIsMontoValid] = useState<boolean>(true);
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(true);
+  const [isTipoGastoValid, setIsTipoGastoValid] = useState<boolean>(true);
+  const [isSelectedSellerValid, setIsSelectedSellerValid] =
+    useState<boolean>(true);
   const [montoMaximo, setMontoMaximo] = useState<number | undefined>(0);
   const [tiposGastos, setTiposGastos] = useState<TipoGasto[]>([]);
   const [sellers, setSellers] = useState<Seller[]>([]);
 
   const fetchSellers = async () => {
     try {
-      const response = await axios.get("https://backendgestorventas1.azurewebsites.net/api/vendedores", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        "https://backendgestorventas1.azurewebsites.net/api/vendedores",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setSellers(response.data);
     } catch (error) {
       console.error("Error obteniendo vendedores:", error);
@@ -46,7 +60,9 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const fetchTiposGastos = async () => {
     try {
-      const response = await axios.get("https://backendgestorventas1.azurewebsites.net/api/gastos/tipos");
+      const response = await axios.get(
+        "https://backendgestorventas1.azurewebsites.net/api/gastos/tipos"
+      );
       setTiposGastos(response.data);
     } catch (error) {
       console.error("Error obteniendo tipos de gastos:", error);
@@ -55,14 +71,12 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const handleCreateGasto = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fecha || !monto || !descripcion || Number(monto) > montoMaximo!) {
+    if (!fecha || !monto || !descripcion || Number(monto) > montoMaximo! || !selectedSeller || !selectedTipoGasto) {
       setIsFechaValid(!!fecha);
       setIsMontoValid(!!monto);
       setIsDescripcionValid(!!descripcion);
-
-      console.log(isFechaValid, isMontoValid, isDescripcionValid);
-
-      console.log(fecha, monto, descripcion, selectedSeller, selectedTipoGasto);
+      setIsTipoGastoValid(!!selectedTipoGasto);
+      setIsSelectedSellerValid(!!selectedSeller);
 
       return;
     }
@@ -76,9 +90,13 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
     };
 
     try {
-      await axios.post("https://backendgestorventas1.azurewebsites.net/api/gastos", gasto, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      await axios.post(
+        "https://backendgestorventas1.azurewebsites.net/api/gastos",
+        gasto,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       refreshGastos();
       onClose();
     } catch (error) {
@@ -100,18 +118,22 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
       setMonto("");
       setMontoMaximo(0);
       setDescripcion("");
+      setSelectedSeller(undefined);
+      setSelectedTipoGasto(undefined);
       setIsFechaValid(true);
       setIsMontoValid(true);
       setIsDescripcionValid(true);
+      setIsTipoGastoValid(true);
+      setIsSelectedSellerValid(true);
     }
   }, [isOpen]);
 
-  const sellersOptions = sellers.map(seller => ({
+  const sellersOptions = sellers.map((seller) => ({
     value: seller.Id,
     label: seller.NombreCompleto,
   }));
 
-  const tiposGastosOptions = tiposGastos.map(tipo => ({
+  const tiposGastosOptions = tiposGastos.map((tipo) => ({
     value: tipo.Id,
     label: tipo.Nombre,
     montoMaximo: tipo.MontoMaximo,
@@ -124,7 +146,10 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
           <div className="fixed inset-0 transition-opacity" aria-hidden="true">
             <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
           </div>
-          <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">
+          <span
+            className="hidden sm:inline-block sm:align-middle sm:h-screen"
+            aria-hidden="true"
+          >
             &#8203;
           </span>
           <form
@@ -133,10 +158,17 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
           >
             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
               <header className="flex w-full items-center justify-between">
-                <h3 className="text-3xl leading-6 font-bold text-blue-900" id="modal-title">
+                <h3
+                  className="text-3xl leading-6 font-bold text-blue-900"
+                  id="modal-title"
+                >
                   Registrar Gasto
                 </h3>
-                <button type="button" onClick={onClose} className="text-4xl text-gray-500 hover:text-gray-900">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="text-4xl text-gray-500 hover:text-gray-900"
+                >
                   &times;
                 </button>
               </header>
@@ -155,18 +187,37 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                   menuPlacement="auto"
                 />
               </div>
+              {!isTipoGastoValid && (
+                <p className="text-red-500 text-xs font-normal">
+                  Este campo es obligatorio
+                </p>
+              )}
               <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                 <label htmlFor="seller">Vendedor:</label>
                 <Select
                   id="seller"
                   options={sellersOptions}
-                  defaultValue={decodeToken()?.user?.role === "Vendedor" ? sellersOptions.find(option => option.value === decodeToken()?.user?.Id) : null}
-                  onChange={(selectedOption) => setSelectedSeller(selectedOption?.value)}
+                  defaultValue={
+                    decodeToken()?.user?.role === "Vendedor"
+                      ? sellersOptions.find(
+                          (option) => option.value === decodeToken()?.user?.Id
+                        )
+                      : null
+                  }
+                  onChange={(selectedOption) => {
+                    setIsSelectedSellerValid(true);
+                    setSelectedSeller(selectedOption?.value);
+                  }}
                   isSearchable
                   isDisabled={decodeToken()?.user?.role === "Vendedor"}
                   maxMenuHeight={170}
                   menuPlacement="auto"
                 />
+                {!isSelectedSellerValid && (
+                  <p className="text-red-500 text-xs">
+                    Este campo es obligatorio
+                  </p>
+                )}
               </div>
               <section className="grid grid-cols-2 gap-4 mb-2">
                 <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
@@ -174,16 +225,24 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                   <input
                     type="number"
                     id="monto"
-                    className={`p-2 rounded-md border w-full ${!isMontoValid ? "border-red-500" : ""}`}
+                    className={`p-2 rounded-md border w-full ${
+                      !isMontoValid ? "border-red-500" : ""
+                    }`}
                     value={monto}
                     onChange={(e) => {
                       setMonto(e.target.value);
                       setIsMontoValid(true);
                     }}
                   />
-                  {!isMontoValid && <p className="text-red-500 text-xs">Este campo es obligatorio</p>}
+                  {!isMontoValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
                   {Number(monto) > montoMaximo! && selectedTipoGasto && (
-                    <p className="text-red-500 text-xs">El monto no puede ser mayor al monto máximo permitido</p>
+                    <p className="text-red-500 text-xs">
+                      El monto no puede ser mayor al monto máximo permitido
+                    </p>
                   )}
                 </div>
                 <div className="block text-base md:text-lg font-normal text-gray-700">
@@ -191,22 +250,33 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                   <input
                     type="date"
                     id="fecha"
-                    className={`p-2 rounded-md border w-full ${!isFechaValid ? "border-red-500" : ""}`}
+                    className={`p-2 rounded-md border w-full ${
+                      !isFechaValid ? "border-red-500" : ""
+                    }`}
                     value={fecha}
                     onChange={(e) => {
                       setFecha(e.target.value);
                       setIsFechaValid(true);
                     }}
                   />
-                  {!isFechaValid && <p className="text-red-500 text-xs">Este campo es obligatorio</p>}
+                  {!isFechaValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
                 </div>
               </section>
-              <label htmlFor="descripcion" className="block text-base md:text-lg font-normal text-gray-700">
+              <label
+                htmlFor="descripcion"
+                className="block text-base md:text-lg font-normal text-gray-700"
+              >
                 Descripcion Gasto:
               </label>
               <textarea
                 id="descripcion"
-                className={`p-2 rounded-md border w-full text-base font-normal ${!isDescripcionValid ? "border-red-500" : ""}`}
+                className={`p-2 rounded-md border w-full text-base font-normal ${
+                  !isDescripcionValid ? "border-red-500" : ""
+                }`}
                 style={{ resize: "none" }}
                 rows={4}
                 value={descripcion}
@@ -215,7 +285,11 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                   setIsDescripcionValid(true);
                 }}
               ></textarea>
-              {!isDescripcionValid && <p className="text-red-500 text-xs">Este campo es obligatorio</p>}
+              {!isDescripcionValid && (
+                <p className="text-red-500 text-xs">
+                  Este campo es obligatorio
+                </p>
+              )}
             </div>
             <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
               <button
