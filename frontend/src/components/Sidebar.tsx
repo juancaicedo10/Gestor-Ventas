@@ -58,6 +58,7 @@ export default function Sidebar() {
         </button>
       </header>
       <ul className="text-xl md:text-2xl flex flex-col w-full">
+      {decodeToken()?.user.role === "Administrador" && (
         <Link
           to="/vendedores"
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
@@ -68,6 +69,7 @@ export default function Sidebar() {
             Vendedores
           </p>
         </Link>
+)}
 
         <Link
           to="/clientes"
@@ -103,6 +105,15 @@ export default function Sidebar() {
             </Link>
 
             <Link
+              to="/abonos-retiros"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            >
+              <AdminPanelSettingsIcon fontSize="large" />
+              <p hidden={!show} className="font-normal">
+                Abonos y Retiros
+              </p>
+            </Link>
+            <Link
               to="/clientes/aprobar"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
@@ -120,6 +131,16 @@ export default function Sidebar() {
               <AdminPanelSettingsIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Ventas por aprobar
+              </p>
+            </Link>
+            <Link
+              to="/liquidaciones"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              onClick={() => setShow(false)}
+            >
+              <AdminPanelSettingsIcon fontSize="large" />
+              <p hidden={!show} className="font-normal">
+                Liquidaciones
               </p>
             </Link>
           </>

@@ -9,7 +9,7 @@ interface Seller {
 }
 
 interface TipoGasto {
-  GastoId: number;
+  Id: number;
   Nombre: string;
   MontoMaximo: number;
 }
@@ -24,7 +24,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(undefined);
   const [selectedTipoGasto, setSelectedTipoGasto] = useState<number | undefined>(undefined);
   const [fecha, setFecha] = useState<string>("");
-  const [monto, setMonto] = useState<number>(0);
+  const [monto, setMonto] = useState<string>("");
   const [descripcion, setDescripcion] = useState<string>("");
   const [isFechaValid, setIsFechaValid] = useState<boolean>(true);
   const [isMontoValid, setIsMontoValid] = useState<boolean>(true);
@@ -35,7 +35,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const fetchSellers = async () => {
     try {
-      const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+      const response = await axios.get("http://localhost:5000/api/vendedores", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setSellers(response.data);
@@ -46,7 +46,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const fetchTiposGastos = async () => {
     try {
-      const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos");
+      const response = await axios.get("http://localhost:5000/api/gastos/tipos");
       setTiposGastos(response.data);
     } catch (error) {
       console.error("Error obteniendo tipos de gastos:", error);
@@ -55,10 +55,15 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const handleCreateGasto = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!fecha || !monto || !descripcion || monto > montoMaximo!) {
+    if (!fecha || !monto || !descripcion || Number(monto) > montoMaximo!) {
       setIsFechaValid(!!fecha);
       setIsMontoValid(!!monto);
       setIsDescripcionValid(!!descripcion);
+
+      console.log(isFechaValid, isMontoValid, isDescripcionValid);
+
+      console.log(fecha, monto, descripcion, selectedSeller, selectedTipoGasto);
+
       return;
     }
 
@@ -66,12 +71,12 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
       GastoId: selectedTipoGasto,
       VendedorId: selectedSeller,
       Fecha: fecha,
-      Monto: monto,
+      Monto: Number(monto),
       Descripcion: descripcion,
     };
 
     try {
-      await axios.post("https://backendgestorventas.azurewebsites.net/api/gastos", gasto, {
+      await axios.post("http://localhost:5000/api/gastos", gasto, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       refreshGastos();
@@ -92,7 +97,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
       setSelectedSeller(undefined);
       setSelectedTipoGasto(undefined);
       setFecha("");
-      setMonto(0);
+      setMonto("");
       setMontoMaximo(0);
       setDescripcion("");
       setIsFechaValid(true);
@@ -107,7 +112,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
   }));
 
   const tiposGastosOptions = tiposGastos.map(tipo => ({
-    value: tipo.GastoId,
+    value: tipo.Id,
     label: tipo.Nombre,
     montoMaximo: tipo.MontoMaximo,
   }));
@@ -142,6 +147,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                   options={tiposGastosOptions}
                   onChange={(selectedOption) => {
                     setSelectedTipoGasto(selectedOption?.value);
+                    console.log(selectedOption);
                     setMontoMaximo(selectedOption?.montoMaximo);
                   }}
                   isSearchable
@@ -171,12 +177,12 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
                     className={`p-2 rounded-md border w-full ${!isMontoValid ? "border-red-500" : ""}`}
                     value={monto}
                     onChange={(e) => {
-                      setMonto(Number(e.target.value));
+                      setMonto(e.target.value);
                       setIsMontoValid(true);
                     }}
                   />
                   {!isMontoValid && <p className="text-red-500 text-xs">Este campo es obligatorio</p>}
-                  {monto > montoMaximo! && selectedTipoGasto && (
+                  {Number(monto) > montoMaximo! && selectedTipoGasto && (
                     <p className="text-red-500 text-xs">El monto no puede ser mayor al monto máximo permitido</p>
                   )}
                 </div>

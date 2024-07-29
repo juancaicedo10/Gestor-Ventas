@@ -1,11 +1,12 @@
 import Sidebar from "../Sidebar";
-import PersonIcon from "@mui/icons-material/Person";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import Spinner from "../../utils/Spinner";
-import ClientsImage from '../../images/clients.png';
+import ClientsImage from "../../images/clients.png";
+import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -24,20 +25,18 @@ function clientesAprobar() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(
-        "https://backendgestorventas.azurewebsites.net/api/clientes/aprobar",
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
-      .then((res) => {setClientsToApprove(res.data)
-        setIsLoading(false)
+      .get("http://localhost:5000/api/clientes/aprobar", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
+      .then((res) => {
+        setClientsToApprove(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err)
-        setIsLoading(false)
+        console.log(err);
+        setIsLoading(false);
       });
   }, [refresh]);
 
@@ -65,44 +64,83 @@ function clientesAprobar() {
         <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
           Clientes por aprobar
         </h1>
-        <section className={`${isLoading && 'flex items-center justify-center'} h-dvh`}>
-          {isLoading ?  <Spinner isLoading={isLoading}/> : (
-            clientsToApprove.length === 0 ? 
+        <section
+          className={`${isLoading && "flex items-center justify-center"} h-dvh`}
+        >
+          {isLoading ? (
+            <Spinner isLoading={isLoading} />
+          ) : clientsToApprove.length === 0 ? (
             <div className="flex items-center flex-col justify-center w-full h-[70vh]">
               <img src={ClientsImage} alt="clientes image" />
-              <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-blue-900">En este momento no hay ningun cliente por aprobar</h1> 
+              <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-blue-900">
+                En este momento no hay ningun cliente por aprobar
+              </h1>
             </div>
-              : (
-                <ul className="flex flex-col items-start w-full px-2">
-                  {clientsToApprove.map((client) => (
-                    <li key={client.Id} className="flex items-center justify-between w-full p-2 my-2 bg-gray-100 shadow-md">
-                      <div className="flex items-center">
-                        <PersonIcon />
-                        <p className="ml-2">{client.NombreCompleto}</p>
-                      </div>
-                      <div className="flex items-center">
-                        <button
-                          onClick={() => HandleApprove(client.Id, { aprobado: true })}
-                          className="bg-green-500 text-white p-2 rounded-md"
-                        >
+          ) : (
+            <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full place-items-center md:place-items-start md:ml-4">
+              {clientsToApprove.map((client) => (
+                  <li className="flex flex-col w-full">
+                    <div className="w-full">
+                      <button
+                        className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
+                        onClick={() =>
+                          HandleApprove(client.Id, { aprobado: true })
+                        }
+                      >
+                        <div className="w-full flex justify-between">
+                        <h5>Aprobar</h5>
+                        <span>
                           <CheckIcon />
-                        </button>
-                        <button
-                          onClick={() => HandleApprove(client.Id, { aprobado: false })}
-                          className="bg-red-500 text-white p-2 rounded-md"
-                        >
+                        </span>
+                        </div>
+                      </button>
+                      <button
+                        className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
+                        onClick={() => console.log("rechazado")}
+                      >
+                        <div className="w-full flex justify-between">
+                        <h5>Rechazar</h5>
+                        <span>
                           <CloseIcon />
-                        </button>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              )
+                        </span>
+                        </div>
+                      </button>
+                    </div>
+                    <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                      <p className="text-lg font-bold text-white">
+                        <h6 className="font-normal text-center">{client.NombreCompleto}</h6>
+                      </p>
+                      <p className="text-lg text-white">
+                        <h6 className="font-normal text-center">
+                          CC.{client.NumeroDocumento}
+                        </h6>
+                      </p>
+                    </div>
+                    <div className="bg-white rounded-md border shadow-sm p-2">
+                      <p className="text-lg text-blue-900 flex items-center"></p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <CalendarMonthIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Correo:</h6>
+                          <span className="text-black font-normal">{client.Correo}</span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <AccountBalanceIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Telefono:</h6>
+                          <span className="text-black font-normal">+57 {client.Telefono}</span>
+                        </span>
+                      </p>
+                    </div>
+                  </li>
+              ))}
+            </ul>
           )}
         </section>
       </div>
     </section>
-    );
+  );
 }
 
 export default clientesAprobar;

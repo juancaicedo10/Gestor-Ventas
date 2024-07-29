@@ -14,8 +14,9 @@ interface Cuota {
   Id: number;
   NumeroCuota: number;
   ValorCuota: number;
-  FechaPago: string;
-  SaldoInteres: number;
+  SaldoMora: number;
+  Fecha: string;
+  ValorInteres: number;
   Pagada: boolean;
 }
 
@@ -42,7 +43,7 @@ function Cuotas() {
   const getCuotas = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/${Id}`)
+      .get(`http://localhost:5000/api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -57,7 +58,7 @@ function Cuotas() {
 
   const getDatosVenta = async () => {
     await axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`)
+      .get(`http://localhost:5000/api/cuotas/datos/${Id}`)
       .then((res) => {
         setDatosVenta(res.data);
         console.log("oe:",res.data);
@@ -95,6 +96,7 @@ function Cuotas() {
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(!isModalOpen)}
                 getCuotas={getCuotas}
+                getDataCuotas={getDatosVenta}
                 cuotaId={cuotaId}
               />
        </section>
@@ -115,31 +117,37 @@ function Cuotas() {
               <tr key={idx} className="border border-black">
                 <td className="text-center border-r border-black py-4 px-1 text-xs md:text-sm lg:text-lg flex flex-col justify-center items-center">
                 {cuota.NumeroCuota}
-                <button className="text-xl text-blue-900" onClick={() => {
+                <button className={`text-xl ${cuota.Pagada ? 'hidden' : 'text-blue-900'}`} onClick={() => {
                     setIsModalOpen(true);
                     setCuotaId(cuota.Id);
-                  }}>
+                  }}
+                  disabled={cuota.Pagada}
+                  >
+                
 
                     <AddCircleIcon fontSize="inherit"/>
                   </button>
                 </td>
                 <td className="text-center border-r border-black px-1 text-xs md:text-sm lg:text-lg">
-                  {new Intl.NumberFormat("es-CO", {
+                  {new Intl.NumberFormat("en-US", {
                     style: "currency",
-                    currency: "COP",
+                    currency: "USD",
                   }).format(cuota.ValorCuota)}
                 </td>
                 <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
-                  {new Date(cuota.FechaPago).toLocaleDateString("es-CO")}
+                  {new Date(cuota.Fecha).toLocaleDateString("es-CO")}
                 </td>
                 <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
                 {new Intl.NumberFormat("es-CO", {
                     style: "currency",
                     currency: "COP",
-                  }).format(0)}
+                  }).format(cuota.SaldoMora)}$
                 </td>
                 <td className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
-                  { cuota.SaldoInteres }$
+                  { new Intl.NumberFormat("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                  }).format(cuota.ValorInteres) }$
                 </td>
                 <td className="text-center border-r border-black text-xs md:text-sm lg:text-lg px-1">
                   <span

@@ -5,6 +5,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   getCuotas: () => void;
+  getDataCuotas: () => void;
   cuotaId: number;
 }
 
@@ -20,6 +21,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   getCuotas,
+  getDataCuotas,
   cuotaId,
 }) => {
 
@@ -29,6 +31,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
   const [saldoInteres, setSaldoInteres] = useState<number>(0);
+  const [saldoMora, setSaldoMora] = useState<number>(0);
   const [cuota, setCuota] = useState<Cuota | null>(null);
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
@@ -81,6 +84,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
             ValorAbono: valorAbono,
             FechaAbono: fechaPago,
             SaldoInteres: saldoInteres,
+            SaldoMora: saldoMora ?? 0,
             DetallesAbono: detallesAbono,
           },
           {
@@ -92,22 +96,22 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
         .then(() => {
           console.log("CUOTA CREADA EXITOSAMENTE");
           getCuotas();
+          getDataCuotas();
         });
     
   };
-
-  console.log(registrarAbono);
 
   const getCuotaById = async () => {
     setIsLoading(true);
     try {
       await axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`
+          `http://localhost:5000/api/cuotas/cuota/${cuotaId}`
         )
         .then((response) => {
           setCuota(response.data);
-          setFechaPago(new Date(response.data.FechaPago).toISOString().split("T")[0])
+          console.log(cuota, "cuota");
+          setFechaPago(new Date(response.data.Fecha).toISOString().split("T")[0])
           setIsLoading(false);
         });
     } catch (error) {
@@ -172,7 +176,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mt-4 w-full mb-2"></div>
-                <section className="grid grid-cols-2 gap-4">
                   <div className="mb-2">
                     <label htmlFor="">Valor Abono: </label>
                     <input
@@ -193,7 +196,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     )}
                   </div>
                   <div>
-                    <label htmlFor="" className="">
+                    <label htmlFor="interes">
                       Saldo Interes:{" "}
                     </label>
                     <input
@@ -213,9 +216,21 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                       </p>
                     )}
                   </div>
-                </section>
+                  <div>
+                    <label htmlFor="mora">Saldo Mora:</label>
+                    <input
+                      type="number"
+                      className={`p-2 rounded-md border w-full ${
+                        !isFechaPagoValid ? "border-red-500" : ""
+                      }`}
+                      placeholder="saldo mora"
+                      onChange={(e) => {
+                        setSaldoMora(Number(e.target.value));
+                      }}
+                    />
+                  </div>
                 <div>
-                  <label htmlFor="">Fecha Pago:</label>
+                  <label htmlFor="fecha">Fecha Pago:</label>
                   <input
                     type="date"
                     className={`p-2 rounded-md border w-full ${
@@ -231,7 +246,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <label htmlFor="">Detalles Abono:</label>
+                  <label htmlFor="detalle">Detalles Abono:</label>
                   <textarea
                     name=""
                     id=""

@@ -51,7 +51,7 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`)
+        .get(`http://localhost:5000/api/clientes/vendedor/${VendedorId}`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -62,7 +62,7 @@ function Clientes() {
         });
     } else {
       axios
-        .get("https://backendgestorventas.azurewebsites.net/api/clientes")
+        .get("http://localhost:5000/api/clientes")
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -74,6 +74,20 @@ function Clientes() {
     }
   };
 
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    const value = e.target.value;
+
+    if (value !== "") {
+      const filtrados = clients.filter((cliente) =>
+        cliente.NombreCompleto.toLowerCase().includes(value.toLowerCase())
+      );
+      setClients(filtrados);
+    } else {
+      getClients();
+    }
+  };
+
   useEffect(() => {
     getClients();
   }, []);
@@ -82,15 +96,57 @@ function Clientes() {
     <section className="w-full overflow-hidden min-h-screen">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-        <header className="flex justify-center w-full border-b shadow-md bg-white mb-4">
-          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
-            {decodeToken()?.user.role === "Administrador"
-              ? "Clientes"
-              : "Tus Clientes"}
-          </h1>
-          <button className="mx-4 text-blue-900">
-            <AddCircleIcon fontSize="large" onClick={toggleModal} />
-          </button>
+        <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
+          <div className="flex w-full">
+            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+              {decodeToken()?.user.role === "Administrador"
+                ? "Clientes"
+                : "Tus Clientes"}
+            </h1>
+            <button className="mx-4 text-blue-900">
+              <AddCircleIcon fontSize="large" onClick={toggleModal} />
+            </button>
+          </div>
+          <div className="flex justify-center items-center px-1">
+            <form className="mx-auto w-full md:w-1/2 mb-2" onSubmit={handleSearch}>
+              <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+                Buscar
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                  <svg
+                    className="w-4 h-4 text-gray-500"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  id="default-search"
+                  className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                  placeholder="Buscar cliente"
+                  onChange={handleSearch}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                >
+                  Buscar
+                </button>
+              </div>
+            </form>
+          </div>
         </header>
         <section
           className={`w-full px-2 ${
@@ -217,17 +273,27 @@ function Clientes() {
                           <PhoneIcon className="text-blue-800" />
                           <span className="mx-4">
                             <h3 className="font-bold">Telefono:</h3>
-                            <p>{client.Telefono}</p>
+                            <p className="border-b border-blue-600 text-blue-600">
+                              <a
+                                href={`https://wa.me/${client.Telefono}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {client.Telefono}
+                              </a>
+                            </p>
                           </span>
                         </li>
                         <li className="flex items-center my-1">
                           <SellIcon className="text-blue-800" />
                           <span className="mx-4">
                             <h3 className="font-bold">Valor Deuda:</h3>
-                            <p>{new Intl.NumberFormat("es-CO", {
+                            <p>
+                              {new Intl.NumberFormat("es-CO", {
                                 style: "currency",
                                 currency: "COP",
-                              }).format(client.ValorDeuda)}</p>
+                              }).format(client.ValorDeuda)}
+                            </p>
                           </span>
                         </li>
                       </div>

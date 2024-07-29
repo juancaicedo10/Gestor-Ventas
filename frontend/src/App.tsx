@@ -9,11 +9,11 @@ import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
 import VentasByVendedor from "./components/VentasByVendedor";
 import Cuotas from "../src/components/Cuotas";
-import Alerts from "./utils/Alerts";
 import VentasAprobar from "./components/ventasAprobar";
 import PanelAdministracion from "./components/PanelAdministracion";
-import Spinner from "./utils/Spinner";
 import Gastos from "./components/Gastos";
+import Retiros from "./components/Abonos-Retiros/AbonosyRetiros";
+import Liquidaciones from "./components/Liquidaciones/Liquidaciones";
 function App() {
   return (
     <>
@@ -69,24 +69,40 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route 
-        path="/administracion"
-        element={
-          <PrivateRoute>
-            <PanelAdministracion />
-          </PrivateRoute>
-        }
+        <Route
+          path="/administracion"
+          element={
+            <PrivateRoute>
+              <PanelAdministracion />
+            </PrivateRoute>
+          }
         />
-        <Route 
-        path="/gastos"
-        element={
-          <PrivateRoute>
-            <Gastos />
-          </PrivateRoute>
-        }
+        <Route
+          path="/gastos"
+          element={
+            <PrivateRoute>
+              <Gastos />
+            </PrivateRoute>
+          }
         />
-        <Route path="/alerts" element={<Alerts />} />
-        <Route path="/spinner" element={<Spinner isLoading={true}/>} />
+
+        <Route
+          path="/abonos-retiros"
+          element={
+            <PrivateRoute>
+              <Retiros />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/liquidaciones"
+          element={
+            <PrivateRoute>
+              <Liquidaciones />
+            </PrivateRoute>
+          }
+        />
       </Routes>
     </>
   );

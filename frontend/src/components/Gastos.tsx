@@ -18,7 +18,7 @@ import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 
 
 interface Gasto {
-  GastoId: number;
+  Id: number;
   Nombre: string;
   Descripcion: string;
   MontoMaximo: number;
@@ -27,11 +27,12 @@ interface Gasto {
 interface GastoPorVendedor {
   Id: number;
   GastoId: number;
-  Nombre: string;
+  NombreGasto: string;
   Descripcion: string;
   Monto: number;
   Fecha: string;
   NombreVendedor: string;
+  Liquidado: boolean;
 }
 
 interface Vendedor {
@@ -54,10 +55,15 @@ function Gastos() {
 
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
+  const [openDropdownTipoId, setOpenDropdownTipoId] = useState<number | null>(null);
+
   const [selectedSeller, setSelectedSeller] = useState<number | null>(null);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const [searched, setSearched] = useState<boolean>(false);
+
+  console.log(searched)
 
   const [Id, setId] = useState<number>(0);
 
@@ -96,7 +102,7 @@ function Gastos() {
   const getTiposGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos")
+      .get("http://localhost:5000/api/gastos/tipos")
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -110,7 +116,7 @@ function Gastos() {
   const getGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/gastos")
+      .get("http://localhost:5000/api/gastos")
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -125,7 +131,7 @@ function Gastos() {
   const getVendedores = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
+      .get("http://localhost:5000/api/vendedores")
       .then((res) => {
         setVendedores(res.data);
         console.log(res.data);
@@ -141,7 +147,7 @@ function Gastos() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/gastos/vendedor/${selectedSeller}`
+        `http://localhost:5000/api/gastos/vendedor/${selectedSeller}`
       )
       .then((res) => {
         setGastosPorVendedor(res.data);
@@ -154,10 +160,15 @@ function Gastos() {
       });
   }
 
+
+
   useEffect(() => {
     getTiposGastos();
     getVendedores();
   }, []);
+
+  console.log(gastos, "gastos");
+  console.log(gastosPorVendedor, "gastos por vendedor");
 
 
   useEffect(() => {
@@ -239,7 +250,7 @@ function Gastos() {
               </div> : 
               <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {gastos.map((gasto) => (
-                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.GastoId}>
+                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.Id}>
                     <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
                       <StoreIcon />
                       <h4>{gasto.Nombre}</h4>
@@ -253,16 +264,17 @@ function Gastos() {
                                 aria-haspopup="true"
                                 aria-expanded="true"
                                 onClick={() =>
-                                  setOpenDropdownId(
-                                    openDropdownId !== gasto.GastoId
-                                      ? gasto.GastoId
+                                  setOpenDropdownTipoId(
+
+                                    openDropdownTipoId !== gasto.Id
+                                      ? gasto.Id
                                       : null
                                   )
                                 }
                               >
                                 <EditNoteIcon fontSize="medium" />
                               </button>
-                              {openDropdownId === gasto.GastoId && (
+                              {openDropdownTipoId === gasto.Id && (
                                 <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
                                   <div
                                     className="py-1"
@@ -273,7 +285,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleTipoGastoEditModal(gasto.GastoId)
+                                        toggleTipoGastoEditModal(gasto.Id)
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -282,7 +294,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleCloseConfirmation(gasto.GastoId);
+                                        toggleCloseConfirmation(gasto.Id);
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -342,7 +354,10 @@ function Gastos() {
                     menuPlacement="auto"
                     className="w-full"
                   />
-                  <button className="border-md text-white bg-blue-900 text-base px-2" onClick={() => getGastosByVendedor()}>Buscar</button>
+                  <button className="border-md text-white bg-blue-900 text-base px-2" onClick={() => {
+                    getGastosByVendedor()
+                    setSearched(true)
+                    }}>Buscar</button>
                 </div>
                 <button className="flex h-full items-center justify-center text-white" onClick={() => setIsOpenModal(true)}>
                   <AddCircleIcon fontSize="large" className="text-blue-900 absolute right-5"/>
@@ -369,7 +384,8 @@ function Gastos() {
                 <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                   {gastosPorVendedor.map((gasto) => (
                     <li className="bg-white border rounded-md p-1 text-wrap break-words" key={gasto.Id} >
-                      <div className="w-full text-white bg-blue-900 rounded-md p-4 text-xl font-semibold flex justify-between">
+                    <div className="flex flex-col items-center w-full text-white bg-blue-900 rounded-md p-4">
+                    <div className="w-full text-xl font-semibold flex justify-between">
                         <h6 className="text-center">{gasto.NombreVendedor}</h6>
                         {decodeToken()?.user.role === "Administrador" && (
                           <div className="relative inline-block text-left">
@@ -423,12 +439,17 @@ function Gastos() {
                           </div>
                         )}
                       </div>
+                    <span className={`rounded-md p-1 ${gasto.Liquidado ? 'bg-green-500': 'bg-red-500'}`}>{
+                      gasto.Liquidado ? "Liquidado" : "Pendiente"
+                      }</span>
+                    </div>
+                     
                       <div className="flex items-center my-2 text-blue-800">
                         <SellIcon />
                         <span className="mx-2">
                           <h6>Nombre Gasto:</h6>
                           <p className="font-normal text-black">
-                            {gasto.Nombre}
+                            {gasto.NombreGasto}
                           </p>
                         </span>
                       </div>

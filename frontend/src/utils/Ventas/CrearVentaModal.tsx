@@ -25,7 +25,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   getVentas,
 }) => {
   const [selectedSeller, setSelectedSeller] = useState<
-    string | number | undefined
+    number | undefined
   >(undefined);
   const [selectedClient, setSelectedClient] = useState<
     string | number | undefined
@@ -41,8 +41,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [detallesVenta, setDetallesVenta] = useState<string>("");
   const [valorSeguro, setValorSeguro] = useState<number>(0);
 
- // const [isSellerValid, setIsSellerValid] = useState<boolean>(true);
-  // const [isClientValid, setIsClientValid] = useState<boolean>(true);
   const [isValorVentaValid, setIsValorVentaValid] = useState<boolean>(true);
   const [isNumeroCuotasValid, setIsNumeroCuotasValid] = useState<boolean>(true);
   const [isPeriodicidadValid, setIsPeriodicidadValid] = useState<boolean>(true);
@@ -60,7 +58,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getSellers = async () => {
     try {
       await axios
-        .get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+        .get("http://localhost:5000/api/vendedores", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -77,7 +75,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getClients = async () => {
     try {
       await axios
-        .get("https://backendgestorventas.azurewebsites.net/api/clientes", {
+        .get("http://localhost:5000/api/clientes", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -142,10 +140,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       ValorSeguro: valorSeguro,
       DetallesVenta: detallesVenta,
     };
-    console.log(venta);
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/ventas", venta, {
+      .post("http://localhost:5000/api/ventas", venta, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -168,7 +165,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) {
-      setSelectedSeller("");
+      setSelectedSeller(0);
       setSelectedClient("");
       setValorVenta(0);
       setNumeroCuotas(0);
@@ -185,6 +182,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsDetallesVentaValid(true);
       setIsValorSeguroValid(true);
     }
+
+    if(decodeToken()?.user?.role === "Vendedor"){
+      setSelectedSeller(decodeToken()?.user?.Id);
+    }
+
   }, [isOpen]);
 
   const SellersOptions = sellers.map((seller) => ({
@@ -197,19 +199,21 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     label: client.NombreCompleto,
   }));
 
-  const handleSelectSeller = (sellerId: string | undefined) => {
+  const handleSelectSeller = (sellerId: Number | undefined) => {
     if (sellerId !== null) {
       setSelectedSeller(Number(sellerId));
     }
+
+    console.log(selectedSeller, "vendedor seleccionado");
   };
 
-  const handleSelectClient = (clientId: string | undefined) => {
+  const handleSelectClient = (clientId: Number | undefined) => {
     if (clientId !== null) {
       setSelectedClient(Number(clientId));
     }
-  };
 
-  console.log(decodeToken().user);
+    console.log(selectedClient, "cliente seleccionado");
+  };
 
   return (
     <div>
@@ -260,11 +264,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       decodeToken()?.user?.role === "Vendedor"
                         ? SellersOptions.find(
                             (option) => option.value === decodeToken()?.user?.Id
-                          )
+                          ) || null // Asegúrate de proporcionar un valor por defecto adecuado
                         : null
                     }
                     onChange={(selectedOption) =>
-                      handleSelectSeller(selectedOption?.value.toString())
+                      handleSelectSeller(selectedOption?.value)
                     }
                     isSearchable
                     isDisabled={decodeToken()?.user?.role === "Vendedor"}
@@ -278,7 +282,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     id="seller"
                     options={ClientsOptions}
                     onChange={(selectedOption) =>
-                      handleSelectClient(selectedOption?.value.toString())
+                      handleSelectClient(selectedOption?.value)
                     }
                     isSearchable
                     maxMenuHeight={170}

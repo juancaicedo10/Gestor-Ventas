@@ -21,8 +21,8 @@ function VentasByVendedor() {
     NombreVendedor: string;
     NombreCliente: string;
     Periodicidad: string;
-    CuotasPagadas: number;
-    ValorAbonado: number;
+    Pagadas: number;
+    Abonado: number;
   }
 
   const { id } = useParams<{ id: string }>();
@@ -38,7 +38,7 @@ function VentasByVendedor() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`
+        `http://localhost:5000/api/ventas/vendedor/${id}`
       )
       .then((res) => {
         setVentas(res.data);
@@ -52,7 +52,7 @@ function VentasByVendedor() {
 
     // Fetch vendedor info
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${id}`)
+      .get(`http://localhost:5000/api/vendedores/${id}`)
       .then((res) => setVendedor(res.data))
       .catch((err) => console.log(err));
   }, [id]);
@@ -201,13 +201,13 @@ function VentasByVendedor() {
                                 {new Intl.NumberFormat("es-CO", {
                                   style: "currency",
                                   currency: "COP",
-                                }).format(venta.ValorAbonado)}$
+                                }).format(venta.Abonado)}$
                               </div>
                               <div className="text-start">
                                 <span className="font-semibold flex flex-col text-blue-900">
                                   Pagadas:
                                 </span>
-                                {venta.CuotasPagadas}
+                                {venta.Pagadas}
                               </div>
                             </li>
                           </ul>
@@ -217,7 +217,7 @@ function VentasByVendedor() {
                             Ir a detalles de cuotas:
                           </h6>
                           <Link
-                            to={`/cuotas/${venta.Id}`}
+                            to={`/cuotas/${venta.Id}/${venta.NumeroVenta}`}
                             className="text-blue-900 font-semibold border-b-2 border-blue-900"
                           >
                             Cuotas Detalles
