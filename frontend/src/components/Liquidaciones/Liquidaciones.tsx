@@ -4,12 +4,16 @@ import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
 import decodeToken from "../../utils/tokenDecored";
 import SellIcon from "@mui/icons-material/Sell";
-import EmailIcon from "@mui/icons-material/Email";
-import PhoneIcon from "@mui/icons-material/Phone";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LiquidacionModal from "../../utils/Liquidacion/LiquidacionModal";
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import SavingsIcon from '@mui/icons-material/Savings';
+import PriceCheckIcon from '@mui/icons-material/PriceCheck';
+import PaidIcon from '@mui/icons-material/Paid';
+import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
+import MoneyOffIcon from '@mui/icons-material/MoneyOff';
+import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 
 interface Liquidacion {
   Id: number;
@@ -133,7 +137,7 @@ function Liquidaciones() {
                         <ul className="text-lg font-light flex flex-col">
                           <div className="grid grid-cols-2">
                             <li className="flex items-center my-1">
-                              <EmailIcon className="text-blue-800" />
+                              <AccountBalanceIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Base:</h3>
                                 <p>
@@ -145,7 +149,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <PhoneIcon className="text-blue-800" />
+                              <PaidIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Gastos:</h3>
                                 <p>
@@ -171,7 +175,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <StorefrontIcon className="text-blue-800" />
+                              <RequestQuoteIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Total Intereses:</h3>
                                 <p>
@@ -183,7 +187,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <StorefrontIcon className="text-blue-800" />
+                              <PriceCheckIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Seguros:</h3>
                                 <p>
@@ -195,7 +199,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <StorefrontIcon className="text-blue-800" />
+                              <MoneyOffIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Multas:</h3>
                                 <p>
@@ -207,7 +211,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <StorefrontIcon className="text-blue-800" />
+                              <SavingsIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Abono capital:</h3>
                                 <p>
@@ -219,7 +223,7 @@ function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <StorefrontIcon className="text-blue-800" />
+                              <LocalAtmIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Efectivo:</h3>
                                 <p>0,00</p>

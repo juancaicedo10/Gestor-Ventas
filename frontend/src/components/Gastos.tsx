@@ -2,7 +2,6 @@ import Sidebar from "./Sidebar";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SellIcon from "@mui/icons-material/Sell";
-import StoreIcon from "@mui/icons-material/Store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
@@ -15,6 +14,7 @@ import Select from "react-select";
 import Spinner from "../utils/Spinner";
 import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
 import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
+import PaymentsIcon from '@mui/icons-material/Payments';
 
 
 interface Gasto {
@@ -252,7 +252,7 @@ function Gastos() {
                 {gastos.map((gasto) => (
                   <li className="bg-white border rounded-md p-1 break-words" key={gasto.Id}>
                     <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
-                      <StoreIcon />
+                      <PaymentsIcon fontSize="large"/>
                       <h4>{gasto.Nombre}</h4>
                       {decodeToken()?.user.role === "Administrador" && (
                           <div className="relative inline-block text-left">

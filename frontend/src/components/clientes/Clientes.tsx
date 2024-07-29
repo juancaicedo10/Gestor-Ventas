@@ -7,12 +7,12 @@ import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import SellIcon from "@mui/icons-material/Sell";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NuevoClienteModal from "../../utils/Clientes/NuevoClienteModal";
 import ModificarClienteModal from "../../utils/Clientes/ModificarClienteModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ModalTest from "../ModalDeleteClient";
 import Spinner from "../../utils/Spinner";
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
 
 function Clientes() {
   interface Client {
@@ -104,7 +104,7 @@ function Clientes() {
                 : "Tus Clientes"}
             </h1>
             <button className="mx-4 text-blue-900">
-              <AddCircleIcon fontSize="large" onClick={toggleModal} />
+              <GroupAddIcon fontSize="large" onClick={toggleModal} />
             </button>
           </div>
           <div className="flex justify-center items-center px-1">

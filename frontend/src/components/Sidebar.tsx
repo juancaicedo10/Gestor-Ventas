@@ -3,13 +3,17 @@ import SellIcon from "@mui/icons-material/Sell";
 import PeopleIcon from "@mui/icons-material/People";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import { Link } from "react-router-dom";
 import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import decodeToken from "../utils/tokenDecored";
-import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import { useNavigate } from "react-router-dom";
+import HowToRegIcon from '@mui/icons-material/HowToReg';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
+import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
+import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
+import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -64,7 +68,7 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <SellIcon fontSize="large" />
+          <SupervisedUserCircleIcon fontSize="large" />
           <p hidden={!show} className="font-normal">
             Vendedores
           </p>
@@ -87,7 +91,7 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <AttachMoneyIcon fontSize="large" />
+          <SellIcon fontSize="large" />
           <p hidden={!show} className="font-normal">
             Ventas
           </p>
@@ -98,7 +102,7 @@ export default function Sidebar() {
               to="/gastos"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             >
-              <AdminPanelSettingsIcon fontSize="large" />
+              <PaymentsIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Gastos
               </p>
@@ -108,7 +112,7 @@ export default function Sidebar() {
               to="/abonos-retiros"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             >
-              <AdminPanelSettingsIcon fontSize="large" />
+              <AccountBalanceIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Abonos y Retiros
               </p>
@@ -118,7 +122,7 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <AdminPanelSettingsIcon fontSize="large" />
+              <HowToRegIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Clientes por aprobar
               </p>
@@ -128,7 +132,7 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <AdminPanelSettingsIcon fontSize="large" />
+              <FactCheckIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Ventas por aprobar
               </p>
@@ -138,7 +142,7 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <AdminPanelSettingsIcon fontSize="large" />
+              <ReceiptLongIcon fontSize="large" />
               <p hidden={!show} className="font-normal">
                 Liquidaciones
               </p>

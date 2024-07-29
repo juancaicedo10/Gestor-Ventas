@@ -3,10 +3,11 @@ import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
 import SellIcon from "@mui/icons-material/Sell";
-import PinDropIcon from "@mui/icons-material/PinDrop";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RegistrarAbonoRetiroModal from "../../utils/Abonos-Retiros/RegistrarAbonoRetiroModal";
 import Select from "react-select";
+import DescriptionIcon from '@mui/icons-material/Description';
+import AttachMoney from "@mui/icons-material/AttachMoney";
 
 interface Retiro {
   NombreVendedor: string;
@@ -183,7 +184,7 @@ function AbonosyRetiros() {
                           </span>
                         </li>
                         <li className="flex items-center my-1">
-                          <PinDropIcon className="text-blue-800" />
+                          <DescriptionIcon className="text-blue-800" />
                           <span className="mx-4">
                             <h3 className="font-bold text-xl text-blue-800">
                               Descripcion:
@@ -194,7 +195,7 @@ function AbonosyRetiros() {
                           </span>
                         </li>
                         <li className="flex items-center my-1">
-                          <PinDropIcon className="text-blue-800" />
+                          <AttachMoney className="text-blue-800" />
                           <span className="mx-4">
                             <h3 className="font-bold text-xl text-blue-800">
                               Liquidado:
