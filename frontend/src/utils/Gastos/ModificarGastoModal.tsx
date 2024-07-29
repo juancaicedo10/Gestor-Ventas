@@ -9,6 +9,7 @@ interface Seller {
 }
 
 interface TiposGastos {
+  Id: number;
   GastoId: number;
   Nombre: string;
   MontoMaximo: number;
@@ -28,7 +29,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
   Id
 }) => {
   const [selectedSeller, setSelectedSeller] = useState<string | number | undefined>(undefined);
-  const [selectedTipoGasto, setSelectedTipoGasto] = useState<string | number | undefined>(undefined);
+  const [selectedTipoGasto, setSelectedTipoGasto] = useState<number | undefined>(undefined);
 
   // properties to create sell
   const [fecha, setFecha] = useState<string>("");
@@ -153,7 +154,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (!isOpen) {
       setSelectedSeller("");
-      setSelectedTipoGasto("");
+      setSelectedTipoGasto(0);
       setFecha("");
       setMonto(0);
       setMontoMaximo(0);
@@ -170,7 +171,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
   }));
 
   const TiposGastosOptions = tiposGastos.map((tipo) => ({
-    value: tipo.GastoId,
+    value: tipo.Id,
     label: tipo.Nombre,
     MontoMaximo: tipo.MontoMaximo,
   }));
@@ -190,8 +191,6 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
     setSelectedTipoGasto(selectedOption?.value);
     setMontoMaximo(Number(selectedOption?.MontoMaximo));
   };
-
-  console.log(isOpen)
 
   return (
     <div>
@@ -253,7 +252,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
                     {!isMontoValid && (
                       <p className="text-red-500 text-xs">Este campo es obligatorio</p>
                     )}
-                    {monto > montoMaximo! && selectedTipoGasto != "" && (
+                    {monto > montoMaximo! && selectedTipoGasto != 0 && (
                       <p className="text-red-500 text-xs">El monto no puede ser mayor al monto máximo permitido</p>
                     )}
                   </div>
