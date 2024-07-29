@@ -144,6 +144,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
       setTelefono("");
       setCedula("");
       setDireccion("");
+      setFoto(null);
       setNombreValido(true);
       setCorreoValido(true);
       setTelefonoValido(true);
