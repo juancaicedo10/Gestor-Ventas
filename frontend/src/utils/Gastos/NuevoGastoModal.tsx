@@ -35,7 +35,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const fetchSellers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/vendedores", {
+      const response = await axios.get("https://backendgestorventas1.azurewebsites.net/api/vendedores", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       setSellers(response.data);
@@ -46,7 +46,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
 
   const fetchTiposGastos = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/gastos/tipos");
+      const response = await axios.get("https://backendgestorventas1.azurewebsites.net/api/gastos/tipos");
       setTiposGastos(response.data);
     } catch (error) {
       console.error("Error obteniendo tipos de gastos:", error);
@@ -76,7 +76,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({ isOpen, onClose, refreshGastos 
     };
 
     try {
-      await axios.post("http://localhost:5000/api/gastos", gasto, {
+      await axios.post("https://backendgestorventas1.azurewebsites.net/api/gastos", gasto, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       refreshGastos();

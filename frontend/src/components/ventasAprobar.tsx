@@ -31,7 +31,7 @@ function VentasAprobar() {
   const getVentasAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("http://localhost:5000/api/ventas/aprobar", {
+      const res = await axios.get("https://backendgestorventas1.azurewebsites.net/api/ventas/aprobar", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -48,7 +48,7 @@ function VentasAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `http://localhost:5000/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -69,7 +69,7 @@ function VentasAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `http://localhost:5000/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
         { aprobado: false },
         {
           headers: {
