@@ -24,9 +24,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   onClose,
   getVentas,
 }) => {
-  const [selectedSeller, setSelectedSeller] = useState<
-    number | undefined
-  >(undefined);
+  const [selectedSeller, setSelectedSeller] = useState<number | undefined>(
+    undefined
+  );
   const [selectedClient, setSelectedClient] = useState<
     string | number | undefined
   >(undefined);
@@ -49,8 +49,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
   const [isDetallesVentaValid, setIsDetallesVentaValid] =
     useState<boolean>(true);
-
-  console.log(setValorSeguro);
+  const [isSelectedClientValid, setIsSelectedSellerValid] =
+    useState<boolean>(true);
+  const [isSelectedSellerValid, setIsSelectedClientValid] =
+    useState<boolean>(true);
 
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
@@ -125,7 +127,15 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       isValid = false;
     }
 
+    if (!selectedClient || selectedClient === "") {
+      setIsSelectedClientValid(false);
+      isValid = false;
+    }
 
+    if (!selectedSeller || selectedSeller === 0) {
+      setIsSelectedSellerValid(false);
+      isValid = false;
+    }
 
     if (!isValid) return;
 
@@ -142,11 +152,15 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas1.azurewebsites.net/api/ventas", venta, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .post(
+        "https://backendgestorventas1.azurewebsites.net/api/ventas",
+        venta,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getVentas();
@@ -181,12 +195,13 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsFechaInicioValid(true);
       setIsDetallesVentaValid(true);
       setIsValorSeguroValid(true);
+      setIsSelectedClientValid(true);
+      setIsSelectedSellerValid(true);
     }
 
-    if(decodeToken()?.user?.role === "Vendedor"){
+    if (decodeToken()?.user?.role === "Vendedor") {
       setSelectedSeller(decodeToken()?.user?.Id);
     }
-
   }, [isOpen]);
 
   const SellersOptions = sellers.map((seller) => ({
@@ -201,6 +216,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
   const handleSelectSeller = (sellerId: Number | undefined) => {
     if (sellerId !== null) {
+      setIsSelectedSellerValid(true);
       setSelectedSeller(Number(sellerId));
     }
 
@@ -209,10 +225,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
   const handleSelectClient = (clientId: Number | undefined) => {
     if (clientId !== null) {
+      setIsSelectedClientValid(true);
       setSelectedClient(Number(clientId));
     }
-
-    console.log(selectedClient, "cliente seleccionado");
   };
 
   return (
@@ -275,6 +290,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     maxMenuHeight={170}
                     menuPlacement="auto"
                   />
+                  {!isSelectedSellerValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
                 </div>
                 <div className="mb-2">
                   <label htmlFor="">Cliente: </label>
@@ -288,6 +308,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     maxMenuHeight={170}
                     menuPlacement="auto"
                   />
+                  {!isSelectedClientValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
                 </div>
                 <section className="grid grid-cols-2 gap-4">
                   <div className="mb-2">
@@ -376,13 +401,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                         setIsValorSeguroValid(true);
                       }}
                     />
-                    {
-                      !isValorSeguroValid && (
-                        <p className="text-red-500 text-xs">
-                          Este campo es obligatorio
-                        </p>
-                      )
-                    }
+                    {!isValorSeguroValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
                   </section>
                   <section>
                     <label htmlFor="">Fecha Inicio:</label>
@@ -403,27 +426,27 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     )}
                   </section>
                 </div>
-              <label htmlFor="">Detalles venta:</label>
-              <textarea
-                name=""
-                id=""
-                cols={10}
-                rows={4}
-                className={`p-2 rounded-md border w-full ${
-                  !isDetallesVentaValid ? "border-red-500" : ""
-                }`}
-                style={{ resize: "none" }}
-                onChange={(e) => {
-                  setDetallesVenta(e.target.value);
-                  setIsDetallesVentaValid(true);
-                }}
-              ></textarea>
-              {!isDetallesVentaValid && (
-                <p className="text-red-500 text-xs">
-                  Este campo es obligatorio
-                </p>
-              )}
-                            </div>
+                <label htmlFor="">Detalles venta:</label>
+                <textarea
+                  name=""
+                  id=""
+                  cols={10}
+                  rows={4}
+                  className={`p-2 rounded-md border w-full ${
+                    !isDetallesVentaValid ? "border-red-500" : ""
+                  }`}
+                  style={{ resize: "none" }}
+                  onChange={(e) => {
+                    setDetallesVenta(e.target.value);
+                    setIsDetallesVentaValid(true);
+                  }}
+                ></textarea>
+                {!isDetallesVentaValid && (
+                  <p className="text-red-500 text-xs">
+                    Este campo es obligatorio
+                  </p>
+                )}
+              </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
