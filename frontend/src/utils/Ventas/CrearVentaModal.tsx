@@ -376,6 +376,13 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                         setIsValorSeguroValid(true);
                       }}
                     />
+                    {
+                      !isValorSeguroValid && (
+                        <p className="text-red-500 text-xs">
+                          Este campo es obligatorio
+                        </p>
+                      )
+                    }
                   </section>
                   <section>
                     <label htmlFor="">Fecha Inicio:</label>

@@ -144,7 +144,7 @@ function AbonosyRetiros() {
                       <section className="w-full p-2 flex items-center justify-center rounded-md bg-blue-900 text-white">
                         <span>
                           <h1 className="font-normal text-2xl py-2">
-                            {retiro.NombreVendedor.split(" ")
+                            {retiro?.NombreVendedor?.split(" ")
                               .slice(0, 2)
                               .join(" ")}
                           </h1>
