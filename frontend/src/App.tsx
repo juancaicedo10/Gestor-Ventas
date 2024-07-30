@@ -14,6 +14,9 @@ import PanelAdministracion from "./components/PanelAdministracion";
 import Gastos from "./components/Gastos";
 import Retiros from "./components/Abonos-Retiros/AbonosyRetiros";
 import Liquidaciones from "./components/Liquidaciones/Liquidaciones";
+import { ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 function App() {
   return (
     <>
@@ -104,6 +107,9 @@ function App() {
           }
         />
       </Routes>
+      <ToastContainer
+        autoClose={1000}
+      />
     </>
   );
 }

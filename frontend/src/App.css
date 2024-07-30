@@ -26,3 +26,24 @@ input:focus {
   border: 2px solid;
   border-color: #4A90E2;
 }
+
+
+.custom-toast-success {
+  background-color: #28a745; /* Verde para éxito */
+  color: white; /* Color del texto */
+}
+
+.custom-toast-error {
+  background-color: #dc3545; /* Rojo para error */
+  color: white; /* Color del texto */
+}
+
+.custom-toast-warning {
+  background-color: #ffc107; /* Amarillo para advertencia */
+  color: black; /* Color del texto */
+}
+
+.custom-toast-info {
+  background-color: #17a2b8; /* Azul para información */
+  color: white; /* Color del texto */
+}

@@ -8,6 +8,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ModeIcon from '@mui/icons-material/Mode';
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
+import { toast } from "react-toastify";
 
 interface VentaAprobar {
   Id: number;
@@ -57,9 +58,11 @@ function VentasAprobar() {
         }
       );
       console.log("Venta aprobada correctamente");
-      getVentasAprobar(); // Refresh the list after approving
+      getVentasAprobar();
+      toast.success("Venta aprobada correctamente");
     } catch (err) {
       console.error(err);
+      toast.error("Error al aprobar la venta");
     } finally {
       setIsLoading(false);
     }
@@ -78,9 +81,11 @@ function VentasAprobar() {
         }
       );
       console.log("Venta rechazada correctamente");
+      toast.success("Venta rechazada correctamente");
       getVentasAprobar(); // Refresh the list after rejecting
     } catch (err) {
       console.error(err);
+      toast.error("Error al rechazar la venta");
     } finally {
       setIsLoading(false);
     }
@@ -123,9 +128,9 @@ function VentasAprobar() {
                 {sellsToApprove.map((venta) => (
                   <ul
                     key={venta.Id}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center md:place-items-start md:ml-4 px-2"
+                    className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center md:place-items-start md:ml-4 px-2"
                   >
-                    <li className="flex flex-col w-full">
+                    <li className="flex flex-col w-full mb-2">
                       <div className="w-full">
                         <button
                           className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Spinner from "../Spinner";
+import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
@@ -134,10 +135,12 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
         .then(() => {
           console.log("CLIENTE CREADO EXITOSAMENTE");
           getClients();
+          toast.success("Cliente modificado correctamente");
         })
         .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error creando cliente:", error);
+      toast.error("Error al modificar el cliente");
     }
     onClose();
   };

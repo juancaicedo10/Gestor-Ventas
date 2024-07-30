@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import axios from "axios";
 import decodeToken from "../tokenDecored"; // Importa CSSProperties desde React
+import { toast } from "react-toastify";
 
 interface Seller {
   Id: number;
@@ -210,10 +211,12 @@ const CrearVentaModal: React.FC<ModalProps> = ({
         console.log("Venta CREADA EXITOSAMENTE");
         getVentas();
         onClose();
+        toast.success(decodeToken()?.user?.role === "Administrador" ? "Venta creada exitosamente" : "Venta enviada a aprobacion");
       })
       .catch((err) => {
         console.log(err);
         onClose();
+        toast.error("Error creando venta");
       });
   };
 
@@ -242,6 +245,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsValorSeguroValid(true);
       setIsSelectedClientValid(true);
       setIsSelectedSellerValid(true);
+      setIsDisabled(false);
     }
 
     if (decodeToken()?.user?.role === "Vendedor") {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import decodeToken from "../tokenDecored";
+import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
@@ -97,10 +98,12 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
           setCedulaValido(true);
           setDireccionValido(true);
           getClients();
+          toast.success(decodeToken()?.user.role === "Administrador" ? "Cliente creado exitosamente" : "Cliente enviado a aprobacion");
         })
         .catch((err) => console.log(err));
     } catch (error) {
       console.error("Error creando cliente:", error);
+      toast.error("Error creando cliente");
     }
     onClose();
   };

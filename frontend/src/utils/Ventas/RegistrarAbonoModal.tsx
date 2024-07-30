@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
@@ -98,6 +99,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
           onClose();
           getCuotas();
           getDataCuotas();
+          toast.success("Abono registrado correctamente");
         });
     
   };

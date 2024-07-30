@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import decodeToken from "../tokenDecored";
+import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
@@ -131,9 +132,12 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
         setContraseñaValido(true);
         setFoto(null);
         getClients();
+        toast.success("Vendedor creado correctamente");
       })
-      .catch((err) => console.log(err));
-
+      .catch((err) => {
+        console.log(err)
+        toast.error("Error creando el vendedor", err);
+      });
     onClose();
   };
 

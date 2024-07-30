@@ -7,6 +7,7 @@ import Spinner from "../../utils/Spinner";
 import ClientsImage from "../../images/clients.png";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import { toast } from "react-toastify";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -51,11 +52,15 @@ function clientesAprobar() {
           },
         }
       );
-      setRefresh(!refresh); // Esto actualizará el estado refresh, lo que a su vez activará el useEffect
+      setRefresh(!refresh);
+      toast.success(approval.aprobado ? "Cliente aprobado" : "Cliente rechazado");
     } catch (error) {
       console.error("Error al aprobar cliente", error);
     }
   };
+
+
+  
 
   return (
     <section className="w-full">
@@ -96,7 +101,7 @@ function clientesAprobar() {
                       </button>
                       <button
                         className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
-                        onClick={() => console.log("rechazado")}
+                        onClick={() => HandleApprove(client.Id, { aprobado: false })}
                       >
                         <div className="w-full flex justify-between">
                         <h5>Rechazar</h5>

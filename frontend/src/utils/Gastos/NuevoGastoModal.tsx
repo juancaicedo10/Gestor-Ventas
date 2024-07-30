@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import decodeToken from "../tokenDecored";
+import { toast } from "react-toastify";
 
 interface Seller {
   Id: number;
@@ -18,12 +19,14 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   refreshGastos: () => void;
+  handleSearch: () => void;
 }
 
 const NuevoGastoModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   refreshGastos,
+  handleSearch,
 }) => {
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(
     undefined
@@ -99,8 +102,11 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       );
       refreshGastos();
       onClose();
+      handleSearch();
+      toast.success(`Gasto registrado correctamente`);
     } catch (error) {
       console.error("Error creando gasto:", error);
+      toast.error("Error registrando el gasto");
       onClose();
     }
   };

@@ -371,6 +371,7 @@ function Gastos() {
                   isOpen={isOpenModal}
                   onClose={() => setIsOpenModal(false)}
                   refreshGastos={getGastos}
+                  handleSearch={getGastosByVendedor}
                 />
                 <ModificarGastoModal 
                 isOpen={isOpenEditModal}
