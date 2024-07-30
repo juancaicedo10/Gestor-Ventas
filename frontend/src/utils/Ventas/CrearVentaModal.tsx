@@ -49,13 +49,44 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
   const [isDetallesVentaValid, setIsDetallesVentaValid] =
     useState<boolean>(true);
-  const [isSelectedClientValid, setIsSelectedSellerValid] =
+  const [isSelectedClientValid, setIsSelectedClientValid] =
     useState<boolean>(true);
-  const [isSelectedSellerValid, setIsSelectedClientValid] =
+  const [isSelectedSellerValid, setIsSelectedSellerValid] =
     useState<boolean>(true);
+
+  const [isDiasValid, setIsDiasValid] = useState<boolean>(false);
+
+  const [diasSelected, setDiasSelected] = useState<boolean>(false);
 
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
+
+  const periodos = [
+    {
+      value: 0,
+      label: "Dias",
+    },
+    {
+      value: 1,
+      label: "Diario",
+    },
+    {
+      value: 7,
+      label: "Semanal",
+    },
+    {
+      value: 14,
+      label: "Catorcenal",
+    },
+    {
+      value: 15,
+      label: "Quincenal",
+    },
+    {
+      value: 30,
+      label: "Mensual",
+    },
+  ];
 
   const getSellers = async () => {
     try {
@@ -96,6 +127,14 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     let isValid = true;
 
+    console.log(isSelectedSellerValid, "seller selected");
+
+    if (!selectedSeller || selectedSeller === 0) {
+
+      setIsSelectedSellerValid(false);
+      isValid = false;
+    }
+
     if (!valorVenta) {
       setIsValorVentaValid(false);
       isValid = false;
@@ -132,8 +171,8 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       isValid = false;
     }
 
-    if (!selectedSeller || selectedSeller === 0) {
-      setIsSelectedSellerValid(false);
+    if (diasSelected && !isDiasValid) {
+      setIsDiasValid(false);
       isValid = false;
     }
 
@@ -200,6 +239,8 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     }
 
     if (decodeToken()?.user?.role === "Vendedor") {
+      setIsSelectedSellerValid(true);
+      console.log(isSelectedSellerValid, "seller");
       setSelectedSeller(decodeToken()?.user?.Id);
     }
   }, [isOpen]);
@@ -219,14 +260,23 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsSelectedSellerValid(true);
       setSelectedSeller(Number(sellerId));
     }
-
-    console.log(selectedSeller, "vendedor seleccionado");
   };
 
   const handleSelectClient = (clientId: Number | undefined) => {
     if (clientId !== null) {
       setIsSelectedClientValid(true);
       setSelectedClient(Number(clientId));
+    }
+  };
+
+  const handleSelectPeriodicidad = (periodicidad: any) => {
+    if (periodicidad.value == 0) {
+      setDiasSelected(true);
+      setIsPeriodicidadValid(true);
+    } else {
+      setDiasSelected(false);
+      setPeriodicidad(Number(periodicidad.value));
+      setIsPeriodicidadValid(true);
     }
   };
 
@@ -355,15 +405,12 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                 <div className="grid grid-cols-2 gap-4 mb-2">
                   <section>
                     <label htmlFor="periodicidad">Periodicidad:</label>
-                    <input
-                      type="number"
-                      className={`p-2 rounded-md border w-full ${
-                        !isPeriodicidadValid ? "border-red-500" : ""
-                      }`}
-                      onChange={(e) => {
-                        setPeriodicidad(Number(e.target.value));
-                        setIsPeriodicidadValid(true);
-                      }}
+                    <Select
+                      options={periodos}
+                      onChange={(e) => handleSelectPeriodicidad(e)}
+                      isSearchable={true}
+                      placeholder="periodicidad"
+                      className="w-full"
                     />
                     {!isPeriodicidadValid && (
                       <p className="text-red-500 text-xs">
@@ -426,6 +473,25 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     )}
                   </section>
                 </div>
+                {diasSelected && (
+                  <>
+                    <label htmlFor="dias">Dias</label>
+                    <input
+                      type="number"
+                      className="p-2 rounded-md border w-full mb-2"
+                      placeholder="ingresa los dias"
+                      onChange={(e) => {
+                        setPeriodicidad(Number(e.target.value));
+                        setIsDiasValid(true);
+                      }}
+                    />
+                    {!isDiasValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </>
+                )}
                 <label htmlFor="">Detalles venta:</label>
                 <textarea
                   name=""

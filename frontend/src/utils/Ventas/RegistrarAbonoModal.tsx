@@ -95,6 +95,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
         )
         .then(() => {
           console.log("CUOTA CREADA EXITOSAMENTE");
+          onClose();
           getCuotas();
           getDataCuotas();
         });
