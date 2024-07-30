@@ -124,13 +124,11 @@ function VentasAprobar() {
                 </div>
               </div>
             ) : (
-              <div>
+              <ul
+              className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2"
+            >
                 {sellsToApprove.map((venta) => (
-                  <ul
-                    key={venta.Id}
-                    className="grid grid-cols-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-center md:place-items-start md:ml-4 px-2"
-                  >
-                    <li className="flex flex-col w-full mb-2">
+                    <li key={venta.Id} className="flex flex-col w-full mb-2">
                       <div className="w-full">
                         <button
                           className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
@@ -211,9 +209,8 @@ function VentasAprobar() {
                         </p>
                       </div>
                     </li>
-                  </ul>
                 ))}
-              </div>
+              </ul>
             )}
           </div>
         )}
