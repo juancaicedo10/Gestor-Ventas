@@ -11,8 +11,8 @@ import AccessAlarm from "@mui/icons-material/AccessAlarm";
 
 interface VentaAprobar {
   Id: number;
-  ClienteNombreCompleto: string;
-  VendedorNombreCompleto: string;
+  NombreCliente: string;
+  NombreVendedor: string;
   ValorVenta: number;
   FechaInicio: Date;
   FechaFin: Date;
@@ -143,11 +143,11 @@ function VentasAprobar() {
                       <div className="bg-blue-900 rounded-md p-2 md:p-4">
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                           <span className="font-semibold mr-2">Cliente:</span>{" "}
-                          <h6 className="font-normal">{venta.ClienteNombreCompleto}</h6>
+                          <h6 className="font-normal">{venta.NombreCliente}</h6>
                         </p>
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                           <span className="font-semibold mr-2">Vendedor:</span>{" "}
-                          <h6 className="font-normal">{venta.VendedorNombreCompleto}</h6>
+                          <h6 className="font-normal">{venta.NombreVendedor}</h6>
                         </p>
                       </div>
                       <div className="bg-white rounded-md border shadow-sm p-2">
@@ -188,6 +188,13 @@ function VentasAprobar() {
                           <span className="m-1">
                             <h6 className="font-semibold">Periodicidad:</h6>
                             <span>cada {venta.Periodicidad} dias</span>
+                          </span>
+                        </p>
+                        <p className="text-lg text-blue-900 flex items-center">
+                          <ModeIcon />
+                          <span className="m-1">
+                            <h6 className="font-semibold flex">Tasa Interes:</h6>
+                            <span>{venta.TasaInteres} %</span>
                           </span>
                         </p>
                         <p className="text-lg text-blue-900 flex items-center">

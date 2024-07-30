@@ -61,6 +61,8 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [sellers, setSellers] = useState<Seller[]>([]);
   const [clients, setClients] = useState<Client[]>([]);
 
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
   const periodos = [
     {
       value: 0,
@@ -124,6 +126,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
   const handleCreateSell = (e: any) => {
     e.preventDefault();
+
+
+    setIsDisabled(true);
+    
 
     let isValid = true;
 
@@ -517,6 +523,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  disabled={isDisabled}
                 >
                   {decodeToken().user.role === "Administrador"
                     ? "Crear Venta"
