@@ -55,7 +55,7 @@ function Vendedores() {
   const getVendedores = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas1.azurewebsites.net/api/vendedores")
+      .get("http://localhost:5000/api/vendedores")
       .then((res) => {
         setVendedores(res.data);
         setIsLoading(false);

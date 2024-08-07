@@ -19,6 +19,7 @@ interface Liquidacion {
   Seguros: number;
   Multas: number;
   AbonoCapital: number;
+  Diferencia: number;
 }
 
 const LiquidacionModal: React.FC<ModalProps> = ({
@@ -43,6 +44,8 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
   const [vendedores, setVendedores] = useState([]);
 
+  const [isVendSelected, setIsVendSelected] = useState<boolean>(false);
+
   const [liquidacionData, setLiquidacionData] = useState<Liquidacion>(
     {} as Liquidacion
   );
@@ -55,7 +58,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/${sellerId}`,
+        `http://localhost:5000/api/liquidaciones/${sellerId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -86,12 +89,13 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     getDataLiquidacion(Number(sellerId));
     if (sellerId !== null) {
       setSelectedSeller(Number(sellerId));
+      setIsVendSelected(true);
     }
   };
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas1.azurewebsites.net/api/vendedores", {
+      const res = await axios.get("http://localhost:5000/api/vendedores", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -122,7 +126,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
+        `http://localhost:5000/api/liquidaciones/${selectedSeller}`,
          liquidacion,
         {
           headers: {
@@ -186,8 +190,12 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mt-4">
+                <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
+                    <label>ingrese la base total: </label>
+                    <input type="text" placeholder="base total" className="border-2 rounded-md py-1 px-1 border-gray-400"/>
+                  </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label>Vendedor: </label>
+                    <label>Seleccione un Vendedor: </label>
                     <Select
                       options={SellersOptions}
                       onChange={(e) => handleSelectSeller(e?.value)}
@@ -196,6 +204,12 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       className="w-full"
                     />
                   </div>
+                  {isVendSelected &&
+                  <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
+                    <label>Ingrese el efetivo: </label>
+                    <input type="text" placeholder="efetivo" className="border-2 rounded-md py-1 px-1 border-gray-400"/>
+                  </div>
+                  }
                   {isLoading ? (
                     <div className="w-full flex items-center justify-center min-h-[290px]">
                       <Spinner isLoading={isLoading} />
@@ -205,7 +219,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       <section className="grid grid-cols-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
-                            Base:
+                            Base vendedor:
                           </label>
                           <h3 className="font-normal">
                             {new Intl.NumberFormat("es-CO", {
@@ -294,11 +308,26 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                               }).format(0) ?? 0}</h3>
                         </div>
                       </section>
+                      <div className="w-full flex flex-col items-center justify-center rounded-md border-2 border-red-400">
+                        <h3 className="text-lg font-semibold text-blue-800">
+                          Diferencia:
+                        </h3>
+                        <h3 className="font-normal text-lg">
+                          {new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(totalAbonos) ?? 0}
+                        </h3>
+                      </div>
                     </>
                   )}
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex justify-between items-center">
+                <span className="text-xl">
+                  <label htmlFor="efectivo" className="text-blue-900">Debe entregar:</label>
+                  <h3>$ 5000</h3>
+                </span>
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"

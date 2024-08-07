@@ -59,7 +59,7 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas1.azurewebsites.net/api/gastos/tipo", TipoGasto, {
+      .post("http://localhost:5000/api/gastos/tipo", TipoGasto, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

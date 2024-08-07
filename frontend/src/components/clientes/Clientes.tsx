@@ -51,7 +51,7 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`https://backendgestorventas1.azurewebsites.net/api/clientes/vendedor/${VendedorId}`)
+        .get(`http://localhost:5000/api/clientes/vendedor/${VendedorId}`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -62,7 +62,7 @@ function Clientes() {
         });
     } else {
       axios
-        .get("https://backendgestorventas1.azurewebsites.net/api/clientes")
+        .get("http://localhost:5000/api/clientes")
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);

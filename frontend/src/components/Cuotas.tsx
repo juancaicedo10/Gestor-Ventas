@@ -15,8 +15,8 @@ interface Cuota {
   NumeroCuota: number;
   ValorCuota: number;
   SaldoMora: number;
-  Fecha: string;
-  ValorInteres: number;
+  FechaPago: string;
+  SaldoInteres: number;
   Pagada: boolean;
 }
 
@@ -26,7 +26,6 @@ interface DatosVenta {
   ValorCuotas: number;
   MoraTotal: number;
   TotalAbonado: number;
-
 }
 
 function Cuotas() {
@@ -36,14 +35,14 @@ function Cuotas() {
   const NumeroVenta = useParams()?.numeroVenta;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [cuotaId, setCuotaId] = useState<number>(0);
-  const [DatosVenta, setDatosVenta] = useState<DatosVenta | null>(null);
+  const [DatosVenta, setDatosVenta] = useState<DatosVenta>();
 
   console.log(cuotas);
 
   const getCuotas = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas1.azurewebsites.net/api/cuotas/${Id}`)
+      .get(`http://localhost:5000/api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -58,7 +57,7 @@ function Cuotas() {
 
   const getDatosVenta = async () => {
     await axios
-      .get(`https://backendgestorventas1.azurewebsites.net/api/cuotas/datos/${Id}`)
+      .get(`http://localhost:5000/api/cuotas/datos/${Id}`)
       .then((res) => {
         setDatosVenta(res.data);
         console.log("oe:",res.data);
@@ -135,7 +134,7 @@ function Cuotas() {
                   }).format(cuota.ValorCuota)}
                 </td>
                 <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
-                  {new Date(cuota.Fecha).toLocaleDateString("es-CO")}
+                  {new Date(cuota.FechaPago).toLocaleDateString("es-CO")}
                 </td>
                 <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
                 {new Intl.NumberFormat("es-CO", {
@@ -147,7 +146,7 @@ function Cuotas() {
                   { new Intl.NumberFormat("es-CO", {
                     style: "currency",
                     currency: "COP",
-                  }).format(cuota.ValorInteres) }$
+                  }).format(cuota.SaldoInteres) }$
                 </td>
                 <td className="text-center border-r border-black text-xs md:text-sm lg:text-lg px-1">
                   <span

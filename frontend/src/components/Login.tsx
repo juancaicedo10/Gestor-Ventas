@@ -22,7 +22,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "https://backendgestorventas1.azurewebsites.net/login",
+        "http://localhost:5000/login",
         data
       );
       console.log("Login correcto");

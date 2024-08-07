@@ -26,7 +26,7 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
   const getTipoGastoById = () => {
     axios
       .get(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/tipos/${GastoId}`,
+        `http://localhost:5000/api/gastos/tipos/${GastoId}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -71,7 +71,7 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
 
     axios
       .put(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/tipo/${GastoId}`,
+        `http://localhost:5000/api/gastos/tipo/${GastoId}`,
         TipoGasto,
         {
           headers: {

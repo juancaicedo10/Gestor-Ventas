@@ -51,7 +51,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [isDetallesVentaValid, setIsDetallesVentaValid] =
     useState<boolean>(true);
   const [isSelectedClientValid, setIsSelectedClientValid] =
-    useState<boolean>(true);
+    useState<boolean>(false);
   const [isSelectedSellerValid, setIsSelectedSellerValid] =
     useState<boolean>(true);
 
@@ -94,7 +94,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getSellers = async () => {
     try {
       await axios
-        .get("https://backendgestorventas1.azurewebsites.net/api/vendedores", {
+        .get("http://localhost:5000/api/vendedores", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -111,7 +111,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getClients = async () => {
     try {
       await axios
-        .get("https://backendgestorventas1.azurewebsites.net/api/clientes", {
+        .get("http://localhost:5000/api/clientes", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -134,8 +134,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     let isValid = true;
 
-    console.log(isSelectedSellerValid, "seller selected");
-
     if (!selectedSeller || selectedSeller === 0) {
 
       setIsSelectedSellerValid(false);
@@ -145,43 +143,55 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     if (!valorVenta) {
       setIsValorVentaValid(false);
       isValid = false;
+      console.log("es valor venta");
     }
     if (!numeroCuotas) {
       setIsNumeroCuotasValid(false);
       isValid = false;
+      console.log("es numero cuotas");
     }
     if (!periodicidad) {
       setIsPeriodicidadValid(false);
       isValid = false;
+      console.log("es periodicidad");
     }
     if (!tasaInteres) {
       setIsTasaInteresValid(false);
       isValid = false;
+      console.log("es tasa interes");
     }
     if (!fechaInicio) {
       setIsFechaInicioValid(false);
       isValid = false;
+      console.log("es fecha inicio");
     }
 
     if (!valorSeguro) {
       setIsValorSeguroValid(false);
       isValid = false;
+      console.log("es valor seguro");
     }
 
     if (!detallesVenta) {
       setIsDetallesVentaValid(false);
       isValid = false;
+      console.log("es detalles venta");
     }
 
     if (!selectedClient || selectedClient === "") {
+
       setIsSelectedClientValid(false);
       isValid = false;
+      console.log("es cliente");
     }
 
     if (diasSelected && !isDiasValid) {
       setIsDiasValid(false);
       isValid = false;
+
     }
+
+    setIsDisabled(false);
 
     if (!isValid) return;
 
@@ -199,7 +209,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        "https://backendgestorventas1.azurewebsites.net/api/ventas",
+        "http://localhost:5000/api/ventas",
         venta,
         {
           headers: {
@@ -266,16 +276,22 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   }));
 
   const handleSelectSeller = (sellerId: Number | undefined) => {
+
     if (sellerId !== null) {
       setIsSelectedSellerValid(true);
       setSelectedSeller(Number(sellerId));
+      setIsDisabled(false);
     }
   };
 
   const handleSelectClient = (clientId: Number | undefined) => {
+    console.log("entro a la seleccion del cliente")
     if (clientId !== null) {
-      setIsSelectedClientValid(true);
       setSelectedClient(Number(clientId));
+      setIsSelectedClientValid(true);
+      setIsDisabled(false);
+      
+      console.log("oe", clientId, selectedClient, isSelectedClientValid);
     }
   };
 

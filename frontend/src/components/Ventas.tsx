@@ -25,8 +25,8 @@ function Ventas() {
     NombreVendedor: string;
     NombreCliente: string;
     PeriodicidadNombre: string;
-    Pagadas: number;
-    Abonado: number;
+    CuotasPagadas: number;
+    ValorAbonado: number;
     ValorSeguro: number;
     TasaInteres: number;
     Liquidada: boolean;
@@ -46,7 +46,7 @@ function Ventas() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador"){
       axios
-      .get(`https://backendgestorventas1.azurewebsites.net/api/ventas/vendedor/${Id}`)
+      .get(`http://localhost:5000/api/ventas/vendedor/${Id}`)
       .then((res) => {
         setVentas(res.data);
         setIsLoading(false);
@@ -57,7 +57,7 @@ function Ventas() {
       });
     } else {
       axios
-      .get("https://backendgestorventas1.azurewebsites.net/api/ventas")
+      .get("http://localhost:5000/api/ventas")
       .then((res) => {
         setVentas(res.data);
         setIsLoading(false);
@@ -114,9 +114,9 @@ function Ventas() {
                           <span className="font-medium">Cliente:</span>{" "}
                           {venta.NombreCliente}
                         </p>
-                        <span className={`${venta.Liquidada ? 'bg-green-500' : 'bg-red-500'} py-1 px-2 rounded-md font-semibold mt-2`}>
+                        <span className={`${!venta.Liquidada ? 'bg-green-500' : 'bg-red-500'} py-1 px-2 rounded-md font-semibold mt-2`}>
 
-                          {venta.Liquidada ? "Liquidada" : "Pendiente por liquidar"}
+                          {venta.Liquidada ? "Completada" : "Activa"}
                         </span>
                       </header>
                       <p className="rounded-md border-2 p-2 mt-2 text-sm bg-white min-h-[100px]">
@@ -228,13 +228,13 @@ function Ventas() {
                               {new Intl.NumberFormat("es-CO", {
                                   style: "currency",
                                   currency: "COP",
-                                }).format(venta.Abonado)}$
+                                }).format(venta.ValorAbonado)}$
                             </div>
                             <div className="text-start">
                               <span className="font-semibold flex flex-col text-blue-900">
                                 Pagadas:
                               </span>
-                              {venta.Pagadas}
+                              {venta.CuotasPagadas}
                             </div>
                             <div>
                               <span className="font-semibold flex flex-col text-blue-900">

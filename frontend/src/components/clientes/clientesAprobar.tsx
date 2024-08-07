@@ -26,7 +26,7 @@ function clientesAprobar() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas1.azurewebsites.net/api/clientes/aprobar", {
+      .get("http://localhost:5000/api/clientes/aprobar", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -44,7 +44,7 @@ function clientesAprobar() {
   const HandleApprove = async (id: number, approval: { aprobado: boolean }) => {
     try {
       await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/clientes/aprobar/${id}`,
+        `http://localhost:5000/api/clientes/aprobar/${id}`,
         approval,
         {
           headers: {
