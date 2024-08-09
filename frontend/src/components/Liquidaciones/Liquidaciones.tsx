@@ -28,6 +28,7 @@ interface Liquidacion {
   Fecha: string;
   Multas: number;
   AbonoCapital: number;
+  Efectivo: number;
 }
 
 function Liquidaciones() {
@@ -226,7 +227,12 @@ function Liquidaciones() {
                               <LocalAtmIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Efectivo:</h3>
-                                <p>0,00</p>
+                                <p>
+                                {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(liquidacion.Efectivo)}
+                                </p>
                               </span>
                             </li>
                           </div>

@@ -25,14 +25,13 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   getDataCuotas,
   cuotaId,
 }) => {
-
   const [isLoading, setIsLoading] = useState(true);
 
-  const [valorAbono, setValorAbono] = useState<number>(0);
+  const [valorAbono, setValorAbono] = useState<string>("");
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
-  const [saldoInteres, setSaldoInteres] = useState<number>(0);
-  const [saldoMora, setSaldoMora] = useState<number>(0);
+  const [saldoInteres, setSaldoInteres] = useState<string>("");
+  const [saldoMora, setSaldoMora] = useState<string>("");
   const [cuota, setCuota] = useState<Cuota | null>(null);
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
@@ -47,74 +46,70 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
     let esValido = true;
 
-    if (!valorAbono || valorAbono === 0) {
+    if (!valorAbono || Number(valorAbono) === 0) {
       setIsValorAbonoValid(false);
       esValido = false;
-      console.log("valor abono invalido", esValido)
+      console.log("valor abono invalido", esValido);
     }
 
     if (!fechaPago) {
       setIsFechaPagoValid(false);
       esValido = false;
-      console.log("fecha pago invalido", esValido)
+      console.log("fecha pago invalido", esValido);
     }
 
     if (!saldoInteres) {
       setIsSaldoInteresValid(false);
       esValido = false;
-      console.log("saldo interes invalid ", esValido)
+      console.log("saldo interes invalid ", esValido);
     }
-
 
     if (!detallesAbono) {
       setIsDetallesAbonoValid(false);
       esValido = false;
-      console.log("detalles abono invalido", esValido)
+      console.log("detalles abono invalido", esValido);
     }
-
 
     if (!esValido) {
       return;
     }
 
-      await axios
-        .post(
-          `
+    await axios
+      .post(
+        `
         http://localhost:5000/api/cuotas/cuota/abonar/${cuotaId}`,
-          {
-            ValorAbono: valorAbono,
-            FechaAbono: fechaPago,
-            SaldoInteres: saldoInteres,
-            SaldoMora: saldoMora ?? 0,
-            DetallesAbono: detallesAbono,
+        {
+          ValorAbono: Number(valorAbono),
+          FechaAbono: fechaPago,
+          SaldoInteres: Number(saldoInteres),
+          SaldoMora: Number(saldoMora) ?? 0,
+          DetallesAbono: detallesAbono,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(() => {
-          console.log("CUOTA CREADA EXITOSAMENTE");
-          onClose();
-          getCuotas();
-          getDataCuotas();
-          toast.success("Abono registrado correctamente");
-        });
-    
+        }
+      )
+      .then(() => {
+        console.log("CUOTA CREADA EXITOSAMENTE");
+        onClose();
+        getCuotas();
+        getDataCuotas();
+        toast.success("Abono registrado correctamente");
+      });
   };
 
   const getCuotaById = async () => {
     setIsLoading(true);
     try {
       await axios
-        .get(
-          `http://localhost:5000/api/cuotas/cuota/${cuotaId}`
-        )
+        .get(`http://localhost:5000/api/cuotas/cuota/${cuotaId}`)
         .then((response) => {
           setCuota(response.data);
-          console.log(cuota, "cuota");
-          setFechaPago(new Date(response.data.FechaPago).toISOString().split("T")[0])
+          setFechaPago(
+            new Date(response.data.FechaPago).toISOString().split("T")[0]
+          );
           setIsLoading(false);
         });
     } catch (error) {
@@ -155,7 +150,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
               onSubmit={registrarAbono}
             >
               {" "}
-              
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
                   <h3
@@ -179,59 +173,67 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mt-4 w-full mb-2"></div>
-                  <div className="mb-2">
-                    <label htmlFor="">Valor Abono: </label>
-                    <input
-                      type="number"
-                      className={`p-2 rounded-md border w-full ${
-                        !isValorAbonoValid ? "border-red-500" : ""
-                      }`}
-                      placeholder="valor abono"
-                      onChange={(e) => {
-                        setValorAbono(Number(e.target.value));
-                        setIsValorAbonoValid(true);
-                      }}
-                    />
-                      {!isValorAbonoValid && (
-                      <p className="text-red-500 text-xs">
-                        Este campo es obligatorio
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="interes">
-                      Saldo Interes:{" "}
-                    </label>
-                    <input
-                      type="number"
-                      className={`p-2 rounded-md border w-full ${
-                        !isSaldoInteresValid ? "border-red-500" : ""
-                      }`}
-                      placeholder="saldo interes"
-                      onChange={(e) => {
-                        setSaldoInteres(Number(e.target.value));
-                        setIsSaldoInteresValid(true);
-                      }}
-                    />
-                    {!isSaldoInteresValid && (
-                      <p className="text-red-500 text-xs">
-                        Este campo es obligatorio
-                      </p>
-                    )}
-                  </div>
-                  <div>
-                    <label htmlFor="mora">Saldo Mora:</label>
-                    <input
-                      type="number"
-                      className={`p-2 rounded-md border w-full ${
-                        !isFechaPagoValid ? "border-red-500" : ""
-                      }`}
-                      placeholder="saldo mora"
-                      onChange={(e) => {
-                        setSaldoMora(Number(e.target.value));
-                      }}
-                    />
-                  </div>
+                <div className="mb-2">
+                  <label htmlFor="">Valor Abono: </label>
+                  <input
+                    type="text"
+                    className={`p-2 rounded-md border w-full ${
+                      !isValorAbonoValid ? "border-red-500" : ""
+                    }`}
+                    placeholder="valor abono"
+                    onChange={(e) => {
+                      let value = e.target.value = e.target.value
+                      .replace(/[^.0-9]/g, '')
+                      console.log(value)
+                      setValorAbono(value); // Almacena el valor como cadena
+                      setIsValorAbonoValid(true);
+                    }}
+                    value={valorAbono}// Asegura que el valor del input se actualice correctamente
+                  />
+                  {!isValorAbonoValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="interes">Saldo Interes: </label>
+                  <input
+                    type="text"
+                    className={`p-2 rounded-md border w-full ${
+                      !isSaldoInteresValid ? "border-red-500" : ""
+                    }`}
+                    placeholder="saldo interes"
+                    onChange={(e) => {
+                      let value = e.target.value = e.target.value
+                      .replace(/[^.0-9]/g, '')
+                      setSaldoInteres(value);
+                      setIsSaldoInteresValid(true);
+                    }}
+                    value={saldoInteres}
+                  />
+                  {!isSaldoInteresValid && (
+                    <p className="text-red-500 text-xs">
+                      Este campo es obligatorio
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label htmlFor="mora">Saldo Mora:</label>
+                  <input
+                    type="text"
+                    className={`p-2 rounded-md border w-full ${
+                      !isFechaPagoValid ? "border-red-500" : ""
+                    }`}
+                    placeholder="saldo mora"
+                    onChange={(e) => {
+                      let value = e.target.value = e.target.value
+                      .replace(/[^.0-9]/g, '')
+                      setSaldoMora(value);
+                    }}
+                    value={saldoMora}
+                  />
+                </div>
                 <div>
                   <label htmlFor="fecha">Fecha Pago:</label>
                   <input

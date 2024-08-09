@@ -10,7 +10,7 @@ interface Seller {
 }
 
 interface TipoGasto {
-  Id: number;
+  GastoId: number;
   Nombre: string;
   MontoMaximo: number;
 }
@@ -140,7 +140,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   }));
 
   const tiposGastosOptions = tiposGastos.map((tipo) => ({
-    value: tipo.Id,
+    value: tipo.GastoId,
     label: tipo.Nombre,
     montoMaximo: tipo.MontoMaximo,
   }));

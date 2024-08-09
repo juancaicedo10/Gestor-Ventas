@@ -12,7 +12,6 @@ import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 import decodeToken from "../utils/tokenDecored";
 
 function Ventas() {
-
   interface Venta {
     Id: number;
     FechaInicio: string;
@@ -36,6 +35,9 @@ function Ventas() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [fechaInicia, setIsFechaInicio] = useState("");
+  const [fechaFin, setIsFechaFin] = useState("");
+
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
   console.log(ventas);
@@ -44,29 +46,43 @@ function Ventas() {
 
   const getVentas = () => {
     setIsLoading(true);
-    if (decodeToken()?.user.role !== "Administrador"){
+    if (decodeToken()?.user.role !== "Administrador") {
       axios
-      .get(`http://localhost:5000/api/ventas/vendedor/${Id}`)
-      .then((res) => {
-        setVentas(res.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+        .get(`http://localhost:5000/api/ventas/vendedor/${Id}`)
+        .then((res) => {
+          setVentas(res.data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     } else {
       axios
-      .get("http://localhost:5000/api/ventas")
-      .then((res) => {
-        setVentas(res.data);
-        setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+        .get("http://localhost:5000/api/ventas")
+        .then((res) => {
+          setVentas(res.data);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
     }
+  };
+
+  const filter = () => {
+    if (fechaInicia === "" || fechaFin === "") {
+      return ventas;
+    }
+
+    const start = new Date(fechaInicia);
+    const end = new Date(fechaFin);
+
+    return ventas.filter((item) => {
+      const itemDate = new Date(item.FechaInicio);
+      return itemDate >= start && itemDate <= end;
+    });
   };
 
   useEffect(() => {
@@ -77,11 +93,26 @@ function Ventas() {
     <section>
       <Sidebar />
       <div className="ml-[64px]">
-        <header className="flex justify-center w-full border-b shadow-md bg-white">
-          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full font-bold">
-            { decodeToken()?.user.role === "Administrador" ? "ventas" : "Tus Ventas" }
+        <header className="flex flex-col-reverse items-center md:flex-row md:justify-between w-full border-b shadow-md bg-white">
+          <div className="flex items-center md:w-1/3 w-full justify-center">
+            <input
+              type="date"
+              className="border-2 rounded-md text-black p-2 border-blue-600 w-[43%]"
+              onChange={(e) => setIsFechaInicio(e.target.value)}
+            />
+            <span className="px-2 text-blue-800 font-semibold text-2xl">a</span>
+            <input
+              type="date"
+              className="border-2 rounded-md text-black p-2 border-blue-600 w-[43%]"
+              onChange={(e) => setIsFechaFin(e.target.value)}
+            />
+          </div>
+          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 font-bold md:w-1/3">
+            {decodeToken()?.user.role === "Administrador"
+              ? "ventas"
+              : "Tus Ventas"}
           </h1>
-          <button className="mx-4 text-blue-900">
+          <button className="text-blue-900 w-1/3 text-center md:text-end">
             <AddCircleIcon fontSize="large" onClick={toggleModal} />
           </button>
         </header>
@@ -102,20 +133,24 @@ function Ventas() {
                 />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
-                {ventas.map((venta) => (
+                {filter().map((venta) => (
                   <li>
                     <div className="flex flex-col m-2 p-2">
                       <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[150px]">
                         <SellIcon fontSize="large" className="text-white" />
                         <h1 className="text-xl pb-2 text-center">
-                          <span className="font-bold">Venta:</span> { venta.NumeroVenta }
+                          <span className="font-bold">Venta:</span>{" "}
+                          {venta.NumeroVenta}
                         </h1>
                         <p className="text-gray-300 text-lg mx-3 text-center">
                           <span className="font-medium">Cliente:</span>{" "}
                           {venta.NombreCliente}
                         </p>
-                        <span className={`${!venta.Liquidada ? 'bg-green-500' : 'bg-red-500'} py-1 px-2 rounded-md font-semibold mt-2`}>
-
+                        <span
+                          className={`${
+                            !venta.Liquidada ? "bg-green-500" : "bg-red-500"
+                          } py-1 px-2 rounded-md font-semibold mt-2`}
+                        >
                           {venta.Liquidada ? "Completada" : "Activa"}
                         </span>
                       </header>
@@ -137,7 +172,7 @@ function Ventas() {
                           <span className="font-semibold text-blue-900">
                             Numero Venta:
                           </span>{" "}
-                          { venta.NumeroVenta }
+                          {venta.NumeroVenta}
                         </li>
                         <li className="p-1">
                           <PersonIcon
@@ -183,7 +218,9 @@ function Ventas() {
                         </li>
                         <li className="p-1 text-blue-900 flex items-center">
                           <DateRangeIcon fontSize="small" />
-                          <span className="font-semibold text-blue-900">Fecha Fin:</span>{" "}
+                          <span className="font-semibold text-blue-900">
+                            Fecha Fin:
+                          </span>{" "}
                           <p className="text-black">
                             {new Date(venta.FechaFin).toLocaleDateString(
                               "es-ES"
@@ -219,16 +256,20 @@ function Ventas() {
                               {new Intl.NumberFormat("es-CO", {
                                 style: "currency",
                                 currency: "COP",
-                              }).format(venta.ValorSeguro)}$
+                              }).format(venta.ValorSeguro)}
+                              $
                             </div>
                           </li>
                           <li>
                             <div className="text-start flex flex-col">
-                              <span className="font-semibold text-blue-900">Abonado:</span>
+                              <span className="font-semibold text-blue-900">
+                                Abonado:
+                              </span>
                               {new Intl.NumberFormat("es-CO", {
-                                  style: "currency",
-                                  currency: "COP",
-                                }).format(venta.ValorAbonado)}$
+                                style: "currency",
+                                currency: "COP",
+                              }).format(venta.ValorAbonado)}
+                              $
                             </div>
                             <div className="text-start">
                               <span className="font-semibold flex flex-col text-blue-900">

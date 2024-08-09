@@ -20,6 +20,8 @@ interface Liquidacion {
   Multas: number;
   AbonoCapital: number;
   Diferencia: number;
+  EfectivoAbonosCompras: number;
+  EfectivoEntregar: number;
 }
 
 const LiquidacionModal: React.FC<ModalProps> = ({
@@ -27,10 +29,8 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   onClose,
   getGastos,
 }) => {
-
-
   //data de liquidacion
-  const [base, setBase] = useState<number>(0);
+  const [baseVendedor, setBaseVendedor] = useState<number>(0);
   const [gastos, setGastos] = useState<number>(0);
   const [totalAbonos, setTotalAbonos] = useState<number>(0);
   const [totalRetiros, setTotalRetiros] = useState<number>(0);
@@ -39,10 +39,15 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const [seguros, setSeguros] = useState<number>(0);
   const [multas, setMultas] = useState<number>(0);
   const [abonoCapital, setAbonoCapital] = useState<number>(0);
-
-
+  const [Difere, setDifere] = useState<number>(0);
+  const [efectivo, setEfectivo] = useState<number>(0);
+  const [efectivoAbonosCompras, setEfectivoAbonosCompras] = useState<number>(0);
+  const [efectivoEntregar, setEfectivoEntregar] = useState<number>(0);
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
+  const [abonosTransacciones, setAbonosTransacciones] = useState<number>(0);
+  const [retirosTransacciones, setRetirosTransacciones] = useState<number>(0);
   const [vendedores, setVendedores] = useState([]);
+  const [base, setBase] = useState<number>(0);
 
   const [isVendSelected, setIsVendSelected] = useState<boolean>(false);
 
@@ -54,39 +59,54 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const getDataLiquidacion = async (sellerId: number) => {
+  const getDataLiquidacion = async (sellerId: number, e: any) => {
+    e.preventDefault();
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `http://localhost:5000/api/liquidaciones/${sellerId}`,
+        `http://localhost:5000/api/liquidaciones/${sellerId}/${efectivo}/${base}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         }
       );
-      setLiquidacionData(res.data);
-      setBase(res.data.Base ?? 0);
-      setGastos(res.data.Gastos ?? 0);
-      setTotalAbonos(res.data.TotalAbonos ?? 0);
-      setTotalRetiros(res.data.TotalRetiros ?? 0);
-      setVentas(res.data.Ventas ?? 0);
-      setIntereses(res.data.Intereses ?? 0);
-      setSeguros(res.data.Seguros ?? 0);
-      setMultas(res.data.Multas ?? 0);
-      setAbonoCapital(res.data.AbonoCapital ?? 0);
+      const data = res.data;
+      setLiquidacionData(data);
+      setBaseVendedor(data?.Base ?? 0);
+      setGastos(data?.Gastos ?? 0);
+      setTotalAbonos(data?.Abonos ?? 0);
+      setTotalRetiros(data?.TotalRetiros ?? 0);
+      setVentas(data?.Ventas ?? 0);
+      setIntereses(data?.Intereses ?? 0);
+      setSeguros(data?.Seguros ?? 0);
+      setMultas(data?.Multas ?? 0);
+      setAbonoCapital(data?.AbonoCapital ?? 0);
+      setDifere(data?.Diferencia ?? 0);
+      setEfectivoAbonosCompras(data?.EfectivoAbonosCompras ?? 0);
+      setEfectivoEntregar(data?.EfectivoEntregar ?? 0);
+      setAbonosTransacciones(data?.AbonosTransacciones ?? 0);
+      setRetirosTransacciones(data?.RetirosTransacciones ?? 0);
       setIsLoading(false);
     } catch (err) {
-      console.error(err);
+      console.error("Error fetching liquidacion data:", err);
       setIsLoading(false);
     }
   };
 
-
-  console.log(base, gastos, totalAbonos, totalRetiros, ventas, intereses, seguros, multas, abonoCapital);
+  console.log(
+    baseVendedor,
+    gastos,
+    totalAbonos,
+    totalRetiros,
+    ventas,
+    intereses,
+    seguros,
+    multas,
+    abonoCapital
+  );
 
   const handleSelectSeller = (sellerId: string | undefined) => {
-    getDataLiquidacion(Number(sellerId));
     if (sellerId !== null) {
       setSelectedSeller(Number(sellerId));
       setIsVendSelected(true);
@@ -113,21 +133,29 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
+    console.log(efectivoEntregar, "efectivo a entregar");
+
     const liquidacion = {
-      Base: base,
+      BaseVendedor: baseVendedor,
       Gastos: gastos,
       Abonos: totalAbonos,
       Ventas: ventas,
+      AbonoCapital: abonoCapital,
+      Multas: multas,
       Intereses: intereses,
       Seguros: seguros,
-      Multas: multas,
-      AbonoCapital: abonoCapital
+      AbonosTransacciones: abonosTransacciones, 
+      RetirosTransacciones: retirosTransacciones, 
+      Efectivo: efectivo,
+      Diferencia: Difere,
+      EfectivoAbonosCompras: efectivoAbonosCompras,
+      EfectivoEntregar: efectivoEntregar,
     };
 
     axios
       .post(
         `http://localhost:5000/api/liquidaciones/${selectedSeller}`,
-         liquidacion,
+        liquidacion,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -190,9 +218,15 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mt-4">
-                <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
+                  <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label>ingrese la base total: </label>
-                    <input type="text" placeholder="base total" className="border-2 rounded-md py-1 px-1 border-gray-400"/>
+                    <input
+                      type="text"
+                      placeholder="base total"
+                      className="border rounded-md py-1 px-1 border-gray-600"
+                      onChange={(e) => setBase(Number(e.target.value))}
+                    />
+                    
                   </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label>Seleccione un Vendedor: </label>
@@ -204,12 +238,29 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       className="w-full"
                     />
                   </div>
-                  {isVendSelected &&
-                  <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label>Ingrese el efetivo: </label>
-                    <input type="text" placeholder="efetivo" className="border-2 rounded-md py-1 px-1 border-gray-400"/>
-                  </div>
-                  }
+                  {isVendSelected && (
+                    <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-600">
+                      <label>Ingrese el efectivo: </label>
+                      <div className="relative">
+                        <input
+                          type="text"
+                          placeholder="efectivo"
+                          className="border rounded-md border-gray-700 w-full py-1 pl-2"
+                          onChange={(e) => {
+                            setEfectivo(Number(e.target.value));
+                          }}
+                        />
+                        <button
+                          className="absolute right-0 top-1/2 -translate-y-1/2 text-white bg-blue-800 text-sm px-2 py-2 rounded-md"
+                          onClick={(e) =>
+                            getDataLiquidacion(selectedSeller ?? 0, e)
+                          }
+                        >
+                          calcular
+                        </button>
+                      </div>
+                    </div>
+                  )}
                   {isLoading ? (
                     <div className="w-full flex items-center justify-center min-h-[290px]">
                       <Spinner isLoading={isLoading} />
@@ -223,9 +274,9 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </label>
                           <h3 className="font-normal">
                             {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(base) ?? 0}
+                              style: "currency",
+                              currency: "COP",
+                            }).format(baseVendedor) ?? 0}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -233,10 +284,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Gastos:
                           </label>
                           <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(gastos) ?? 0}
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(gastos) ?? 0}
                           </h3>
                         </div>
                       </section>
@@ -246,10 +297,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Total Ventas:
                           </label>
                           <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(ventas) ?? 0}
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(ventas) ?? 0}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -257,10 +308,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Total Intereses:
                           </label>
                           <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(intereses) ?? 0}
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(intereses) ?? 0}
                           </h3>
                         </div>
                       </section>
@@ -270,20 +321,46 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Seguros:
                           </label>
                           <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(seguros) ?? 0}
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(seguros) ?? 0}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Multas:
                           </label>
-                          <h3 className="font-normal text-lg">{new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(multas) ?? 0}</h3>
+                          <h3 className="font-normal text-lg">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(multas) ?? 0}
+                          </h3>
+                        </div>
+                      </section>
+                      <section className="grid grid-cols-2 mb-2">
+                      <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                      <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          Total Abonos:
+                        </label>
+                        <h3 className="font-normal text-lg">
+                          {new Intl.NumberFormat("es-CO", {
+                            style: "currency",
+                            currency: "COP",
+                          }).format(totalAbonos) ?? 0}
+                        </h3>
+                      </div>
+                        <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Efectivo:
+                          </label>
+                          <h3 className="font-normal text-lg">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(efectivo) ?? 0}
+                          </h3>
                         </div>
                       </section>
                       <section className="grid grid-cols-2 mb-2">
@@ -292,31 +369,33 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Abono Capital:
                           </label>
                           <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(abonoCapital) ?? 0}
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(abonoCapital) ?? 0}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
-                            Efectivo:
+                            Efectivo de Abonos, compras y seguros:
                           </label>
-                          <h3 className="font-normal text-lg">{new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(0) ?? 0}</h3>
+                          <h3 className="font-normal text-lg">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(efectivoAbonosCompras) ?? 0}
+                          </h3>
                         </div>
                       </section>
-                      <div className="w-full flex flex-col items-center justify-center rounded-md border-2 border-red-400">
+                      <div className="w-full flex flex-col items-center justify-center rounded-md border-2">
                         <h3 className="text-lg font-semibold text-blue-800">
                           Diferencia:
                         </h3>
                         <h3 className="font-normal text-lg">
                           {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(totalAbonos) ?? 0}
+                            style: "currency",
+                            currency: "COP",
+                          }).format(Difere) ?? 0}
                         </h3>
                       </div>
                     </>
@@ -325,8 +404,15 @@ const LiquidacionModal: React.FC<ModalProps> = ({
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex justify-between items-center">
                 <span className="text-xl">
-                  <label htmlFor="efectivo" className="text-blue-900">Debe entregar:</label>
-                  <h3>$ 5000</h3>
+                  <label htmlFor="efectivo" className="text-blue-900">
+                    Debe entregar:
+                  </label>
+                  <h3>
+                    {new Intl.NumberFormat("es-CO", {
+                      style: "currency",
+                      currency: "COP",
+                    }).format(efectivoEntregar) ?? 0}
+                  </h3>
                 </span>
                 <button
                   type="submit"

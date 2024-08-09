@@ -18,7 +18,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 
 
 interface Gasto {
-  Id: number;
+  GastoId: number;
   Nombre: string;
   Descripcion: string;
   MontoMaximo: number;
@@ -27,7 +27,7 @@ interface Gasto {
 interface GastoPorVendedor {
   Id: number;
   GastoId: number;
-  NombreGasto: string;
+  Nombre: string;
   Descripcion: string;
   Monto: number;
   Fecha: string;
@@ -250,7 +250,7 @@ function Gastos() {
               </div> : 
               <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                 {gastos.map((gasto) => (
-                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.Id}>
+                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.GastoId}>
                     <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
                       <PaymentsIcon fontSize="large"/>
                       <h4>{gasto.Nombre}</h4>
@@ -266,15 +266,15 @@ function Gastos() {
                                 onClick={() =>
                                   setOpenDropdownTipoId(
 
-                                    openDropdownTipoId !== gasto.Id
-                                      ? gasto.Id
+                                    openDropdownTipoId !== gasto.GastoId
+                                      ? gasto.GastoId
                                       : null
                                   )
                                 }
                               >
                                 <EditNoteIcon fontSize="medium" />
                               </button>
-                              {openDropdownTipoId === gasto.Id && (
+                              {openDropdownTipoId === gasto.GastoId && (
                                 <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
                                   <div
                                     className="py-1"
@@ -285,7 +285,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleTipoGastoEditModal(gasto.Id)
+                                        toggleTipoGastoEditModal(gasto.GastoId)
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -294,7 +294,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleCloseConfirmation(gasto.Id);
+                                        toggleCloseConfirmation(gasto.GastoId);
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -450,7 +450,7 @@ function Gastos() {
                         <span className="mx-2">
                           <h6>Nombre Gasto:</h6>
                           <p className="font-normal text-black">
-                            {gasto.NombreGasto}
+                            {gasto.Nombre}
                           </p>
                         </span>
                       </div>
