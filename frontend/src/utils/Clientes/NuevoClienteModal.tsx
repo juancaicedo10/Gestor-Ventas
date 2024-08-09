@@ -69,7 +69,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     try {
       axios
         .post(
-          "http://localhost:5000/api/clientes",
+          "https://backendgestorventas.azurewebsites.net//api/clientes",
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,

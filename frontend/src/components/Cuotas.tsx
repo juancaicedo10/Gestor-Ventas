@@ -53,7 +53,7 @@ function Cuotas() {
   const getCuotas = () => {
     setIsLoading(true);
     axios
-      .get(`http://localhost:5000/api/cuotas/${Id}`)
+      .get(`https://backendgestorventas.azurewebsites.net//api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -68,7 +68,7 @@ function Cuotas() {
 
   const getDatosVenta = async () => {
     await axios
-      .get(`http://localhost:5000/api/cuotas/datos/${Id}`)
+      .get(`https://backendgestorventas.azurewebsites.net//api/cuotas/datos/${Id}`)
       .then((res) => {
         setDatosVenta(res.data);
         console.log("oe:", res.data);

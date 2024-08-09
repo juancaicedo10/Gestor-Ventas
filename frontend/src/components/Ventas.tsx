@@ -48,7 +48,7 @@ function Ventas() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`http://localhost:5000/api/ventas/vendedor/${Id}`)
+        .get(`https://backendgestorventas.azurewebsites.net//api/ventas/vendedor/${Id}`)
         .then((res) => {
           setVentas(res.data);
           setIsLoading(false);
@@ -59,7 +59,7 @@ function Ventas() {
         });
     } else {
       axios
-        .get("http://localhost:5000/api/ventas")
+        .get("https://backendgestorventas.azurewebsites.net//api/ventas")
         .then((res) => {
           setVentas(res.data);
           setIsLoading(false);

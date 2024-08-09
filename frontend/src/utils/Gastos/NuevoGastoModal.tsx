@@ -50,7 +50,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/vendedores",
+        "https://backendgestorventas.azurewebsites.net//api/vendedores",
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -64,7 +64,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchTiposGastos = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:5000/api/gastos/tipos"
+        "https://backendgestorventas.azurewebsites.net//api/gastos/tipos"
       );
       setTiposGastos(response.data);
     } catch (error) {
@@ -94,7 +94,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
     try {
       await axios.post(
-        "http://localhost:5000/api/gastos",
+        "https://backendgestorventas.azurewebsites.net//api/gastos",
         gasto,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

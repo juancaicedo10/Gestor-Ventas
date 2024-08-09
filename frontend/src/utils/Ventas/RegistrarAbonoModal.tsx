@@ -77,7 +77,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .post(
         `
-        http://localhost:5000/api/cuotas/cuota/abonar/${cuotaId}`,
+        https://backendgestorventas.azurewebsites.net//api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
@@ -104,7 +104,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     setIsLoading(true);
     try {
       await axios
-        .get(`http://localhost:5000/api/cuotas/cuota/${cuotaId}`)
+        .get(`https://backendgestorventas.azurewebsites.net//api/cuotas/cuota/${cuotaId}`)
         .then((response) => {
           setCuota(response.data);
           setFechaPago(

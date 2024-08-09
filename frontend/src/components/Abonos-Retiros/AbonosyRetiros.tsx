@@ -32,8 +32,8 @@ function AbonosyRetiros() {
     setIsLoading(true);
     console.log("selectedSeller:", selectedSeller);
     Promise.all([
-      axios.get(`http://localhost:5000/api/abonos/${VendedorId}`),
-      axios.get(`http://localhost:5000/api/retiros/${VendedorId}`),
+      axios.get(`https://backendgestorventas.azurewebsites.net//api/abonos/${VendedorId}`),
+      axios.get(`https://backendgestorventas.azurewebsites.net//api/retiros/${VendedorId}`),
     ])
       .then(([abonosRes, retirosRes]) => {
         const combinedData = [...abonosRes.data.abonos, ...retirosRes.data.retiros];
@@ -58,7 +58,7 @@ function AbonosyRetiros() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/vendedores", {
+      const res = await axios.get("https://backendgestorventas.azurewebsites.net//api/vendedores", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

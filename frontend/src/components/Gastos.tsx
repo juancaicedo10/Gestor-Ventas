@@ -102,7 +102,7 @@ function Gastos() {
   const getTiposGastos = async () => {
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/gastos/tipos")
+      .get("https://backendgestorventas.azurewebsites.net//api/gastos/tipos")
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -116,7 +116,7 @@ function Gastos() {
   const getGastos = async () => {
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/gastos")
+      .get("https://backendgestorventas.azurewebsites.net//api/gastos")
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -131,7 +131,7 @@ function Gastos() {
   const getVendedores = async () => {
     setIsLoading(true);
     axios
-      .get("http://localhost:5000/api/vendedores")
+      .get("https://backendgestorventas.azurewebsites.net//api/vendedores")
       .then((res) => {
         setVendedores(res.data);
         console.log(res.data);
@@ -147,7 +147,7 @@ function Gastos() {
     setIsLoading(true);
     axios
       .get(
-        `http://localhost:5000/api/gastos/vendedor/${selectedSeller}`
+        `https://backendgestorventas.azurewebsites.net//api/gastos/vendedor/${selectedSeller}`
       )
       .then((res) => {
         setGastosPorVendedor(res.data);
