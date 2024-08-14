@@ -5,34 +5,27 @@ import axios from "axios";
 import Spinner from "../utils/Spinner";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ModeIcon from '@mui/icons-material/Mode';
-import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
 
-interface VentaAprobar {
+interface GastoAprobar {
   Id: number;
-  NombreCliente: string;
+  GastoId: number;
+  Nombre: string;
+  Descripcion: string;
+  Monto: number;
+  Fecha: string;
   NombreVendedor: string;
-  ValorVenta: number;
-  FechaInicio: Date;
-  FechaFin: Date;
-  NumeroCuotas: number;
-  DetallesVenta: number;
-  Periodicidad: number;
-  TasaInteres: number;
-  ValorSeguro: number;
-  NumeroVenta: string;
 }
 
-function VentasAprobar() {
-  const [sellsToApprove, setSellsToApprove] = useState<VentaAprobar[]>([]);
+function GastosAprobar() {
+  const [sellsToApprove, setSellsToApprove] = useState<GastoAprobar[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const getVentasAprobar = async () => {
+  const getgastosAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/ventas/aprobar", {
+      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/gastos/aprobar", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -45,11 +38,11 @@ function VentasAprobar() {
     }
   };
 
-  const handleAprobar = async (ventaId: number) => {
+  const handleAprobar = async (gastoId: number) => {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -57,22 +50,22 @@ function VentasAprobar() {
           },
         }
       );
-      console.log("Venta aprobada correctamente");
-      getVentasAprobar();
-      toast.success("Venta aprobada correctamente");
+      console.log("gasto aprobado correctamente");
+      getgastosAprobar();
+      toast.success("gasto aprobado correctamente");
     } catch (err) {
       console.error(err);
-      toast.error("Error al aprobar la venta");
+      toast.error("Error al aprobar el gasto");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleRechazar = async (ventaId: number) => {
+  const handleRechazar = async (gastoId: number) => {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
         { aprobado: false },
         {
           headers: {
@@ -80,19 +73,19 @@ function VentasAprobar() {
           },
         }
       );
-      console.log("Venta rechazada correctamente");
-      toast.success("Venta rechazada correctamente");
-      getVentasAprobar(); // Refresh the list after rejecting
+      console.log("gasto rechazado correctamente");
+      toast.success("gasto rechazado correctamente");
+      getgastosAprobar(); // Refresh the list after rejecting
     } catch (err) {
       console.error(err);
-      toast.error("Error al rechazar la venta");
+      toast.error("Error al rechazar el gasto");
     } finally {
       setIsLoading(false);
     }
   }
 
   useEffect(() => {
-    getVentasAprobar();
+    getgastosAprobar();
   }, []);
 
   console.log(sellsToApprove);
@@ -102,7 +95,7 @@ function VentasAprobar() {
       <Sidebar />
       <div className="ml-[63px]">
         <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
-          Ventas por aprobar
+          Gastos por aprobar
         </h1>
         {isLoading ? (
           <div className="w-full h-screen flex items-center justify-center">
@@ -115,11 +108,11 @@ function VentasAprobar() {
                 <div className="flex items-center flex-col justify-center w-full">
                   <img
                     src={SellImage}
-                    alt="venta imagen"
+                    alt="gasto imagen"
                     className="w-3/4 md:w-1/4"
                   />
                   <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-blue-900 py-4 text-center w-full md:w-1/2">
-                    En este momento no hay ninguna venta por aprobar
+                    En este momento no hay ninguna gasto por aprobar
                   </h1>
                 </div>
               </div>
@@ -127,30 +120,30 @@ function VentasAprobar() {
               <ul
               className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2"
             >
-                {sellsToApprove.map((venta) => (
-                    <li key={venta.Id} className="flex flex-col w-full mb-2">
+                {sellsToApprove.map((gasto) => (
+                    <li key={gasto.Id} className="flex flex-col w-full mb-2">
                       <div className="w-full">
                         <button
                           className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
-                          onClick={() => handleAprobar(venta.Id)}
+                          onClick={() => handleAprobar(gasto.Id)}
                         >
                           Aprobar
                         </button>
                         <button
                           className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
-                          onClick={() => handleRechazar(venta.Id)}
+                          onClick={() => handleRechazar(gasto.Id)}
                         >
                           Rechazar
                         </button>
                       </div>
                       <div className="bg-blue-900 rounded-md p-2 md:p-4">
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
-                          <span className="font-semibold mr-2">Cliente:</span>{" "}
-                          <h6 className="font-normal">{venta.NombreCliente}</h6>
+                          <span className="font-semibold mr-2">Vendedor:</span>{" "}
+                          <h6 className="font-normal">{gasto.NombreVendedor}</h6>
                         </p>
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
-                          <span className="font-semibold mr-2">Vendedor:</span>{" "}
-                          <h6 className="font-normal">{venta.NombreVendedor}</h6>
+                          <span className="font-semibold mr-2">Gasto:</span>{" "}
+                          <h6 className="font-normal">{gasto.Nombre}</h6>
                         </p>
                       </div>
                       <div className="bg-white rounded-md border shadow-sm p-2">
@@ -158,13 +151,13 @@ function VentasAprobar() {
                           <AttachMoneyIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
-                              Valor de la venta:
+                              Valor de la gasto:
                             </h6>
                             <span>
                               {new Intl.NumberFormat("en-US", {
                                 style: "currency",
                                 currency: "USD",
-                              }).format(venta.ValorVenta)}
+                              }).format(gasto.Monto)}
                             </span>
                           </span>
                         </p>
@@ -172,39 +165,18 @@ function VentasAprobar() {
                           <CalendarMonthIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
-                              Fecha de inicio Estimada:
+                              Fecha del Gasto:
                             </h6>
                             <span>
-                              {new Date(venta.FechaInicio).toLocaleDateString()}
+                              {new Date(gasto.Fecha).toLocaleDateString()}
                             </span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <AccountBalanceIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold">Numero de cuotas:</h6>
-                            <span>{venta.NumeroCuotas}</span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <AccessAlarm />
-                          <span className="m-1">
-                            <h6 className="font-semibold">Periodicidad:</h6>
-                            <span>cada {venta.Periodicidad} dias</span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <ModeIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold flex">Tasa Interes:</h6>
-                            <span>{venta.TasaInteres} %</span>
                           </span>
                         </p>
                         <p className="text-lg text-blue-900 flex items-center">
                           <ModeIcon />
                           <span className="m-1">
                             <h6 className="font-semibold flex">Detalles:</h6>
-                            <span>{venta.DetallesVenta}</span>
+                            <span>{gasto.Descripcion}</span>
                           </span>
                         </p>
                       </div>
@@ -219,4 +191,4 @@ function VentasAprobar() {
   );
 }
 
-export default VentasAprobar;
+export default GastosAprobar;

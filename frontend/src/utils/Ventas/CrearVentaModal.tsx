@@ -94,7 +94,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getSellers = async () => {
     try {
       await axios
-        .get("https://backendgestorventas.azurewebsites.net//api/vendedores", {
+        .get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -111,7 +111,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getClients = async () => {
     try {
       await axios
-        .get("https://backendgestorventas.azurewebsites.net//api/clientes", {
+        .get("https://backendgestorventas.azurewebsites.net/api/clientes", {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -209,7 +209,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        "https://backendgestorventas.azurewebsites.net//api/ventas",
+        "https://backendgestorventas.azurewebsites.net/api/ventas",
         venta,
         {
           headers: {

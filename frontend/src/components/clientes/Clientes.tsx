@@ -6,13 +6,15 @@ import PersonIcon from "@mui/icons-material/Person";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import SellIcon from "@mui/icons-material/Sell";
 import NuevoClienteModal from "../../utils/Clientes/NuevoClienteModal";
 import ModificarClienteModal from "../../utils/Clientes/ModificarClienteModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import ModalTest from "../ModalDeleteClient";
+import ModalTest from "./ModalDeleteClient";
 import Spinner from "../../utils/Spinner";
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import WorkIcon from '@mui/icons-material/Work';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
+
 
 function Clientes() {
   interface Client {
@@ -22,6 +24,8 @@ function Clientes() {
     NumeroDocumento: string;
     Telefono: string;
     Direccion: string;
+    Ocupacion : string;
+    Detalle : string;
     ValorDeuda: number;
   }
 
@@ -51,7 +55,7 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`https://backendgestorventas.azurewebsites.net//api/clientes/vendedor/${VendedorId}`)
+        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -62,7 +66,7 @@ function Clientes() {
         });
     } else {
       axios
-        .get("https://backendgestorventas.azurewebsites.net//api/clientes")
+        .get("https://backendgestorventas.azurewebsites.net/api/clientes")
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -123,9 +127,9 @@ function Clientes() {
                   >
                     <path
                       stroke="currentColor"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
                     />
                   </svg>
@@ -285,14 +289,19 @@ function Clientes() {
                           </span>
                         </li>
                         <li className="flex items-center my-1">
-                          <SellIcon className="text-blue-800" />
+                          <WorkIcon className="text-blue-800" />
                           <span className="mx-4">
-                            <h3 className="font-bold">Valor Deuda:</h3>
+                            <h3 className="font-bold">Ocupacion:</h3>
+                            <p>{client.Ocupacion}</p>
+                          </span>
+                        </li>
+
+                        <li className="flex items-center my-1">
+                          <BorderColorIcon className="text-blue-800" />
+                          <span className="mx-4">
+                            <h3 className="font-bold">Detalle:</h3>
                             <p>
-                              {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(client.ValorDeuda)}
+                                {client.Detalle}
                             </p>
                           </span>
                         </li>

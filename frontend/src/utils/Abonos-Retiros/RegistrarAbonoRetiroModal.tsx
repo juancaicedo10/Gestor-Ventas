@@ -43,7 +43,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        "https://backendgestorventas.azurewebsites.net//api/vendedores",
+        "https://backendgestorventas.azurewebsites.net/api/vendedores",
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -94,7 +94,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net//api/${
+        `https://backendgestorventas.azurewebsites.net/api/${
           selectedTipo === "Abono" ? "abonos" : "retiros"
         }`,
         AbonoRetiro,

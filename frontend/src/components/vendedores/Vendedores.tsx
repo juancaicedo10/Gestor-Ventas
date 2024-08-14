@@ -10,7 +10,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import NuevoVendedorModal from "../../utils/vendedores/NuevoVendedorModal";
 import ModificarVendedorModal from "../../utils/vendedores/ModificarVendedorModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import VendedorDeleteModal from "../ModalDeleteVendedor";
+import VendedorDeleteModal from "./ModalDeleteVendedor";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import Spinner from "../../utils/Spinner";
 import { Link } from "react-router-dom";
@@ -55,7 +55,7 @@ function Vendedores() {
   const getVendedores = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net//api/vendedores")
+      .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
       .then((res) => {
         setVendedores(res.data);
         setIsLoading(false);

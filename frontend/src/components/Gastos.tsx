@@ -102,7 +102,7 @@ function Gastos() {
   const getTiposGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net//api/gastos/tipos")
+      .get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos")
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -116,7 +116,7 @@ function Gastos() {
   const getGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net//api/gastos")
+      .get("https://backendgestorventas.azurewebsites.net/api/gastos")
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -131,7 +131,7 @@ function Gastos() {
   const getVendedores = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net//api/vendedores")
+      .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
       .then((res) => {
         setVendedores(res.data);
         console.log(res.data);
@@ -147,7 +147,7 @@ function Gastos() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net//api/gastos/vendedor/${selectedSeller}`
+        `https://backendgestorventas.azurewebsites.net/api/gastos/vendedor/${selectedSeller}`
       )
       .then((res) => {
         setGastosPorVendedor(res.data);
@@ -167,12 +167,15 @@ function Gastos() {
     getVendedores();
   }, []);
 
-  console.log(gastos, "gastos");
-  console.log(gastosPorVendedor, "gastos por vendedor");
 
 
   useEffect(() => {
+    if (decodeToken()?.user.role === "Vendedor") {
+      setSelectedSeller(decodeToken()?.user.Id);
+      getGastosByVendedor();
+    } else {
     getGastos();
+    }
   }, [activeView === "gastosPorVendedor"]);
 
 
@@ -217,7 +220,7 @@ function Gastos() {
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("gastosPorVendedor")}
           >
-            Gastos por vendedor
+            {decodeToken().user.role === 'Administrador' ? 'Gastos por vendedor ' : 'Tus Gastos'}
           </li>
         </ul>
         <NuevoTipoGastoModal
@@ -238,12 +241,14 @@ function Gastos() {
                 <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
                   Tipos de Gastos:
                 </h4>
+                {decodeToken()?.user.role === "Administrador" &&
                 <button
                   className="mx-4 text-blue-900"
                   onClick={() => setIsOpenTipoGastoModal(true)}
                 >
                   <AddCircleIcon fontSize="large" />
                 </button>
+               }
               </div>
               { isLoading ? <div className="w-full h-[70vh] flex items-center justify-center">
                 <Spinner isLoading={isLoading}/>
@@ -339,8 +344,8 @@ function Gastos() {
             </div>
           ) : (
             <div className="px-2 md:px-4">
-              <div className="w-full py-5 flex items-center justify-center">
-                <div className="md:w-1/2 flex font-normal text-lg">
+              <div className="w-full py-5 flex flex-col md:flex-row items-center justify-center">
+                <div className="md:w-1/2 flex font-normal text-sm md:text-lg">
                 <Select
                     id="seller"
                     options={SellersOptions}
@@ -350,6 +355,10 @@ function Gastos() {
                     }
                     isSearchable
                     isDisabled={decodeToken()?.user?.role === "Vendedor"}
+                    defaultValue={SellersOptions.find(
+                      (option) => option.value === selectedSeller
+                    )
+                    }
                     maxMenuHeight={170}
                     menuPlacement="auto"
                     className="w-full"
@@ -359,8 +368,8 @@ function Gastos() {
                     setSearched(true)
                     }}>Buscar</button>
                 </div>
-                <button className="flex h-full items-center justify-center text-white" onClick={() => setIsOpenModal(true)}>
-                  <AddCircleIcon fontSize="large" className="text-blue-900 absolute right-5"/>
+                <button className="flex mt-5 md:mt-0 w-full md:w-[50px] items-center justify-center text-white" onClick={() => setIsOpenModal(true)}>
+                  <AddCircleIcon fontSize="large" className="text-blue-900 absolute md:right-5"/>
                 </button>
               </div>
               <div>

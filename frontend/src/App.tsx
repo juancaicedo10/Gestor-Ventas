@@ -10,12 +10,12 @@ import Perfil from "./components/perfil";
 import VentasByVendedor from "./components/VentasByVendedor";
 import Cuotas from "../src/components/Cuotas";
 import VentasAprobar from "./components/ventasAprobar";
-import PanelAdministracion from "./components/PanelAdministracion";
 import Gastos from "./components/Gastos";
 import Retiros from "./components/Abonos-Retiros/AbonosyRetiros";
 import Liquidaciones from "./components/Liquidaciones/Liquidaciones";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import GastosAprobar from "./components/GastosAprobar";
 
 function App() {
   return (
@@ -72,11 +72,11 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route
-          path="/administracion"
+         <Route
+          path="/gastos/aprobar"
           element={
             <PrivateRoute>
-              <PanelAdministracion />
+              <GastosAprobar />
             </PrivateRoute>
           }
         />

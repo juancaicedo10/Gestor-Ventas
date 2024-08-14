@@ -46,7 +46,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
     let esValido = true;
 
-    if (!valorAbono || Number(valorAbono) === 0) {
+    if (!valorAbono) {
       setIsValorAbonoValid(false);
       esValido = false;
       console.log("valor abono invalido", esValido);
@@ -77,7 +77,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .post(
         `
-        https://backendgestorventas.azurewebsites.net//api/cuotas/cuota/abonar/${cuotaId}`,
+        https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
@@ -104,7 +104,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     setIsLoading(true);
     try {
       await axios
-        .get(`https://backendgestorventas.azurewebsites.net//api/cuotas/cuota/${cuotaId}`)
+        .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`)
         .then((response) => {
           setCuota(response.data);
           setFechaPago(
@@ -184,7 +184,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     onChange={(e) => {
                       let value = e.target.value = e.target.value
                       .replace(/[^.0-9]/g, '')
-                      console.log(value)
                       setValorAbono(value); // Almacena el valor como cadena
                       setIsValorAbonoValid(true);
                     }}

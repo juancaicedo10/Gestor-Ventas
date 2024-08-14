@@ -21,6 +21,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const [telefono, setTelefono] = useState("");
   const [cedula, setCedula] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [ocupacion, setOcupacion] = useState("");
+  const [detalle, setDetalle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [nombreValido, setNombreValido] = useState(true);
@@ -28,13 +30,15 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const [telefonoValido, setTelefonoValido] = useState(true);
   const [cedulaValido, setCedulaValido] = useState(true);
   const [direccionValido, setDireccionValido] = useState(true);
+  const [ocupacionValido, setOcupacionValido] = useState(true);
+  const [detalleValido, setDetalleValido] = useState(true);
 
   const getClient = async () => {
     try {
       setIsLoading(true);
       await axios
         .get(
-          `https://backendgestorventas.azurewebsites.net//api/clientes/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -47,6 +51,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           setTelefono(response.data.Telefono);
           setCedula(response.data.NumeroDocumento);
           setDireccion(response.data.Direccion);
+          setOcupacion(response.data.Ocupacion);
+          setDetalle(response.data.Detalle);
           setIsLoading(false);
           console.log(response.data);
         });
@@ -83,9 +89,16 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
       setDireccion(event.target.value);
       setDireccionValido(true);
     }
+    if (event.target.name === "ocupacion") {
+      setOcupacion(event.target.value);
+      setOcupacionValido(true);
+    }
+    if (event.target.name === "detalle") {
+      setDetalle(event.target.value);
+      setDetalleValido(true);
+    }
   };
 
-  console.log("nombre", nombre, "correo", correo, "telefono", telefono, "cedula", cedula, "direccion", direccion)
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -112,12 +125,22 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
       esValido = false;
     }
 
+    if (!ocupacion) {
+      setOcupacionValido(false);
+      esValido = false;
+    }
+
+    if (!detalle) {
+      setDetalleValido(false);
+      esValido = false;
+    }
+
     if (!esValido) return;
 
     try {
       axios
         .put(
-          `https://backendgestorventas.azurewebsites.net//api/clientes/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,
@@ -125,6 +148,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
             Telefono: telefono,
             Correo: correo,
             Direccion: direccion,
+            Ocupacion: ocupacion,
+            Detalle: detalle,
           },
           {
             headers: {
@@ -274,6 +299,42 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                       placeholder="Calle 123 # 123-123"
                     />
                     {!direccionValido && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </label>
+                  <label className="block text-base md:text-lg font-normal">
+                    <span className="text-gray-700">Ocupacion:</span>
+                    <input
+                      type="text"
+                      name="ocupacion"
+                      value={ocupacion}
+                      onChange={handleChange}
+                      className={`p-2 rounded-md border w-full text-sm ${
+                        !ocupacionValido ? "border-red-500" : ""
+                      }`}
+                      placeholder="Calle 123 # 123-123"
+                    />
+                    {!ocupacionValido && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </label>
+                  <label className="block text-base md:text-lg font-normal">
+                    <span className="text-gray-700">Detalle:</span>
+                    <input
+                      type="text"
+                      name="detalle"
+                      value={detalle}
+                      onChange={handleChange}
+                      className={`p-2 rounded-md border w-full text-sm ${
+                        !detalleValido ? "border-red-500" : ""
+                      }`}
+                      placeholder="Calle 123 # 123-123"
+                    />
+                    {!detalleValido && (
                       <p className="text-red-500 text-xs">
                         Este campo es obligatorio
                       </p>

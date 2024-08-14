@@ -14,12 +14,13 @@ import PaidIcon from '@mui/icons-material/Paid';
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
+import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 
 interface Liquidacion {
   Id: number;
   Base: number;
   Gastos: number;
-  TotalAbonos: number;
+  Abonos: number;
   TotalRetiros: number;
   Ventas: number;
   Intereses: number;
@@ -46,7 +47,7 @@ function Liquidaciones() {
   const getLiquidaciones = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net//api/liquidaciones/all")
+      .get("https://backendgestorventas.azurewebsites.net/api/liquidaciones/all")
       .then((res) => {
         setLiquidaciones(res.data);
         setIsLoading(false);
@@ -232,6 +233,18 @@ function Liquidaciones() {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Efectivo)}
+                                </p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Abonos:</h3>
+                                <p>
+                                {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(liquidacion.Abonos)}
                                 </p>
                               </span>
                             </li>

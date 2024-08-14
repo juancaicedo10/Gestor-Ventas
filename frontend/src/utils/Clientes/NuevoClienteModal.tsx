@@ -19,12 +19,16 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
   const [telefono, setTelefono] = useState("");
   const [cedula, setCedula] = useState("");
   const [direccion, setDireccion] = useState("");
+  const [ocupacion, setOcupacion] = useState("");
+  const [detalle, setDetalle] = useState("");
 
   const [nombreValido, setNombreValido] = useState(true);
   const [correoValido, setCorreoValido] = useState(true);
   const [telefonoValido, setTelefonoValido] = useState(true);
   const [cedulaValido, setCedulaValido] = useState(true);
   const [direccionValido, setDireccionValido] = useState(true);
+  const [ocupacionValido, setOcupacionValido] = useState(true);
+  const [detalleValido, setDetalleValido] = useState(true);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -49,6 +53,14 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
         setDireccion(value);
         setDireccionValido(true);
         break;
+      case "ocupacion":
+        setOcupacion(value);
+        setOcupacionValido(true);
+        break;
+      case "detalle":
+        setDetalle(value);
+        setDetalleValido(true);
+        break;
       default:
         break;
   };
@@ -63,13 +75,18 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     if (!telefono) { setTelefonoValido(false); esValido = false; }
     if (!cedula) { setCedulaValido(false); esValido = false; }
     if (!direccion) { setDireccionValido(false); esValido = false; }
+    if (!ocupacion) { setOcupacionValido(false); esValido = false; }
+    if (!detalle) { setDetalleValido(false); esValido = false; }
 
     if (!esValido) return;
+
+    console.log('ocupacion: ', ocupacion)
+    console.log('detalle: ', detalle)
 
     try {
       axios
         .post(
-          "https://backendgestorventas.azurewebsites.net//api/clientes",
+          "https://backendgestorventas.azurewebsites.net/api/clientes",
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,
@@ -78,6 +95,8 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
             Correo: correo,
             Contraseña: "12121212",
             Direccion: direccion,
+            Ocupacion: ocupacion,
+            Detalle: detalle,
           },
           {
             headers: {
@@ -92,11 +111,15 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
           setTelefono("");
           setCedula("");
           setDireccion("");
+          setOcupacion("");
+          setDetalle("");
           setNombreValido(true);
           setCorreoValido(true);
           setTelefonoValido(true);
           setCedulaValido(true);
           setDireccionValido(true);
+          setOcupacionValido(true);
+          setDetalleValido(true);
           getClients();
           toast.success(decodeToken()?.user.role === "Administrador" ? "Cliente creado exitosamente" : "Cliente enviado a aprobacion");
         })
@@ -115,11 +138,15 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
       setTelefono("");
       setCedula("");
       setDireccion("");
+      setOcupacion("");
+      setDetalle("");
       setNombreValido(true);
       setCorreoValido(true);
       setTelefonoValido(true);
       setCedulaValido(true);
       setDireccionValido(true);
+      setOcupacionValido(true);
+      setDetalleValido(true);
   }
 }, [isOpen])
 
@@ -245,6 +272,42 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
                   placeholder="Calle 123 # 123-123"
                 />
                 {!direccionValido && (
+                  <p className="text-red-500 text-xs">
+                    Este campo es obligatorio
+                  </p>
+                )}
+              </label>
+              <label className="block text-base md:text-lg font-normal mt-2">
+                <span className="text-gray-700">Ocupacion:</span>
+                <input
+                  type="text"
+                  name="ocupacion"
+                  value={ocupacion}
+                  onChange={handleChange}
+                  className={`p-2 rounded-md border w-full text-sm ${
+                    !ocupacionValido ? "border-red-500" : ""
+                  }`}
+                  placeholder="Carpintero"
+                />
+                {!ocupacionValido && (
+                  <p className="text-red-500 text-xs">
+                    Este campo es obligatorio
+                  </p>
+                )}
+              </label>
+              <label className="block text-base md:text-lg font-normal mt-2">
+                <span className="text-gray-700">Detalle:</span>
+                <input
+                  type="text"
+                  name="detalle"
+                  value={detalle}
+                  onChange={handleChange}
+                  className={`p-2 rounded-md border w-full text-sm ${
+                    !detalleValido ? "border-red-500" : ""
+                  }`}
+                  placeholder="Trabaja en..."
+                />
+                {!detalleValido && (
                   <p className="text-red-500 text-xs">
                     Este campo es obligatorio
                   </p>

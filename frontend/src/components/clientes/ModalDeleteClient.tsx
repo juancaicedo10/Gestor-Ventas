@@ -3,17 +3,17 @@ import axios from "axios";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  getVendedores: () => void;
+  getClients: () => void;
   Id: number;
 }
 
-const VendedorDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getVendedores}) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getClients}) => {
 
   const handleDelete = () => {
     try {
       axios
         .delete(
-          `https://backendgestorventas.azurewebsites.net//api/vendedores/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -22,7 +22,8 @@ const VendedorDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getVen
         )
         .then(() => {
           console.log("CLIENTE ELIMINADO EXITOSAMENTE");
-          getVendedores();
+          getClients();
+          onClose();
         })
         .catch((err) => console.log(err));
     } catch (error) {
@@ -51,7 +52,7 @@ const VendedorDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getVen
                     </h3>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500">
-                       ¿Estas Seguro que quieres Eliminar este Vendedor?
+                       ¿Estas Seguro que quieres Eliminar este cliente?
                       </p>
                     </div>
                   </div>
@@ -81,4 +82,4 @@ const VendedorDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getVen
   );
 }
 
-export default VendedorDeleteModal;
+export default Modal;

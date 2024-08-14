@@ -64,7 +64,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net//api/liquidaciones/${sellerId}/${efectivo}/${base}`,
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${sellerId}/${efectivo}/${base}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -94,6 +94,30 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     }
   };
 
+
+  useEffect(() => {
+
+    if (!isOpen) {
+      setBaseVendedor(0);
+      setGastos(0);
+      setTotalAbonos(0);
+      setTotalRetiros(0);
+      setVentas(0);
+      setIntereses(0);
+      setSeguros(0);
+      setMultas(0);
+      setAbonoCapital(0);
+      setDifere(0);
+      setEfectivo(0);
+      setEfectivoAbonosCompras(0);
+      setEfectivoEntregar(0);
+      setAbonosTransacciones(0);
+      setRetirosTransacciones(0);
+      setIsVendSelected(false);
+    }
+
+  }, [!isOpen])
+
   console.log(
     baseVendedor,
     gastos,
@@ -115,7 +139,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net//api/vendedores", {
+      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -154,7 +178,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net//api/liquidaciones/${selectedSeller}`,
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
         liquidacion,
         {
           headers: {
@@ -219,10 +243,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                 </header>
                 <div className="mt-4">
                   <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label>ingrese la base total: </label>
+                    <label>Ingrese la base para hoy: </label>
                     <input
                       type="text"
-                      placeholder="base total"
+                      placeholder="Base hoy"
                       className="border rounded-md py-1 px-1 border-gray-600"
                       onChange={(e) => setBase(Number(e.target.value))}
                     />
@@ -252,8 +276,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                         />
                         <button
                           className="absolute right-0 top-1/2 -translate-y-1/2 text-white bg-blue-800 text-sm px-2 py-2 rounded-md"
-                          onClick={(e) =>
-                            getDataLiquidacion(selectedSeller ?? 0, e)
+                          onClick={(e) => [
+                            getDataLiquidacion(selectedSeller ?? 0, e),
+                            setEfectivoEntregar(0)
+                          ]
                           }
                         >
                           calcular

@@ -15,7 +15,7 @@ const Dropdown = ( { Id, getClients, onEdit  } : Props ) => {
   const handleDelete = (e: any) => {
     e.preventDefault();
     try {
-      axios.delete(`https://backendgestorventas.azurewebsites.net//api/clientes/${Id}`, {
+      axios.delete(`https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

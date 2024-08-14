@@ -14,6 +14,7 @@ import FactCheckIcon from '@mui/icons-material/FactCheck';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
 import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
+import SavingsIcon from '@mui/icons-material/Savings';
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -68,8 +69,8 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <SupervisedUserCircleIcon fontSize="large" />
-          <p hidden={!show} className="font-normal">
+          <SupervisedUserCircleIcon fontSize="inherit" />
+          <p hidden={!show} className="font-normal text-xl">
             Vendedores
           </p>
         </Link>
@@ -80,8 +81,8 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <PeopleIcon fontSize="large" />
-          <p hidden={!show} className="font-normal">
+          <PeopleIcon fontSize="inherit" />
+          <p hidden={!show} className="font-normal text-xl">
             Clientes
           </p>
         </Link>
@@ -91,29 +92,28 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <SellIcon fontSize="large" />
-          <p hidden={!show} className="font-normal">
+          <SellIcon fontSize="inherit" />
+          <p hidden={!show} className="font-normal text-xl">
             Ventas
           </p>
         </Link>
-        {decodeToken()?.user.role === "Administrador" && (
-          <>
             <Link
               to="/gastos"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             >
-              <PaymentsIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
+              <PaymentsIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
                 Gastos
               </p>
             </Link>
-
+            {decodeToken()?.user.role === "Administrador" && (
+            <>
             <Link
               to="/abonos-retiros"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             >
-              <AccountBalanceIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
+              <AccountBalanceIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
                 Abonos y Retiros
               </p>
             </Link>
@@ -122,9 +122,19 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <HowToRegIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
+              <HowToRegIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
                 Clientes por aprobar
+              </p>
+            </Link>
+            <Link
+              to="/gastos/aprobar"
+              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              onClick={() => setShow(false)}
+            >
+              <SavingsIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
+                Gastos por aprobar
               </p>
             </Link>
             <Link
@@ -132,8 +142,8 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <FactCheckIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
+              <FactCheckIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
                 Ventas por aprobar
               </p>
             </Link>
@@ -142,8 +152,8 @@ export default function Sidebar() {
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
-              <ReceiptLongIcon fontSize="large" />
-              <p hidden={!show} className="font-normal">
+              <ReceiptLongIcon fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
                 Liquidaciones
               </p>
             </Link>
@@ -154,8 +164,8 @@ export default function Sidebar() {
           className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
-          <AccountCircleIcon fontSize="large" />
-          <p hidden={!show} className="font-normal">
+          <AccountCircleIcon fontSize="inherit" />
+          <p hidden={!show} className="font-normal text-xl">
             Perfil
           </p>
         </Link>
@@ -166,7 +176,7 @@ export default function Sidebar() {
         onClick={() => handleLogout()}
       >
         <LogoutIcon fontSize="large" />
-        <p hidden={!show} className="font-semibold text-2xl">
+        <p hidden={!show} className="font-semibold text-xl ml-3">
           Cerrar Sesion
         </p>
       </Link>

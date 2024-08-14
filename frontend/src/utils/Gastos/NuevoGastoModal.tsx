@@ -50,7 +50,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
-        "https://backendgestorventas.azurewebsites.net//api/vendedores",
+        "https://backendgestorventas.azurewebsites.net/api/vendedores",
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
@@ -64,7 +64,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchTiposGastos = async () => {
     try {
       const response = await axios.get(
-        "https://backendgestorventas.azurewebsites.net//api/gastos/tipos"
+        "https://backendgestorventas.azurewebsites.net/api/gastos/tipos"
       );
       setTiposGastos(response.data);
     } catch (error) {
@@ -94,7 +94,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
     try {
       await axios.post(
-        "https://backendgestorventas.azurewebsites.net//api/gastos",
+        "https://backendgestorventas.azurewebsites.net/api/gastos",
         gasto,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
@@ -103,7 +103,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       refreshGastos();
       onClose();
       handleSearch();
-      toast.success(`Gasto registrado correctamente`);
+      toast.success(decodeToken()?.user?.role === 'Administrador' ? `Gasto registrado correctamente` : `Gasto enviado a aprobacion correctamente`);
     } catch (error) {
       console.error("Error creando gasto:", error);
       toast.error("Error registrando el gasto");
@@ -114,6 +114,10 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   useEffect(() => {
     fetchSellers();
     fetchTiposGastos();
+
+    decodeToken().user?.role === "Vendedor" &&
+      setSelectedSeller(decodeToken().user?.Id);
+      setIsSelectedSellerValid(true);
   }, []);
 
   useEffect(() => {
@@ -185,7 +189,6 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
                   options={tiposGastosOptions}
                   onChange={(selectedOption) => {
                     setSelectedTipoGasto(selectedOption?.value);
-                    console.log(selectedOption);
                     setMontoMaximo(selectedOption?.montoMaximo);
                   }}
                   isSearchable
@@ -302,7 +305,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
                 type="submit"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
-                Guardar
+                {decodeToken()?.user?.role === 'Administrador' ? 'Guardar' : 'Enviar gasto a aprobacion'}
               </button>
               <button
                 type="button"
