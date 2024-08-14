@@ -314,7 +314,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                       className={`p-2 rounded-md border w-full text-sm ${
                         !ocupacionValido ? "border-red-500" : ""
                       }`}
-                      placeholder="Calle 123 # 123-123"
+                      placeholder="Carpintero"
                     />
                     {!ocupacionValido && (
                       <p className="text-red-500 text-xs">
@@ -332,7 +332,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                       className={`p-2 rounded-md border w-full text-sm ${
                         !detalleValido ? "border-red-500" : ""
                       }`}
-                      placeholder="Calle 123 # 123-123"
+                      placeholder="Trabaja en..."
                     />
                     {!detalleValido && (
                       <p className="text-red-500 text-xs">
