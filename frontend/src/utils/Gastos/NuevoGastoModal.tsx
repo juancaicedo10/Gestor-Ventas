@@ -47,6 +47,8 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const [tiposGastos, setTiposGastos] = useState<TipoGasto[]>([]);
   const [sellers, setSellers] = useState<Seller[]>([]);
 
+  const userRole = decodeToken()?.user?.role;
+
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
@@ -115,10 +117,10 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
     fetchSellers();
     fetchTiposGastos();
 
-    decodeToken().user?.role === "Vendedor" &&
-      setSelectedSeller(decodeToken().user?.Id);
-      setIsSelectedSellerValid(true);
   }, []);
+
+
+
 
   useEffect(() => {
     if (!isOpen) {
@@ -136,6 +138,13 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       setIsTipoGastoValid(true);
       setIsSelectedSellerValid(true);
     }
+
+
+    if (decodeToken()?.user?.role === 'Vendedor') {
+      setSelectedSeller(decodeToken()?.user?.Id);
+      setIsSelectedSellerValid(true);
+    }
+
   }, [isOpen]);
 
   const sellersOptions = sellers.map((seller) => ({
