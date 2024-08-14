@@ -21,8 +21,8 @@ function VentasByVendedor() {
     NombreVendedor: string;
     NombreCliente: string;
     Periodicidad: string;
-    Pagadas: number;
-    Abonado: number;
+    CuotasPagadas: number;
+    ValorAbonado: number;
   }
 
   const { id } = useParams<{ id: string }>();
@@ -57,8 +57,7 @@ function VentasByVendedor() {
       .catch((err) => console.log(err));
   }, [id]);
 
-  console.log(ventas);
-  console.log(vendedor);
+
   return (
     <section className="flex w-full">
       <Sidebar />
@@ -201,13 +200,13 @@ function VentasByVendedor() {
                                 {new Intl.NumberFormat("es-CO", {
                                   style: "currency",
                                   currency: "COP",
-                                }).format(venta.Abonado)}$
+                                }).format(venta.CuotasPagadas)}$
                               </div>
                               <div className="text-start">
                                 <span className="font-semibold flex flex-col text-blue-900">
                                   Pagadas:
                                 </span>
-                                {venta.Pagadas}
+                                {venta.CuotasPagadas}
                               </div>
                             </li>
                           </ul>
