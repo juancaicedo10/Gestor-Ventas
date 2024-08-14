@@ -20,7 +20,7 @@ function VentasByVendedor() {
     ValorVenta: number;
     NombreVendedor: string;
     NombreCliente: string;
-    Periodicidad: string;
+    PeriodicidadNombre: string;
     CuotasPagadas: number;
     ValorAbonado: number;
   }
@@ -144,7 +144,7 @@ function VentasByVendedor() {
                             <span className="font-semibold text-blue-900">
                               Periodicidad
                             </span>
-                            : {venta.Periodicidad}
+                            : {venta.PeriodicidadNombre}
                           </li>
                           <li className="p-1">
                             <DateRangeIcon
