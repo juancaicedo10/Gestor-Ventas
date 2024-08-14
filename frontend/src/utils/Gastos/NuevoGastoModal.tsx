@@ -47,8 +47,6 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const [tiposGastos, setTiposGastos] = useState<TipoGasto[]>([]);
   const [sellers, setSellers] = useState<Seller[]>([]);
 
-  const userRole = decodeToken()?.user?.role;
-
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
