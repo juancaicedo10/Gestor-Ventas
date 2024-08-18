@@ -47,7 +47,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const [abonosTransacciones, setAbonosTransacciones] = useState<number>(0);
   const [retirosTransacciones, setRetirosTransacciones] = useState<number>(0);
   const [vendedores, setVendedores] = useState([]);
-  const [base, setBase] = useState<number>(0);
 
   const [isVendSelected, setIsVendSelected] = useState<boolean>(false);
 
@@ -64,7 +63,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${sellerId}/${efectivo}/${base}`,
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${sellerId}/${efectivo}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -242,16 +241,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mt-4">
-                  <div className="flex flex-col w-full text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label>Ingrese la base para hoy: </label>
-                    <input
-                      type="text"
-                      placeholder="Base hoy"
-                      className="border rounded-md py-1 px-1 border-gray-600"
-                      onChange={(e) => setBase(Number(e.target.value))}
-                    />
-                    
-                  </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label>Seleccione un Vendedor: </label>
                     <Select
