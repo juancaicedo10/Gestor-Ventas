@@ -14,24 +14,23 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
   getGastos,
 }) => {
 
-  // properties to create sell
 
   const [nombreGasto, setNombreGasto] = useState<string>("");
   const [descripcionGasto, setDescripcionGasto] = useState<string>("");
   const [montoMaximo, setMontoMaximo] = useState<number>(0);
 
-  // const [isSellerValid, setIsSellerValid] = useState<boolean>(true);
-  // const [isClientValid, setIsClientValid] = useState<boolean>(true);
-  ;
   const [isNombreGastoValid, setIsNombreGastoValid] = useState<boolean>(false);
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
   const [isMontoMaximoValid, setIsMontoMaximoValid] = useState<boolean>(false);
-  // const [isValorSeguroValid, setIsValorSeguroValid] = useState<boolean>(true);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+
 
 
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    setIsDisabled(true);
 
 
     let isValid = true;
@@ -66,11 +65,13 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
       })
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
+        setIsDisabled(false);
         getGastos();
         onClose();
       })
       .catch((err) => {
         console.log(err);
+        setIsDisabled(false);
         onClose();
       });
   };
@@ -198,6 +199,7 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  disabled={isDisabled}
                 >
                   Crear Tipo de gasto
                 </button>

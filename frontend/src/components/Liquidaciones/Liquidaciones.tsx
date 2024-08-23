@@ -15,6 +15,8 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
 import MoneyOffIcon from '@mui/icons-material/MoneyOff';
 import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
+import Notificaciones from "../Notificaciones/Notificaciones";  
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 interface Liquidacion {
   Id: number;
@@ -36,6 +38,8 @@ function Liquidaciones() {
   const [liquidaciones, setLiquidaciones] = useState<Liquidacion[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
 
   // Funciones para manejar los modales
@@ -63,19 +67,23 @@ function Liquidaciones() {
   }, []);
 
   return (
-    <section className="w-full overflow-y-hidden">
+    <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
       <Sidebar />
+      <Notificaciones isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)}/>
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex justify-center w-full border-b shadow-md bg-white mb-4">
           <h1 className="text-2xl text-blue-900 md:text-4xl md:text-center lg:text-6xl text-start p-2 w-full">
             Liquidaciones
           </h1>
+          <button className="mx-4 text-blue-900" onClick={() => setIsNotificationsOpen(true)} >
+            <NotificationsIcon fontSize="large" />
+          </button>
           <button className="mx-4 text-blue-900">
             <AddCircleIcon fontSize="large" onClick={toggleModal} />
           </button>
         </header>
         <div
-          className={`w-full flex items-center justify-center ${
+          className={`w-full flex items-center justify-center bg-[#F2F2FF]${
             isLoading ? "h-screen" : ""
           } `}
         >

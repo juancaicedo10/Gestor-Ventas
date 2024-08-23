@@ -30,6 +30,8 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
   const [ocupacionValido, setOcupacionValido] = useState(true);
   const [detalleValido, setDetalleValido] = useState(true);
 
+  const [isDisabled, setIsDisabled] = useState(true);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
     switch (name) {
@@ -68,6 +70,8 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    setIsDisabled(true);
 
     let esValido = true;
     if (!nombre) { setNombreValido(false); esValido = false; }
@@ -121,12 +125,17 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
           setOcupacionValido(true);
           setDetalleValido(true);
           getClients();
+          setIsDisabled(false);
           toast.success(decodeToken()?.user.role === "Administrador" ? "Cliente creado exitosamente" : "Cliente enviado a aprobacion");
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err)
+          setIsDisabled(false);
+        });
     } catch (error) {
       console.error("Error creando cliente:", error);
       toast.error("Error creando cliente");
+      setIsDisabled(false);
     }
     onClose();
   };
@@ -318,6 +327,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
             <button
                 type="submit"
                 className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+                disabled={isDisabled}
               >
                 {decodeToken()?.user.role === "Administrador"
                   ? "Crear Cliente"

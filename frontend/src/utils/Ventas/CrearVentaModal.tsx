@@ -191,8 +191,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     }
 
-    setIsDisabled(false);
-
     if (!isValid) return;
 
     const venta = {
@@ -220,12 +218,14 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getVentas();
+        setIsDisabled(false);
         onClose();
         toast.success(decodeToken()?.user?.role === "Administrador" ? "Venta creada exitosamente" : "Venta enviada a aprobacion");
       })
       .catch((err) => {
         console.log(err);
         onClose();
+        setIsDisabled(false);
         toast.error("Error creando venta");
       });
   };

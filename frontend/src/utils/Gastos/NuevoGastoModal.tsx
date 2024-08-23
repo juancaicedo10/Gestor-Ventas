@@ -47,6 +47,9 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const [tiposGastos, setTiposGastos] = useState<TipoGasto[]>([]);
   const [sellers, setSellers] = useState<Seller[]>([]);
 
+
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);``
+
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
@@ -74,6 +77,9 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
   const handleCreateGasto = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setIsDisabled(true);
+
     if (!fecha || !monto || !descripcion || Number(monto) > montoMaximo! || !selectedSeller || !selectedTipoGasto) {
       setIsFechaValid(!!fecha);
       setIsMontoValid(!!monto);
@@ -101,11 +107,13 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
         }
       );
       refreshGastos();
+      setIsDisabled(false);
       onClose();
       handleSearch();
       toast.success(decodeToken()?.user?.role === 'Administrador' ? `Gasto registrado correctamente` : `Gasto enviado a aprobacion correctamente`);
     } catch (error) {
       console.error("Error creando gasto:", error);
+      setIsDisabled(false);
       toast.error("Error registrando el gasto");
       onClose();
     }
@@ -317,6 +325,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
+                disabled={isDisabled}
                 className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
               >
                 Cancelar
