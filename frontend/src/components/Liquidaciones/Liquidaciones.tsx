@@ -17,6 +17,9 @@ import LocalAtmIcon from '@mui/icons-material/LocalAtm';
 import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
 import Notificaciones from "../Notificaciones/Notificaciones";  
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidacion";
+import PersonIcon from '@mui/icons-material/Person';
+
 
 interface Liquidacion {
   Id: number;
@@ -24,6 +27,7 @@ interface Liquidacion {
   Gastos: number;
   Abonos: number;
   TotalRetiros: number;
+  VendedorId: number;
   Ventas: number;
   Intereses: number;
   Seguros: number;
@@ -32,6 +36,11 @@ interface Liquidacion {
   Multas: number;
   AbonoCapital: number;
   Efectivo: number;
+  Movimientos : number;
+  Consecutivo: string;
+  Hora: string;
+  BaseCapital: number;
+  Cartera: number;
 }
 
 function Liquidaciones() {
@@ -40,13 +49,18 @@ function Liquidaciones() {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
+
+  const [isMovimientosOpen, setIsMovimientosOpen] = useState(false);
+
+  const [consecutivo, setConsecutivo] = useState("");
+  const [vendedorId, setVendedorId] = useState(0);
+
   const [isLoading, setIsLoading] = useState(false);
 
   // Funciones para manejar los modales
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
-
   // Función para obtener la lista de vendedores
   const getLiquidaciones = () => {
     setIsLoading(true);
@@ -70,6 +84,7 @@ function Liquidaciones() {
     <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
       <Sidebar />
       <Notificaciones isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)}/>
+      <NotificacionesLiquidacion isOpen={isMovimientosOpen} onClose={() => setIsMovimientosOpen(false)} Consecutivo={consecutivo} VendedorId={vendedorId}/>
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex justify-center w-full border-b shadow-md bg-white mb-4">
           <h1 className="text-2xl text-blue-900 md:text-4xl md:text-center lg:text-6xl text-start p-2 w-full">
@@ -113,12 +128,13 @@ function Liquidaciones() {
                                 .join(" ")}
                             </h1>
                             <p className="text-gray-300 font-light py-2 text-lg">
-                              {new Date(liquidacion.Fecha).toLocaleDateString(
-                                "es-CO"
-                              )}
+                              {new Date(liquidacion.Fecha).toLocaleDateString()}
                             </p>
-                            <span className="font-semibold bg-green-500 p-1 rounded-md text-xl">
-                              Liquidada
+                            <p>
+                              <h6 className="font-normal text-lg pb-1">{ liquidacion.Hora }</h6>
+                            </p>
+                            <span className="font-bold text-2xl">
+                              { liquidacion.Consecutivo }
                             </span>
                           </span>
                           {decodeToken()?.user.role === "Administrador" && (
@@ -149,12 +165,12 @@ function Liquidaciones() {
                             <li className="flex items-center my-1">
                               <AccountBalanceIcon className="text-blue-800" />
                               <span className="mx-4">
-                                <h3 className="font-bold">Base:</h3>
+                                <h3 className="font-bold">Base Capital:</h3>
                                 <p>
                                   {new Intl.NumberFormat("es-CO", {
                                     style: "currency",
                                     currency: "COP",
-                                  }).format(liquidacion.Base)}
+                                  }).format(liquidacion.BaseCapital)}
                                 </p>
                               </span>
                             </li>
@@ -253,6 +269,48 @@ function Liquidaciones() {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Abonos)}
+                                </p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Cartera:</h3>
+                                <p>
+                                {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(liquidacion.Cartera)}
+                                </p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <PersonIcon className="text-blue-800" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Base Vendedor:</h3>
+                                <p>
+                                {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(liquidacion.Base)}
+                                </p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Movimientos:</h3>
+                                <p>
+                                  <button
+                                  onClick={
+                                    () => {
+                                      setConsecutivo(liquidacion.Consecutivo);
+                                      setVendedorId(liquidacion.VendedorId);
+                                      setIsMovimientosOpen(true);
+                                    }
+                                  }>
+                                    {liquidacion.Movimientos}
+                                  </button>
                                 </p>
                               </span>
                             </li>

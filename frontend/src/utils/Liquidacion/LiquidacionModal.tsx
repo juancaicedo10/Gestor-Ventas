@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import Spinner from "../Spinner";
+import NotificacionesToLiquidar from "../../components/Notificaciones/NotificacionesToLiquidar";
 
 interface ModalProps {
   isOpen: boolean;
@@ -22,6 +23,10 @@ interface Liquidacion {
   Diferencia: number;
   EfectivoAbonosCompras: number;
   EfectivoEntregar: number;
+  BaseCapital: number;
+  AbonosMultasSeguros: number;
+  Cartera: number;
+  Movimientos: number;
 }
 
 const LiquidacionModal: React.FC<ModalProps> = ({
@@ -46,20 +51,64 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
   const [abonosTransacciones, setAbonosTransacciones] = useState<number>(0);
   const [retirosTransacciones, setRetirosTransacciones] = useState<number>(0);
+  const [abonosMultasSeguros, setAbonosMultasSeguros] = useState<number>(0);
+  const [baseCapital, setBaseCapital] = useState<number>(0);
+  const [cartera, setCartera] = useState<number>(0);
+  const [clientesActivus, setClientesActivus] = useState<number>(0);
+  const [Movimientos, setMovimientos] = useState<number>(0);
+  const [detalles, setDetalles] = useState<string>("");
   const [vendedores, setVendedores] = useState([]);
 
   const [isVendSelected, setIsVendSelected] = useState<boolean>(false);
+
+  const [isDifeValid, setIsDifeValid] = useState<boolean>(true);
 
   const [liquidacionData, setLiquidacionData] = useState<Liquidacion>(
     {} as Liquidacion
   );
 
   console.log(liquidacionData);
+  console.log(totalRetiros);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  //movimientos
+
+  const [isMovimientosOpen, setIsMOvimientosOpen] = useState<boolean>(false);
+
+
+
+  const getBaseCartera = async (id: number | null) => {
+    try {
+      setIsLoading(true);
+      const res = await axios.post(
+        `http://localhost:4200/api/liquidaciones/base/cartera?id=${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      const data = res.data;
+      setBaseCapital(data?.BaseCapital ?? 0);
+      setCartera(data?.Cartera ?? 0);
+      setBaseVendedor(data?.Base ?? 0);
+      setDifere(data?.Diferencia ?? 0);
+      setClientesActivus(data?.ClientesActivos ?? 0);
+      setMovimientos(data?.Movimientos ?? 0);
+      setIsLoading(false);
+    } catch (err) {
+     {
+        setIsLoading(false);
+        console.log("Error fetching base capital and cartera:", err);
+      };
+    }
+  }
+
+
   const getDataLiquidacion = async (sellerId: number, e: any) => {
     e.preventDefault();
+
     try {
       setIsLoading(true);
       const res = await axios.get(
@@ -86,12 +135,27 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setEfectivoEntregar(data?.EfectivoEntregar ?? 0);
       setAbonosTransacciones(data?.AbonosTransacciones ?? 0);
       setRetirosTransacciones(data?.RetirosTransacciones ?? 0);
+      setBaseCapital(data?.BaseCapital ?? 0);
+      setCartera(data?.Cartera ?? 0);
+      setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
+      setClientesActivus(data?.ClientesActivos ?? 0);
+      setIsDifeValid(data?.Diferencia === 0);
       setIsLoading(false);
     } catch (err) {
       console.error("Error fetching liquidacion data:", err);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getBaseCartera(null);
+  }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedSeller !== 0) {
+      getBaseCartera(selectedSeller || 0);
+    }
+  }, [selectedSeller]);
 
 
   useEffect(() => {
@@ -112,22 +176,17 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setEfectivoEntregar(0);
       setAbonosTransacciones(0);
       setRetirosTransacciones(0);
+      setBaseCapital(0);
+      setCartera(0);
+      setClientesActivus(0);
+      setMovimientos(0);
+      setDetalles("");
       setIsVendSelected(false);
+      setIsDifeValid(true);
     }
 
   }, [!isOpen])
 
-  console.log(
-    baseVendedor,
-    gastos,
-    totalAbonos,
-    totalRetiros,
-    ventas,
-    intereses,
-    seguros,
-    multas,
-    abonoCapital
-  );
 
   const handleSelectSeller = (sellerId: string | undefined) => {
     if (sellerId !== null) {
@@ -156,7 +215,10 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    console.log(efectivoEntregar, "efectivo a entregar");
+    if (Difere !== 0) {
+      setIsDifeValid(false);
+      return;
+    }
 
     const liquidacion = {
       BaseVendedor: baseVendedor,
@@ -173,11 +235,13 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       Diferencia: Difere,
       EfectivoAbonosCompras: efectivoAbonosCompras,
       EfectivoEntregar: efectivoEntregar,
+      Detalle: detalles,
+      Cartera: cartera,
     };
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
+        `http://localhost:4200/api/liquidaciones/${selectedSeller}`,
         liquidacion,
         {
           headers: {
@@ -203,8 +267,9 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
   return (
     <section>
+      <NotificacionesToLiquidar isOpen={isMovimientosOpen} VendedorId={selectedSeller || 0} onClose={() => setIsMOvimientosOpen(false)}/>
       {isOpen && (
-        <div className="fixed z-50 inset-0 overflow-y-auto">
+        <div className={`fixed ${isMovimientosOpen ? 'w-1/2' : 'w-full' } z-40 inset-0 overflow-y-auto`}>
           <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
             <div
               className="fixed inset-0 transition-opacity"
@@ -285,15 +350,28 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       <section className="grid grid-cols-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
-                            Base vendedor:
+                            Base capital:
                           </label>
                           <h3 className="font-normal">
                             {new Intl.NumberFormat("es-CO", {
                               style: "currency",
                               currency: "COP",
-                            }).format(baseVendedor) ?? 0}
+                            }).format(baseCapital) ?? 0}
                           </h3>
                         </div>
+                        <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Cartera:
+                          </label>
+                          <h3 className="font-normal">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(cartera) ?? 0}
+                          </h3>
+                        </div>
+                        </section>
+                        <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Gastos:
@@ -305,8 +383,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(gastos) ?? 0}
                           </h3>
                         </div>
-                      </section>
-                      <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Total Ventas:
@@ -318,6 +394,8 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(ventas) ?? 0}
                           </h3>
                         </div>
+                        </section>
+                        <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Total Intereses:
@@ -329,8 +407,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(intereses) ?? 0}
                           </h3>
                         </div>
-                      </section>
-                      <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Seguros:
@@ -342,6 +418,8 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(seguros) ?? 0}
                           </h3>
                         </div>
+                        </section>
+                        <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Multas:
@@ -353,8 +431,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(multas) ?? 0}
                           </h3>
                         </div>
-                      </section>
-                      <section className="grid grid-cols-2 mb-2">
                       <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                       <label className="block text-base md:text-lg font-semibold text-blue-800">
                           Total Abonos:
@@ -366,6 +442,8 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           }).format(totalAbonos) ?? 0}
                         </h3>
                       </div>
+                      </section>
+                      <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Efectivo:
@@ -377,8 +455,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             }).format(efectivo) ?? 0}
                           </h3>
                         </div>
-                      </section>
-                      <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
                             Abono Capital:
@@ -392,17 +468,26 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                           <label className="block text-base md:text-lg font-semibold text-blue-800">
-                            Efectivo de Abonos, compras y seguros:
+                            Base Vendedor:
                           </label>
                           <h3 className="font-normal text-lg">
                             {new Intl.NumberFormat("es-CO", {
                               style: "currency",
                               currency: "COP",
-                            }).format(efectivoAbonosCompras) ?? 0}
+                            }).format(baseVendedor) ?? 0}
                           </h3>
                         </div>
+                        <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Movimientos:
+                          </label>
+                          <button className="font-normal text-lg"
+                          onClick={() => setIsMOvimientosOpen(true)}>
+                            {Movimientos}
+                          </button>
+                        </div>
                       </section>
-                      <div className="w-full flex flex-col items-center justify-center rounded-md border-2">
+                      <div className={`w-full flex flex-col items-center justify-center rounded-md border-2 ${!isDifeValid ? 'border-red-500' : ''}`}>
                         <h3 className="text-lg font-semibold text-blue-800">
                           Diferencia:
                         </h3>
@@ -413,6 +498,46 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           }).format(Difere) ?? 0}
                         </h3>
                       </div>
+                      {!isDifeValid && (
+                        <p className="text-red-500 text-sm font-semibold">
+                          La diferencia debe ser 0
+                        </p>
+                      )
+                      }
+                      <section className="w-full grid grid-cols-2 mt-5">
+                        <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Clientes Activos:
+                          </label>
+                          <h3 className="font-normal text-lg">
+                            {clientesActivus}
+                          </h3>
+                        </div>
+                        <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Intereses, Seguros, Multas:
+                          </label>
+                          <h3 className="font-normal text-lg">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(abonosMultasSeguros) ?? 0}
+                          </h3>
+                        </div>
+                      </section>
+                      <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
+                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                            Detalles:
+                         </label>
+                         <textarea
+                         rows={4}
+                         cols={6}
+                          className="border-2 rounded-md p-1 w-full"
+                          placeholder="Escribe los detalles de la liquidación"
+                          onChange={(e) => setDetalles(e.target.value)}
+                          style={{ resize: 'none' }}
+                         ></textarea>  
+                        </div>
                     </>
                   )}
                 </div>

@@ -358,8 +358,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                           ) || null // Asegúrate de proporcionar un valor por defecto adecuado
                         : null
                     }
-                    onChange={(selectedOption) =>
+                    onChange={(selectedOption) => {
                       handleSelectSeller(selectedOption?.value)
+                      setIsDisabled(false);
+                    }
                     }
                     isSearchable
                     isDisabled={decodeToken()?.user?.role === "Vendedor"}
@@ -377,8 +379,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   <Select
                     id="seller"
                     options={ClientsOptions}
-                    onChange={(selectedOption) =>
+                    onChange={(selectedOption) => {
                       handleSelectClient(selectedOption?.value)
+                      setIsDisabled(false);
+                    }
                     }
                     isSearchable
                     maxMenuHeight={170}
@@ -401,6 +405,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setValorVenta(Number(e.target.value));
                         setIsValorVentaValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isValorVentaValid && (
@@ -419,6 +424,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setNumeroCuotas(Number(e.target.value));
                         setIsNumeroCuotasValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isNumeroCuotasValid && (
@@ -454,6 +460,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setTasaInteres(Number(e.target.value));
                         setIsTasaInteresValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isTasaInteresValid && (
@@ -472,6 +479,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setValorSeguro(Number(e.target.value));
                         setIsValorSeguroValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isValorSeguroValid && (
@@ -490,6 +498,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setFechaInicio(e.target.value);
                         setIsFechaInicioValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isFechaInicioValid && (
@@ -509,6 +518,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                       onChange={(e) => {
                         setPeriodicidad(Number(e.target.value));
                         setIsDiasValid(true);
+                        setIsDisabled(false);
                       }}
                     />
                     {!isDiasValid && (
@@ -531,6 +541,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   onChange={(e) => {
                     setDetallesVenta(e.target.value);
                     setIsDetallesVentaValid(true);
+                    setIsDisabled(false);
                   }}
                 ></textarea>
                 {!isDetallesVentaValid && (

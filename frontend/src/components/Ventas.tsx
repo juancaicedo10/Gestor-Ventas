@@ -40,9 +40,8 @@ function Ventas() {
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  console.log(ventas);
-
   const Id = decodeToken()?.user.Id;
+
 
   const getVentas = () => {
     setIsLoading(true);
@@ -50,7 +49,11 @@ function Ventas() {
       axios
         .get(`https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`)
         .then((res) => {
-          setVentas(res.data);
+
+          const { data } = res.data;
+
+
+          setVentas(data);
           setIsLoading(false);
         })
         .catch((err) => {
@@ -61,7 +64,8 @@ function Ventas() {
       axios
         .get("https://backendgestorventas.azurewebsites.net/api/ventas")
         .then((res) => {
-          setVentas(res.data);
+          const { data } = res.data;
+          setVentas(data);
           setIsLoading(false);
         })
         .catch((err) => {

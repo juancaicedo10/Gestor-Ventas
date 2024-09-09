@@ -15,6 +15,8 @@ import Spinner from "../utils/Spinner";
 import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
 import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 import PaymentsIcon from '@mui/icons-material/Payments';
+import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
+import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
 
 
 interface Gasto {
@@ -67,11 +69,15 @@ function Gastos() {
 
   const [Id, setId] = useState<number>(0);
 
-  const [GastoId, setGastoId] = useState<number>(0);
+  const [TipoGastoId, setTipoGastoId] = useState<number>(0);
 
   //modales del edit de gastos
 
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
+
+  const [isOpenDeleteTipoGastoModal, setIsOpenDeleteTipoGastoModal] = useState<boolean>(false);
+
+  const [isOpenDeleteGastoModal, setIsOpenDeleteGastoModal] = useState<boolean>(false);
 
   const toggleEditModal = (id: number) => {
     setIsOpenEditModal(!isOpenEditModal);
@@ -93,8 +99,10 @@ function Gastos() {
 
   const toggleTipoGastoEditModal = (GastoId: number) => {
     setIsOpenEditGastoModal(!isOpenEditGastoModal);
-    setGastoId(GastoId);
+    setTipoGastoId(GastoId);
   }
+
+
 
 
 
@@ -232,7 +240,13 @@ function Gastos() {
           isOpen={isOpenEditGastoModal}
           onClose={() => setIsOpenEditGastoModal(false)}
           getGastos={getTiposGastos}
-          GastoId={GastoId}
+          GastoId={TipoGastoId}
+         />
+         <ModalDeleteTipoGasto 
+          isOpen={isOpenDeleteTipoGastoModal}
+          onClose={() => setIsOpenDeleteTipoGastoModal(false)}
+          getTipoGastos={getTiposGastos}
+          Id={TipoGastoId}
          />
         <div>
           {activeView === "tiposDeGastos" ? (
@@ -301,6 +315,8 @@ function Gastos() {
                                       onClick={() => {
                                         toggleCloseConfirmation(gasto.GastoId);
                                         setOpenDropdownId(null);
+                                        setIsOpenDeleteTipoGastoModal(true);
+                                        setTipoGastoId(gasto.GastoId);
                                       }}
                                     >
                                       Eliminar
@@ -385,6 +401,12 @@ function Gastos() {
                 <ModificarGastoModal 
                 isOpen={isOpenEditModal}
                 onClose={() => setIsOpenEditModal(false)}
+                getGastos={getTiposGastos}
+                Id={Id}
+                />
+                <ModalDeleteGasto 
+                isOpen={isOpenDeleteGastoModal}
+                onClose={() => setIsOpenDeleteGastoModal(false)}
                 getGastos={getGastos}
                 Id={Id}
                 />
@@ -438,6 +460,7 @@ function Gastos() {
                                       onClick={() => {
                                         toggleCloseConfirmation(gasto.Id);
                                         setOpenDropdownId(null);
+                                        setId(gasto.Id);
                                       }}
                                     >
                                       Eliminar
