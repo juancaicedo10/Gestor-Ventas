@@ -82,7 +82,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `http://localhost:4200/api/liquidaciones/base/cartera?id=${id}`,
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/base/cartera?id=${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -241,7 +241,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `http://localhost:4200/api/liquidaciones/${selectedSeller}`,
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
         liquidacion,
         {
           headers: {

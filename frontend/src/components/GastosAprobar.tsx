@@ -42,7 +42,7 @@ function GastosAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `http://localhost:4200/api/gastos/${gastoId}/aprobar`,
+        `https://backendgestorventas.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
         { aprobado: true },
         {
           headers: {

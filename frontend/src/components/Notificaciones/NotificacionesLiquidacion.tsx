@@ -37,7 +37,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({ isOpen, onClose, Consecuti
     const getNotificaciones = async (ConsecutivoNoti: string, VendedorIdNoti: number) => {
         try {
             const response = await axios.post(
-                "http://localhost:4200/api/notificaciones/liquidacion" , {
+                "https://backendgestorventas.azurewebsites.net/api/notificaciones/liquidacion" , {
                     Consecutivo: ConsecutivoNoti,
                     VendedorId: VendedorIdNoti
                 }

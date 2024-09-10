@@ -81,7 +81,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     const getNotificacionesFiltered = async () => {
         try {
             const response = await axios.post(
-                `http://localhost:4200/api/notificaciones/filtro`, {
+                `https://backendgestorventas.azurewebsites.net/api/notificaciones/filtro`, {
                     VendedorId: selectedSeller,
                     FechaInicio : selectedFechaInicio,
                     FechaFin: selectedFechaFin,

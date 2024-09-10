@@ -36,7 +36,7 @@ const NotificacionesToLiquidar: React.FC<Props> = ({ isOpen, onClose, VendedorId
     const getNotificaciones = async (VendedorIdNoti: number) => {
         try {
             const response = await axios.get(
-                `http://localhost:4200/api/notificaciones/pendientes/${VendedorIdNoti}`
+                `https://backendgestorventas.azurewebsites.net/api/notificaciones/pendientes/${VendedorIdNoti}`
             );
             setNotificaciones(response.data);
         } catch (error) {
