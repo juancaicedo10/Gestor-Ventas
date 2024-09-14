@@ -137,7 +137,7 @@ function Ventas() {
                 />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
-                {filter().map((venta) => (
+                {filter()?.map((venta) => (
                   <li>
                     <div className="flex flex-col m-2 p-2">
                       <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[150px]">
