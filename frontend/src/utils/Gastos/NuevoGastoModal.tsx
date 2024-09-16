@@ -93,7 +93,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
     const gasto = {
       GastoId: selectedTipoGasto,
       VendedorId: selectedSeller,
-      Fecha: fecha,
+      Fecha: new Date(fecha),
       Monto: Number(monto),
       Descripcion: descripcion,
     };

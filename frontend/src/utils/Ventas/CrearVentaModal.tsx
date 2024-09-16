@@ -167,9 +167,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     }
 
     if (!valorSeguro) {
-      setIsValorSeguroValid(false);
-      isValid = false;
-      console.log("es valor seguro");
+      setValorSeguro(0);
     }
 
     if (!detallesVenta) {

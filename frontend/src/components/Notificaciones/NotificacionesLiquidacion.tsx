@@ -49,6 +49,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({ isOpen, onClose, Consecuti
     }
 
     useEffect(() => {
+        setNotificaciones([]);
         getNotificaciones(Consecutivo, VendedorId);
     }, [isOpen]);
 

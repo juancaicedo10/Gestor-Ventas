@@ -30,7 +30,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
   const [ocupacionValido, setOcupacionValido] = useState(true);
   const [detalleValido, setDetalleValido] = useState(true);
 
-  const [isDisabled, setIsDisabled] = useState(true);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -69,6 +69,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
 }
 
   const handleSubmit = (event: React.FormEvent) => {
+    console.log("handleSubmit", isDisabled);
     event.preventDefault();
 
     setIsDisabled(true);
@@ -82,7 +83,10 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     if (!ocupacion) { setOcupacionValido(false); esValido = false; }
     if (!detalle) { setDetalleValido(false); esValido = false; }
 
-    if (!esValido) return;
+    if (!esValido) {
+      setIsDisabled(false);
+      return;
+    }
 
     console.log('ocupacion: ', ocupacion)
     console.log('detalle: ', detalle)

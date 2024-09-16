@@ -1,4 +1,5 @@
 import axios from "axios";
+import Select from "react-select";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
@@ -49,6 +50,9 @@ function Liquidaciones() {
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
+  const [vendedores, setVendedores] = useState([]);
+  const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
+
 
   const [isMovimientosOpen, setIsMovimientosOpen] = useState(false);
 
@@ -76,7 +80,45 @@ function Liquidaciones() {
       });
   };
 
+  const getLiquidacioneaByVendedor = (VendedorId: number) => {
+    setIsLoading(true);
+    axios
+      .get(`http://localhost:4200/api/liquidaciones/${VendedorId}`)
+      .then((res) => {
+        setLiquidaciones(Array.isArray(res.data) ? res.data : [res.data]);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsLoading(false);
+      });
+  }
+
+  const getVendedores = async () => {
+    try {
+      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setVendedores(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const vendedoresOptions = vendedores.map((vendedor: any) => ({
+    value: vendedor.Id,
+    label: vendedor.NombreCompleto,
+  }));
+
+  const handleVendedorChange = (selectedOption: any) => {
+    setSelectedSeller(selectedOption.value);
+    getLiquidacioneaByVendedor(Number(selectedOption.value));
+  }
+
   useEffect(() => {
+    getVendedores();
     getLiquidaciones();
   }, []);
 
@@ -86,16 +128,29 @@ function Liquidaciones() {
       <Notificaciones isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)}/>
       <NotificacionesLiquidacion isOpen={isMovimientosOpen} onClose={() => setIsMovimientosOpen(false)} Consecutivo={consecutivo} VendedorId={vendedorId}/>
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-        <header className="flex justify-center w-full border-b shadow-md bg-white mb-4">
-          <h1 className="text-2xl text-blue-900 md:text-4xl md:text-center lg:text-6xl text-start p-2 w-full">
-            Liquidaciones
-          </h1>
-          <button className="mx-4 text-blue-900" onClick={() => setIsNotificationsOpen(true)} >
-            <NotificationsIcon fontSize="large" />
-          </button>
-          <button className="mx-4 text-blue-900">
-            <AddCircleIcon fontSize="large" onClick={toggleModal} />
-          </button>
+        <header className="flex flex-col items-center w-full border-b shadow-md bg-white mb-4">
+        <div className="flex justify-between items-center w-full">
+  <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 w-full">
+    Liquidaciones
+  </h1>
+  <div className="flex space-x-4">
+    <button className="text-blue-900" onClick={() => setIsNotificationsOpen(true)}>
+      <NotificationsIcon fontSize="large" />
+    </button>
+    <button className="text-blue-900" onClick={toggleModal}>
+      <AddCircleIcon fontSize="large" />
+    </button>
+  </div>
+</div>
+<div className="flex justify-center py-4 w-full">
+            <Select
+              options={vendedoresOptions}
+              placeholder="Seleccione un vendedor"
+              className="w-1/2 mx-4 text-3xl font-semibold"
+              onChange={handleVendedorChange}
+              value={vendedoresOptions.find((option) => option.value === selectedSeller)}
+            />
+          </div>
         </header>
         <div
           className={`w-full flex items-center justify-center bg-[#F2F2FF]${
@@ -112,7 +167,7 @@ function Liquidaciones() {
                 getGastos={getLiquidaciones}
               />
               <section className="w-full px-2 grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                {liquidaciones.map((liquidacion) => {
+                {liquidaciones?.map((liquidacion) => {
                   return (
                     <li
                       className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md"

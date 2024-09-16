@@ -41,7 +41,7 @@ function VentasByVendedor() {
         `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`
       )
       .then((res) => {
-        setVentas(res.data.data);
+        setVentas(res.data);
 
         setIsLoading(false);
       })

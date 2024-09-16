@@ -50,9 +50,7 @@ function Ventas() {
         .get(`https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`)
         .then((res) => {
 
-          const { data } = res.data;
-
-
+          const data = res.data
           setVentas(data);
           setIsLoading(false);
         })
