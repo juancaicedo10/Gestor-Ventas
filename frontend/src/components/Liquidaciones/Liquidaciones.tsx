@@ -69,7 +69,7 @@ function Liquidaciones() {
   const getLiquidaciones = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/liquidaciones/all")
+      .get("https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas")
       .then((res) => {
         setLiquidaciones(res.data);
         setIsLoading(false);
