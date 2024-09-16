@@ -152,7 +152,7 @@ function Vendedores() {
                 onClose={toggleModal}
                 getClients={getVendedores}
               />
-              <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md overflow-hidden min-h-screen">
+              <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md overflow-hidden">
                 {isEditModalOpen && (
                   <ModificarVendedorModal
                     Id={Id}

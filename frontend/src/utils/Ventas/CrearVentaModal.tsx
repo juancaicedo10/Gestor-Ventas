@@ -470,7 +470,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   <section>
                     <label htmlFor="">Valor Seguro</label>
                     <input
-                      type="text"
+                      type="number"
                       className={`p-2 rounded-md border w-full ${
                         !isValorSeguroValid ? "border-red-500" : ""
                       }`}
