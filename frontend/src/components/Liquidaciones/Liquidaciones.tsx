@@ -83,7 +83,7 @@ function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     axios
-      .get(`http://localhost:4200/api/liquidaciones/${VendedorId}`)
+      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`)
       .then((res) => {
         setLiquidaciones(Array.isArray(res.data) ? res.data : [res.data]);
         setIsLoading(false);
