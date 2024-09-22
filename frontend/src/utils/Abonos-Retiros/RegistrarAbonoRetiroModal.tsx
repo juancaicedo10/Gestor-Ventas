@@ -258,11 +258,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                     htmlFor=""
                     className="block text-base md:text-lg font-normal text-gray-700"
                   >
-                    {`Descripcion del ${
-                      selectedTipo === "Abono"
-                        ? "abono a realizar:"
-                        : "retiro a realizar:"
-                    }`}
+                    Descripcion:{" "}
                   </label>
                   <textarea
                     name=""
