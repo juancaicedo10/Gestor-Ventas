@@ -6,16 +6,12 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   getGastos: () => void;
-  selectedVendedor: number | undefined;
-  setSelectedVendedor: (value: number | undefined) => void;
 }
 
 const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   getGastos,
-  selectedVendedor,
-  setSelectedVendedor,
 }) => {
   const [monto, setMonto] = useState<number>(0);
   const [descripcion, setDescripcion] = useState<string>("");
@@ -26,6 +22,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
   const [isSellerValid, setIsSellerValid] = useState<boolean>(false);
   const [isTipoValid, setIsTipoValid] = useState<boolean>(false);
+  const [optionSelected, setOptionSelected] = useState<string | undefined>(undefined);
 
   console.log(selectedSeller);
 
@@ -37,6 +34,14 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
     {
       value: "Retiro",
       label: "Retiro",
+    },
+    {
+      value: "Abono a Base Capital",
+      label: "Abono a Base Capital",
+    },
+    {
+      value: "Retiro a Base Capital",
+      label: "Retiro a Base Capital",
     },
   ];
 
@@ -94,9 +99,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net/api/${
-          selectedTipo === "Abono" ? "abonos" : "retiros"
-        }`,
+        `https://backendgestorventas.azurewebsites.net/api/${optionSelected}`,
         AbonoRetiro,
         {
           headers: {
@@ -105,10 +108,9 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
         }
       )
       .then(() => {
-        console.log("Venta CREADA EXITOSAMENTE");
-        getGastos();
-        setSelectedVendedor(selectedVendedor);
+        console.log("Venta CREADA EXITOSAMENTE")
         onClose();
+        getGastos();
       })
       .catch((err) => {
         console.log(err);
@@ -143,6 +145,15 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
     if (TipoId !== null) {
       setIsTipoValid(true);
       setSelectedTipo(TipoId);
+      if (TipoId === "Abono") {
+        setOptionSelected("abonos");
+      } else if (TipoId === "Retiro") {
+        setOptionSelected("retiros");
+      } else if (TipoId === "Abono a Base Capital") {
+        setOptionSelected("abonos/capital");
+      } else if (TipoId === "Retiro a Base Capital") {
+        setOptionSelected("retiros/capital");
+      }
     }
   };
 
@@ -225,10 +236,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                   </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label htmlFor="numero cuotas">
-                      {`Monto a ${
-                        selectedTipo === "Abono" ? "Abonar" : "Retirar"
-                      }`}
-                      :
+                      Monto: 
                     </label>
                     <input
                       type="number"

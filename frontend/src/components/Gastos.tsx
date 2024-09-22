@@ -17,6 +17,7 @@ import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 import PaymentsIcon from '@mui/icons-material/Payments';
 import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
 import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
+import { formatDate } from "../utils/Helpers/FormatDate.tsx";
 
 
 interface Gasto {
@@ -513,7 +514,7 @@ function Gastos() {
                         <span className="mx-2">
                           <h6>Fecha del gasto:</h6>
                           <p className="font-normal text-black">
-                            {new Date(gasto.Fecha).toLocaleDateString("es-CO")}
+                            {formatDate(gasto.Fecha)}
                           </p>
                         </span>
                       </div>

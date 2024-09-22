@@ -10,6 +10,7 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import Spinner from "../utils/Spinner";
 import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 import decodeToken from "../utils/tokenDecored";
+import { formatDate } from "../utils/Helpers/FormatDate";
 
 function Ventas() {
   interface Venta {
@@ -29,6 +30,9 @@ function Ventas() {
     ValorSeguro: number;
     TasaInteres: number;
     Liquidada: boolean;
+    Estado: string;
+    ColorEstado: string;
+    ColorTexto: string;
   }
 
   const [ventas, setVentas] = useState<Venta[]>([]);
@@ -52,6 +56,7 @@ function Ventas() {
 
           const data = res.data
           setVentas(data);
+          console.log(data, 'data');
           setIsLoading(false);
         })
         .catch((err) => {
@@ -149,11 +154,10 @@ function Ventas() {
                           {venta.NombreCliente}
                         </p>
                         <span
-                          className={`${
-                            !venta.Liquidada ? "bg-green-500" : "bg-red-500"
-                          } py-1 px-2 rounded-md font-semibold mt-2`}
+                          className={`rounded-md p-1 text-sm bg-[${venta.ColorEstado}] mt-2`}
+                          style={{ backgroundColor: `${venta.ColorEstado}`, color: `${venta.ColorTexto}` }}
                         >
-                          {venta.Liquidada ? "Completada" : "Activa"}
+                          {venta.Estado}
                         </span>
                       </header>
                       <p className="rounded-md border-2 p-2 mt-2 text-sm bg-white min-h-[100px]">
@@ -214,9 +218,7 @@ function Ventas() {
                           <span className="font-semibold text-blue-900">
                             Fecha Inicio:
                           </span>{" "}
-                          {new Date(venta.FechaInicio).toLocaleDateString(
-                            "es-ES"
-                          )}
+                          {formatDate(venta.FechaInicio)}
                         </li>
                         <li className="p-1 text-blue-900 flex items-center">
                           <DateRangeIcon fontSize="small" />
@@ -224,9 +226,7 @@ function Ventas() {
                             Fecha Fin:
                           </span>{" "}
                           <p className="text-black">
-                            {new Date(venta.FechaFin).toLocaleDateString(
-                              "es-ES"
-                            )}
+                            {formatDate(venta.FechaFin)}
                           </p>
                         </li>
                       </ul>

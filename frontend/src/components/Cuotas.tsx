@@ -9,6 +9,7 @@ import ReplyIcon from "@mui/icons-material/Reply";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Spinner from "../utils/Spinner";
 import RegistrarAbonoModal from "../utils/Ventas/RegistrarAbonoModal";
+import { formatDate } from "../utils/Helpers/FormatDate";
 
 interface Cuota {
   Id: number;
@@ -28,7 +29,7 @@ interface Abono {
   InteresAbono: number;
   DetallesAbono: string;
   MoraAbono: number;
-  SaldoRestante: number;
+  ValorRestante: number;
 }
 
 interface DatosVenta {
@@ -36,6 +37,8 @@ interface DatosVenta {
   ValorCuotas: number;
   MoraTotal: number;
   TotalAbonado: number;
+  SaldoRestante: number;
+  TotalAPagar: number;
 }
 
 function Cuotas() {
@@ -171,7 +174,7 @@ function Cuotas() {
                     }).format(cuota.ValorCuota)}
                   </td>
                   <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
-                    {new Date(cuota.FechaPago).toLocaleDateString("es-CO")}
+                    {formatDate(cuota.FechaPago)}
                   </td>
                   <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
                     {new Intl.NumberFormat("es-CO", {
@@ -234,7 +237,7 @@ function Cuotas() {
                                       }).format(abono?.ValorAbono || 0)}
                                     </td>
                                     <td className="text-center px-1 text-xs md:text-sm lg:text-lg">
-                                    {new Date(cuota.FechaPago).toLocaleDateString("es-CO")}
+                                    {formatDate(cuota.FechaPago)}
                                     </td>
                                     <td className="text-center px-1 text-xs md:text-sm lg:text-lg">
                                       {new Intl.NumberFormat("es-CO", {
@@ -267,7 +270,9 @@ function Cuotas() {
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
               <th className="border-r border-black px-1">Mora Total</th>
-              <th className="px-1">Total Abonado</th>
+              <th className="border-r border-black px-1">Total Abonado</th>
+              <th className="border-r border-black px-1">Valor a Pagar</th>
+              <th className="px-1">Valor restante</th>
             </tr>
           </thead>
           <tbody>
@@ -295,6 +300,18 @@ function Cuotas() {
                   style: "currency",
                   currency: "COP",
                 }).format(Number(DatosVenta?.TotalAbonado || 0))}
+              </td>
+              <td className="border-r border-black px-1">
+                {new Intl.NumberFormat("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                }).format(Number(DatosVenta?.TotalAPagar || 0))}
+              </td>
+              <td className="border-r border-black px-1">
+                {new Intl.NumberFormat("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                }).format(Number(DatosVenta?.SaldoRestante || 0))}
               </td>
             </tr>
           </tbody>

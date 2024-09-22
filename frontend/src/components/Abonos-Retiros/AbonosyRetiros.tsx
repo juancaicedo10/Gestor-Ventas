@@ -6,7 +6,7 @@ import SellIcon from "@mui/icons-material/Sell";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RegistrarAbonoRetiroModal from "../../utils/Abonos-Retiros/RegistrarAbonoRetiroModal";
 import Select from "react-select";
-import DescriptionIcon from '@mui/icons-material/Description';
+import DescriptionIcon from "@mui/icons-material/Description";
 import AttachMoney from "@mui/icons-material/AttachMoney";
 
 interface Retiro {
@@ -27,24 +27,28 @@ function AbonosyRetiros() {
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
 
   const [Base, setBase] = useState<number>(0);
+  const [BaseCapital, setBaseCapital] = useState<number>(0);
 
   const getAbonosyRetiros = async (VendedorId: number) => {
     setIsLoading(true);
     console.log("selectedSeller:", selectedSeller);
     Promise.all([
-      axios.get(`https://backendgestorventas.azurewebsites.net/api/abonos/${VendedorId}`),
-      axios.get(`https://backendgestorventas.azurewebsites.net/api/retiros/${VendedorId}`),
+      await axios.get(
+        `https://backendgestorventas.azurewebsites.net/api/abonos/${VendedorId}`
+      ),
+      await axios.get(
+        `https://backendgestorventas.azurewebsites.net/api/retiros/${VendedorId}`
+      ),
+      await axios.get(`https://backendgestorventas.azurewebsites.net/api/abonos/bases/${VendedorId}`),
     ])
-      .then(([abonosRes, retirosRes]) => {
-        const combinedData = [...abonosRes.data.abonos, ...retirosRes.data.retiros];
+      .then(([abonosRes, retirosRes, res]) => {
+        const combinedData = [
+          ...abonosRes.data.abonos,
+          ...retirosRes.data.retiros,
+        ];
 
-        console.log(abonosRes.data.TotalAbonos, "abonosRes.data.base");
-        console.log(retirosRes.data.TotalRetiros, "retirosRes.data.base");
-
-        setBase(abonosRes.data.TotalAbonos - retirosRes.data.TotalRetiros);
-
-        console.log("BASE", Base)
-        console.log(combinedData, "data");
+        setBase(res.data.BaseVendedor);
+        setBaseCapital(res.data.BaseCapital);
         setRetiros(combinedData);
         setIsLoading(false);
       })
@@ -58,11 +62,14 @@ function AbonosyRetiros() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get(
+        "https://backendgestorventas.azurewebsites.net/api/vendedores",
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setSellers(res.data);
     } catch (err) {
       console.error(err);
@@ -71,14 +78,15 @@ function AbonosyRetiros() {
 
   useEffect(() => {
     getVendedores();
+    console.log("selectedSeller:", selectedSeller);
     getAbonosyRetiros(Number(selectedSeller));
-
   }, []);
 
-
-  const handleVendedorChange = (selectedOption: any) => {
-    setSelectedSeller(selectedOption);
-    getAbonosyRetiros(Number(selectedOption.value));
+  const handleVendedorChange = async (selectedOption: any) => {
+    setIsLoading(true);
+    setSelectedSeller(selectedOption.value);
+    console.log(isLoading);
+    await getAbonosyRetiros(Number(selectedOption.value));
   };
 
   const vendedoresOptions = sellers.map((seller: any) => {
@@ -110,13 +118,39 @@ function AbonosyRetiros() {
               placeholder="Seleccione un vendedor"
               className="w-1/2 mx-4 text-3xl font-semibold"
               onChange={handleVendedorChange}
-              value={vendedoresOptions.find((option) => option.value === selectedSeller)}
+              value={vendedoresOptions.find(
+                (option) => option.value === selectedSeller
+              )}
             />
           </div>
-          <h2 className="text-center text-2xl py-4 font-semibold"><span className="font-bold text-3xl text-blue-800">Base:</span>{new Intl.NumberFormat("es-CO", {
-                                  style: "currency",
-                                  currency: "COP",
-                                }).format(Base)}</h2>
+          <div className="flex flex-col w-full items-center justify-center">
+            {isLoading ? (
+              <div className="w-full flex items-center justify-center m-4">
+                <Spinner isLoading={isLoading} />
+              </div>
+            ) : (
+              <>
+                <h3>
+                  <span className="font-bold text-3xl text-blue-800">
+                    Base Capital:
+                  </span>
+                  {new Intl.NumberFormat("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                  }).format(BaseCapital || 0)}
+                </h3>
+                <h2 className="text-center text-2xl py-4 font-semibold">
+                  <span className="font-bold text-3xl text-blue-800">
+                    Base Vendedor:
+                  </span>
+                  {new Intl.NumberFormat("es-CO", {
+                    style: "currency",
+                    currency: "COP",
+                  }).format(Base || 0)}
+                </h2>
+              </>
+            )}
+          </div>
         </header>
         <section
           className={`w-full px-2 ${
@@ -127,8 +161,6 @@ function AbonosyRetiros() {
             isOpen={isOpen}
             onClose={() => setIsOpen(!isOpen)}
             getGastos={() => getAbonosyRetiros(Number(selectedSeller))}
-            setSelectedVendedor={setSelectedSeller}
-            selectedVendedor={selectedSeller}
           />
           {isLoading ? (
             <Spinner isLoading={isLoading} />
@@ -205,7 +237,6 @@ function AbonosyRetiros() {
                             </p>
                           </span>
                         </li>
-
                       </div>
                     </div>
                   </li>

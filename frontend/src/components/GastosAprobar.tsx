@@ -7,6 +7,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
+import { formatDate } from "../utils/Helpers/FormatDate";
 
 interface GastoAprobar {
   Id: number;
@@ -166,7 +167,7 @@ function GastosAprobar() {
                               Fecha del Gasto:
                             </h6>
                             <span>
-                              {new Date(gasto.Fecha).toLocaleDateString()}
+                              {formatDate(gasto.Fecha)}
                             </span>
                           </span>
                         </p>

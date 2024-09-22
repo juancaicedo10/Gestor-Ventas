@@ -7,6 +7,7 @@ import Spinner from "../utils/Spinner";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
+import { formatDate } from "../utils/Helpers/FormatDate";
 
 function VentasByVendedor() {
   interface Venta {
@@ -164,9 +165,7 @@ function VentasByVendedor() {
                               Fecha Fin:
                             </span>{" "}
                             <p className="text-black">
-                              {new Date(venta.FechaFin).toLocaleDateString(
-                                "es-ES"
-                              )}
+                              {formatDate(venta.FechaFin)}
                             </p>
                           </li>
                         </ul>

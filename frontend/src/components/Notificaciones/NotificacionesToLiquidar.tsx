@@ -100,6 +100,7 @@ const NotificacionesToLiquidar: React.FC<Props> = ({ isOpen, onClose, VendedorId
       <span className="text-blue-600 font-semibold ml-1">
       {notificacion.Valor}$
       </span>
+      para <span className="text-blue-600 font-semibold">{notificacion.NombreGasto}</span>
     </>
   )}
 </p>

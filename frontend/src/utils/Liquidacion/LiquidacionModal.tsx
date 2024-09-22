@@ -95,7 +95,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setBaseVendedor(data?.Base ?? 0);
       setDifere(data?.Diferencia ?? 0);
       setClientesActivus(data?.ClientesActivos ?? 0);
-      setMovimientos(data?.Movimientos ?? 0);
       setIsLoading(false);
     } catch (err) {
      {
@@ -131,6 +130,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setMultas(data?.Multas ?? 0);
       setAbonoCapital(data?.AbonoCapital ?? 0);
       setDifere(data?.Diferencia ?? 0);
+      setMovimientos(data?.Movimientos ?? 0);
       setEfectivoAbonosCompras(data?.EfectivoAbonosCompras ?? 0);
       setEfectivoEntregar(data?.EfectivoEntregar ?? 0);
       setAbonosTransacciones(data?.AbonosTransacciones ?? 0);
@@ -287,7 +287,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
             <form
               action="submit"
               className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full"
-              onSubmit={handleSubmit}
             >
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
@@ -482,7 +481,12 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Movimientos:
                           </label>
                           <button className="font-normal text-lg"
-                          onClick={() => setIsMOvimientosOpen(true)}>
+                          type="button"
+                            onClick={(event) =>  {
+                            event.preventDefault();
+                            event?.stopPropagation();
+                            setIsMOvimientosOpen(true)
+                            }}>
                             {Movimientos}
                           </button>
                         </div>
@@ -555,8 +559,9 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                   </h3>
                 </span>
                 <button
-                  type="submit"
+                  type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  onClick={handleSubmit}
                 >
                   Liquidar vendedor
                 </button>

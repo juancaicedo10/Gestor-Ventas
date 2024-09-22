@@ -168,6 +168,11 @@ function Liquidaciones() {
               />
               <section className="w-full px-2 grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 {liquidaciones?.map((liquidacion) => {
+                                    const fecha = liquidacion.Fecha.split('T')[0];
+                                    
+                                    // Formatear la fecha manualmente
+                                    const [year, month, day] = fecha.split('-');
+                                    const formattedDate = `${day}/${month}/${year}`;
                   return (
                     <li
                       className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md"
@@ -183,7 +188,7 @@ function Liquidaciones() {
                                 .join(" ")}
                             </h1>
                             <p className="text-gray-300 font-light py-2 text-lg">
-                              {new Date(liquidacion.Fecha).toLocaleDateString()}
+                              {formattedDate}
                             </p>
                             <p>
                               <h6 className="font-normal text-lg pb-1">{ liquidacion.Hora }</h6>

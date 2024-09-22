@@ -106,7 +106,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({ isOpen, onClose, Consecuti
       se registró un gasto por un valor de 
       <span className="text-blue-600 font-semibold ml-1">
       {notificacion.Valor}$
-      </span>
+      </span> para <span className="text-blue-600 font-semibold">{notificacion.NombreGasto}</span>
     </>
   )}
 </p>
