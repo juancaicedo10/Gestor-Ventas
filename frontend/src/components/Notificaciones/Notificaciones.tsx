@@ -4,6 +4,7 @@ import axios from "axios";
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import Select from "react-select";
+import { formatDate } from "../../utils/Helpers/FormatDate";
 
 
 interface Props {
@@ -73,6 +74,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                 "https://backendgestorventas.azurewebsites.net/api/notificaciones"
             );
             setNotificaciones(response.data.data);
+            console.log(response.data.data, 'notificaciones');
         } catch (error) {
             console.error("Error al obtener las notificaciones", error);
         }
@@ -91,6 +93,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                 }
             );
             setNotificaciones(response.data.data);
+            console.log(response.data.data, 'notificaciones filtradas');
         } catch (error) {
             console.error("Error al obtener las notificaciones", error);
         }
@@ -233,7 +236,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
       <span>{FormatearFecha(notificacion.Fecha)}</span>
       <span>
         {
-            new Date(notificacion.Fecha).toLocaleDateString()
+            formatDate(notificacion.Fecha)
         }
       </span>
     </footer>

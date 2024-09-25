@@ -3,6 +3,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../utils/Helpers/FormatDate";
 
 
 interface Props {
@@ -114,7 +115,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({ isOpen, onClose, Consecuti
       <span>{FormatearFecha(notificacion.Fecha)}</span>
       <span>
         {
-            new Date(notificacion.Fecha).toLocaleDateString()
+            formatDate(notificacion.Fecha)
         }
       </span>
     </footer>
