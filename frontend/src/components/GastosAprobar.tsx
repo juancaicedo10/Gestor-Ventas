@@ -8,6 +8,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
 import { formatDate } from "../utils/Helpers/FormatDate";
+import decodeToken from "../utils/tokenDecored";
 
 interface GastoAprobar {
   Id: number;
@@ -26,7 +27,7 @@ function GastosAprobar() {
   const getgastosAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/gastos/aprobar", {
+      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
