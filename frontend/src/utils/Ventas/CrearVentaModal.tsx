@@ -93,15 +93,26 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
   const getSellers = async () => {
     try {
+      let Url =
+        decodeToken()?.user?.role !== "Administrador"
+          ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+              decodeToken()?.user?.Id
+            }`
+          : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+              decodeToken()?.user?.Id
+            }/all`;
       await axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
+        .get(`${Url}`, {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
         })
         .then((response) => {
-          setSellers(response.data);
-          console.log(response.data);
+          if (Array.isArray(response.data)) {
+            setSellers(response.data);
+          } else {
+            setSellers([response.data]);
+          }
         });
     } catch (error) {
       console.error("Error obteniendo vendedores:", error);
@@ -109,9 +120,17 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   };
 
   const getClients = async () => {
+    let Url =
+      decodeToken()?.user?.role === "Administrador"
+        ? `https://backendgestorventas.azurewebsites.net/api/clientes/${
+            decodeToken()?.user?.Id
+          }/all`
+        : `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${
+            decodeToken().user.Id
+          }`;
     try {
       await axios
-        .get("https://backendgestorventas.azurewebsites.net/api/clientes", {
+        .get(`${Url}`, {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -128,14 +147,11 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const handleCreateSell = (e: any) => {
     e.preventDefault();
 
-
     setIsDisabled(true);
-    
 
     let isValid = true;
 
     if (!selectedSeller || selectedSeller === 0) {
-
       setIsSelectedSellerValid(false);
       isValid = false;
     }
@@ -177,7 +193,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     }
 
     if (!selectedClient || selectedClient === "") {
-
       setIsSelectedClientValid(false);
       isValid = false;
       console.log("es cliente");
@@ -186,7 +201,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     if (diasSelected && !isDiasValid) {
       setIsDiasValid(false);
       isValid = false;
-
     }
 
     if (!isValid) return;
@@ -204,21 +218,21 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post(
-        "https://backendgestorventas.azurewebsites.net/api/ventas",
-        venta,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      .post("https://backendgestorventas.azurewebsites.net/api/ventas", venta, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getVentas();
         setIsDisabled(false);
         onClose();
-        toast.success(decodeToken()?.user?.role === "Administrador" ? "Venta creada exitosamente" : "Venta enviada a aprobacion");
+        toast.success(
+          decodeToken()?.user?.role === "Administrador"
+            ? "Venta creada exitosamente"
+            : "Venta enviada a aprobacion"
+        );
       })
       .catch((err) => {
         console.log(err);
@@ -259,22 +273,28 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     if (decodeToken()?.user?.role === "Vendedor") {
       setIsSelectedSellerValid(true);
       console.log(isSelectedSellerValid, "seller");
+      console.log(sellers);
       setSelectedSeller(decodeToken()?.user?.Id);
     }
   }, [isOpen]);
 
-  const SellersOptions = sellers.map((seller) => ({
-    value: seller.Id,
-    label: seller.NombreCompleto,
-  }));
+  const SellersOptions =
+    sellers?.length > 0
+      ? sellers.map((seller) => ({
+          value: seller.Id,
+          label: seller.NombreCompleto,
+        }))
+      : [];
 
-  const ClientsOptions = clients.map((client) => ({
-    value: client.Id,
-    label: client.NombreCompleto,
-  }));
+  const ClientsOptions =
+    clients?.length > 0
+      ? clients.map((client) => ({
+          value: client.Id,
+          label: client.NombreCompleto,
+        }))
+      : [];
 
   const handleSelectSeller = (sellerId: Number | undefined) => {
-
     if (sellerId !== null) {
       setIsSelectedSellerValid(true);
       setSelectedSeller(Number(sellerId));
@@ -283,12 +303,12 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   };
 
   const handleSelectClient = (clientId: Number | undefined) => {
-    console.log("entro a la seleccion del cliente")
+    console.log("entro a la seleccion del cliente");
     if (clientId !== null) {
       setSelectedClient(Number(clientId));
       setIsSelectedClientValid(true);
       setIsDisabled(false);
-      
+
       console.log("oe", clientId, selectedClient, isSelectedClientValid);
     }
   };
@@ -357,10 +377,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                         : null
                     }
                     onChange={(selectedOption) => {
-                      handleSelectSeller(selectedOption?.value)
+                      handleSelectSeller(selectedOption?.value);
                       setIsDisabled(false);
-                    }
-                    }
+                    }}
                     isSearchable
                     isDisabled={decodeToken()?.user?.role === "Vendedor"}
                     maxMenuHeight={170}
@@ -378,10 +397,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     id="seller"
                     options={ClientsOptions}
                     onChange={(selectedOption) => {
-                      handleSelectClient(selectedOption?.value)
+                      handleSelectClient(selectedOption?.value);
                       setIsDisabled(false);
-                    }
-                    }
+                    }}
                     isSearchable
                     maxMenuHeight={170}
                     menuPlacement="auto"

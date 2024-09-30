@@ -14,11 +14,10 @@ import Select from "react-select";
 import Spinner from "../utils/Spinner";
 import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
 import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
-import PaymentsIcon from '@mui/icons-material/Payments';
+import PaymentsIcon from "@mui/icons-material/Payments";
 import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
 import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
 import { formatDate } from "../utils/Helpers/FormatDate.tsx";
-
 
 interface Gasto {
   GastoId: number;
@@ -58,7 +57,9 @@ function Gastos() {
 
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
 
-  const [openDropdownTipoId, setOpenDropdownTipoId] = useState<number | null>(null);
+  const [openDropdownTipoId, setOpenDropdownTipoId] = useState<number | null>(
+    null
+  );
 
   const [selectedSeller, setSelectedSeller] = useState<number | null>(null);
 
@@ -66,7 +67,7 @@ function Gastos() {
 
   const [searched, setSearched] = useState<boolean>(false);
 
-  console.log(searched)
+  console.log(searched);
 
   const [Id, setId] = useState<number>(0);
 
@@ -76,9 +77,11 @@ function Gastos() {
 
   const [isOpenEditModal, setIsOpenEditModal] = useState<boolean>(false);
 
-  const [isOpenDeleteTipoGastoModal, setIsOpenDeleteTipoGastoModal] = useState<boolean>(false);
+  const [isOpenDeleteTipoGastoModal, setIsOpenDeleteTipoGastoModal] =
+    useState<boolean>(false);
 
-  const [isOpenDeleteGastoModal, setIsOpenDeleteGastoModal] = useState<boolean>(false);
+  const [isOpenDeleteGastoModal, setIsOpenDeleteGastoModal] =
+    useState<boolean>(false);
 
   const toggleEditModal = (id: number) => {
     setIsOpenEditModal(!isOpenEditModal);
@@ -89,24 +92,20 @@ function Gastos() {
     console.log("Eliminando el tipo de gasto con id: ", id);
   };
 
-
   //modales del creado del gasto
 
-  const [isOpenTIpoGastoModal, setIsOpenTipoGastoModal] = useState<boolean>(false);
+  const [isOpenTIpoGastoModal, setIsOpenTipoGastoModal] =
+    useState<boolean>(false);
 
   //modales del editado del gasto
 
-  const [isOpenEditGastoModal, setIsOpenEditGastoModal] = useState<boolean>(false);
+  const [isOpenEditGastoModal, setIsOpenEditGastoModal] =
+    useState<boolean>(false);
 
   const toggleTipoGastoEditModal = (GastoId: number) => {
     setIsOpenEditGastoModal(!isOpenEditGastoModal);
     setTipoGastoId(GastoId);
-  }
-
-
-
-
-
+  };
 
   const getTiposGastos = async () => {
     setIsLoading(true);
@@ -117,7 +116,8 @@ function Gastos() {
         setIsLoading(false);
         console.log(res.data);
       })
-      .catch((err) => {console.log(err)
+      .catch((err) => {
+        console.log(err);
         setIsLoading(false);
       });
   };
@@ -125,29 +125,45 @@ function Gastos() {
   const getGastos = async () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/gastos/${decodeToken()?.user?.Id}/all`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/gastos/${
+          decodeToken()?.user?.Id
+        }/all`
+      )
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
   };
 
   const getVendedores = async () => {
     setIsLoading(true);
-    axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`)
-      .then((res) => {
-        setVendedores(res.data);
-        console.log(res.data);
+    let Url =
+      decodeToken()?.user.role !== "Administrador"
+        ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+            decodeToken()?.user?.Id
+          }`
+        : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+            decodeToken()?.user?.Id
+          }/all`;
+    await axios
+      .get(`${Url}`)
+      .then((response) => {
+        if (Array.isArray(response.data)) {
+          setVendedores(response.data);
+        } else {
+          setVendedores([response.data]);
+        }
+        console.log(vendedores);
         setIsLoading(false);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
   };
@@ -164,42 +180,37 @@ function Gastos() {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         setIsLoading(false);
       });
-  }
-
-
+  };
 
   useEffect(() => {
     getTiposGastos();
     getVendedores();
   }, []);
 
-
-
   useEffect(() => {
     if (decodeToken()?.user.role === "Vendedor") {
       setSelectedSeller(decodeToken()?.user.Id);
       getGastosByVendedor();
     } else {
-    getGastos();
+      getGastos();
     }
   }, [activeView === "gastosPorVendedor"]);
-
-
 
   const SellersOptions = vendedores.map((seller) => ({
     value: seller.Id,
     label: seller.NombreCompleto,
   }));
 
+  console.log(SellersOptions, "options");
+
   const handleSelectSeller = (sellerId: string | undefined) => {
     if (sellerId !== null) {
       setSelectedSeller(Number(sellerId));
     }
   };
-
 
   return (
     <section>
@@ -229,7 +240,9 @@ function Gastos() {
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("gastosPorVendedor")}
           >
-            {decodeToken().user.role === 'Administrador' ? 'Gastos por vendedor ' : 'Tus Gastos'}
+            {decodeToken().user.role === "Administrador"
+              ? "Gastos por vendedor "
+              : "Tus Gastos"}
           </li>
         </ul>
         <NuevoTipoGastoModal
@@ -242,13 +255,13 @@ function Gastos() {
           onClose={() => setIsOpenEditGastoModal(false)}
           getGastos={getTiposGastos}
           GastoId={TipoGastoId}
-         />
-         <ModalDeleteTipoGasto 
+        />
+        <ModalDeleteTipoGasto
           isOpen={isOpenDeleteTipoGastoModal}
           onClose={() => setIsOpenDeleteTipoGastoModal(false)}
           getTipoGastos={getTiposGastos}
           Id={TipoGastoId}
-         />
+        />
         <div>
           {activeView === "tiposDeGastos" ? (
             <div className="px-4">
@@ -256,25 +269,30 @@ function Gastos() {
                 <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
                   Tipos de Gastos:
                 </h4>
-                {decodeToken()?.user.role === "Administrador" &&
-                <button
-                  className="mx-4 text-blue-900"
-                  onClick={() => setIsOpenTipoGastoModal(true)}
-                >
-                  <AddCircleIcon fontSize="large" />
-                </button>
-               }
+                {decodeToken()?.user.role === "Administrador" && (
+                  <button
+                    className="mx-4 text-blue-900"
+                    onClick={() => setIsOpenTipoGastoModal(true)}
+                  >
+                    <AddCircleIcon fontSize="large" />
+                  </button>
+                )}
               </div>
-              { isLoading ? <div className="w-full h-[70vh] flex items-center justify-center">
-                <Spinner isLoading={isLoading}/>
-              </div> : 
-              <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                {gastos.map((gasto) => (
-                  <li className="bg-white border rounded-md p-1 break-words" key={gasto.GastoId}>
-                    <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
-                      <PaymentsIcon fontSize="large"/>
-                      <h4>{gasto.Nombre}</h4>
-                      {decodeToken()?.user.role === "Administrador" && (
+              {isLoading ? (
+                <div className="w-full h-[70vh] flex items-center justify-center">
+                  <Spinner isLoading={isLoading} />
+                </div>
+              ) : (
+                <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {gastos.map((gasto) => (
+                    <li
+                      className="bg-white border rounded-md p-1 break-words"
+                      key={gasto.GastoId}
+                    >
+                      <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
+                        <PaymentsIcon fontSize="large" />
+                        <h4>{gasto.Nombre}</h4>
+                        {decodeToken()?.user.role === "Administrador" && (
                           <div className="relative inline-block text-left">
                             <div>
                               <button
@@ -285,7 +303,6 @@ function Gastos() {
                                 aria-expanded="true"
                                 onClick={() =>
                                   setOpenDropdownTipoId(
-
                                     openDropdownTipoId !== gasto.GastoId
                                       ? gasto.GastoId
                                       : null
@@ -305,7 +322,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleTipoGastoEditModal(gasto.GastoId)
+                                        toggleTipoGastoEditModal(gasto.GastoId);
                                         setOpenDropdownId(null);
                                       }}
                                     >
@@ -328,42 +345,43 @@ function Gastos() {
                             </div>
                           </div>
                         )}
-                    </div>
-                    <div className="flex items-center text-blue-900 py-2 break-words">
-                      <DescriptionIcon />
-                      <span className="px-2 w-[90%] text-wrap">
-                        <h6 className="font-semibold text-blue-900 text-lg">
-                          Descripcion:
-                        </h6>
-                        <p className="font-normal text-black">
-                          {gasto.Descripcion}
-                        </p>
-                      </span>
-                    </div>
-                    <div className="flex items-center text-blue-900 py-2">
-                      <SellIcon />
-                      <span className="px-2">
-                        <h6 className="font-semibold text-blue-900 text-lg">
-                          Monto Maximo:{" "}
-                        </h6>
-                        <p className="text-black font-normal">
-                        {new Intl.NumberFormat("es-CO", {
-                                style: "currency",
-                                currency: "COP",
-                              }).format(gasto.MontoMaximo)}$
-                        </p>
-                      </span>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              }
+                      </div>
+                      <div className="flex items-center text-blue-900 py-2 break-words">
+                        <DescriptionIcon />
+                        <span className="px-2 w-[90%] text-wrap">
+                          <h6 className="font-semibold text-blue-900 text-lg">
+                            Descripcion:
+                          </h6>
+                          <p className="font-normal text-black">
+                            {gasto.Descripcion}
+                          </p>
+                        </span>
+                      </div>
+                      <div className="flex items-center text-blue-900 py-2">
+                        <SellIcon />
+                        <span className="px-2">
+                          <h6 className="font-semibold text-blue-900 text-lg">
+                            Monto Maximo:{" "}
+                          </h6>
+                          <p className="text-black font-normal">
+                            {new Intl.NumberFormat("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            }).format(gasto.MontoMaximo)}
+                            $
+                          </p>
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              )}
             </div>
           ) : (
             <div className="px-2 md:px-4">
               <div className="w-full py-5 flex flex-col md:flex-row items-center justify-center">
                 <div className="md:w-1/2 flex font-normal text-sm md:text-lg">
-                <Select
+                  <Select
                     id="seller"
                     options={SellersOptions}
                     placeholder="Seleccione un vendedor"
@@ -374,19 +392,29 @@ function Gastos() {
                     isDisabled={decodeToken()?.user?.role === "Vendedor"}
                     defaultValue={SellersOptions.find(
                       (option) => option.value === selectedSeller
-                    )
-                    }
+                    )}
                     maxMenuHeight={170}
                     menuPlacement="auto"
                     className="w-full"
                   />
-                  <button className="border-md text-white bg-blue-900 text-base px-2" onClick={() => {
-                    getGastosByVendedor()
-                    setSearched(true)
-                    }}>Buscar</button>
+                  <button
+                    className="border-md text-white bg-blue-900 text-base px-2"
+                    onClick={() => {
+                      getGastosByVendedor();
+                      setSearched(true);
+                    }}
+                  >
+                    Buscar
+                  </button>
                 </div>
-                <button className="flex mt-5 md:mt-0 w-full md:w-[50px] items-center justify-center text-white" onClick={() => setIsOpenModal(true)}>
-                  <AddCircleIcon fontSize="large" className="text-blue-900 absolute md:right-5"/>
+                <button
+                  className="flex mt-5 md:mt-0 w-full md:w-[50px] items-center justify-center text-white"
+                  onClick={() => setIsOpenModal(true)}
+                >
+                  <AddCircleIcon
+                    fontSize="large"
+                    className="text-blue-900 absolute md:right-5"
+                  />
                 </button>
               </div>
               <div>
@@ -399,129 +427,140 @@ function Gastos() {
                   refreshGastos={getGastos}
                   handleSearch={getGastosByVendedor}
                 />
-                <ModificarGastoModal 
-                isOpen={isOpenEditModal}
-                onClose={() => setIsOpenEditModal(false)}
-                getGastos={getTiposGastos}
-                Id={Id}
+                <ModificarGastoModal
+                  isOpen={isOpenEditModal}
+                  onClose={() => setIsOpenEditModal(false)}
+                  getGastos={getTiposGastos}
+                  Id={Id}
                 />
-                <ModalDeleteGasto 
-                isOpen={isOpenDeleteGastoModal}
-                onClose={() => setIsOpenDeleteGastoModal(false)}
-                getGastos={getGastos}
-                Id={Id}
+                <ModalDeleteGasto
+                  isOpen={isOpenDeleteGastoModal}
+                  onClose={() => setIsOpenDeleteGastoModal(false)}
+                  getGastos={getGastos}
+                  Id={Id}
                 />
-                { isLoading ? <div className="w-full h-[70vh] flex items-center justify-center">
-                <Spinner isLoading={isLoading}/>
-                </div> : 
-                <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {gastosPorVendedor.map((gasto) => (
-                    <li className="bg-white border rounded-md p-1 text-wrap break-words" key={gasto.Id} >
-                    <div className="flex flex-col items-center w-full text-white bg-blue-900 rounded-md p-4">
-                    <div className="w-full text-xl font-semibold flex justify-between">
-                        <h6 className="text-center">{gasto.NombreVendedor}</h6>
-                        {decodeToken()?.user.role === "Administrador" && (
-                          <div className="relative inline-block text-left">
-                            <div>
-                              <button
-                                type="button"
-                                className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm p-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
-                                id="options-menu"
-                                aria-haspopup="true"
-                                aria-expanded="true"
-                                onClick={() =>
-                                  setOpenDropdownId(
-                                    openDropdownId !== gasto.Id
-                                      ? gasto.Id
-                                      : null
-                                  )
-                                }
-                              >
-                                <EditNoteIcon fontSize="medium" />
-                              </button>
-                              {openDropdownId === gasto.Id && (
-                                <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
-                                  <div
-                                    className="py-1"
-                                    role="menu"
-                                    aria-orientation="vertical"
-                                    aria-labelledby="options-menu"
+                {isLoading ? (
+                  <div className="w-full h-[70vh] flex items-center justify-center">
+                    <Spinner isLoading={isLoading} />
+                  </div>
+                ) : (
+                  <ul className="w-full text-lg grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {gastosPorVendedor.map((gasto) => (
+                      <li
+                        className="bg-white border rounded-md p-1 text-wrap break-words"
+                        key={gasto.Id}
+                      >
+                        <div className="flex flex-col items-center w-full text-white bg-blue-900 rounded-md p-4">
+                          <div className="w-full text-xl font-semibold flex justify-between">
+                            <h6 className="text-center">
+                              {gasto.NombreVendedor}
+                            </h6>
+                            {decodeToken()?.user.role === "Administrador" && (
+                              <div className="relative inline-block text-left">
+                                <div>
+                                  <button
+                                    type="button"
+                                    className="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm p-1 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500"
+                                    id="options-menu"
+                                    aria-haspopup="true"
+                                    aria-expanded="true"
+                                    onClick={() =>
+                                      setOpenDropdownId(
+                                        openDropdownId !== gasto.Id
+                                          ? gasto.Id
+                                          : null
+                                      )
+                                    }
                                   >
-                                    <button
-                                      className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                      onClick={() => {
-                                        toggleEditModal(gasto.Id);
-                                        setOpenDropdownId(null);
-                                      }}
-                                    >
-                                      Modificar
-                                    </button>
-                                    <button
-                                      className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                      onClick={() => {
-                                        toggleCloseConfirmation(gasto.Id);
-                                        setOpenDropdownId(null);
-                                        setId(gasto.Id);
-                                      }}
-                                    >
-                                      Eliminar
-                                    </button>
-                                  </div>
+                                    <EditNoteIcon fontSize="medium" />
+                                  </button>
+                                  {openDropdownId === gasto.Id && (
+                                    <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
+                                      <div
+                                        className="py-1"
+                                        role="menu"
+                                        aria-orientation="vertical"
+                                        aria-labelledby="options-menu"
+                                      >
+                                        <button
+                                          className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                          onClick={() => {
+                                            toggleEditModal(gasto.Id);
+                                            setOpenDropdownId(null);
+                                          }}
+                                        >
+                                          Modificar
+                                        </button>
+                                        <button
+                                          className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                          onClick={() => {
+                                            toggleCloseConfirmation(gasto.Id);
+                                            setOpenDropdownId(null);
+                                            setId(gasto.Id);
+                                          }}
+                                        >
+                                          Eliminar
+                                        </button>
+                                      </div>
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                            </div>
+                              </div>
+                            )}
                           </div>
-                        )}
-                      </div>
-                    <span className={`rounded-md p-1 ${gasto.Liquidado ? 'bg-green-500': 'bg-red-500'}`}>{
-                      gasto.Liquidado ? "Liquidado" : "Pendiente"
-                      }</span>
-                    </div>
-                     
-                      <div className="flex items-center my-2 text-blue-800">
-                        <SellIcon />
-                        <span className="mx-2">
-                          <h6>Nombre Gasto:</h6>
-                          <p className="font-normal text-black">
-                            {gasto.Nombre}
-                          </p>
-                        </span>
-                      </div>
-                      <div className="w-full flex items-center my-2 text-blue-800">
-                        <DescriptionIcon />
-                        <span className="mx-2 w-[90%] break-words">
-                          <h6>Descripcion Gasto: </h6>
-                          <p className="font-normal text-black">
-                            {gasto.Descripcion}
-                          </p>
-                        </span>
-                      </div>
-                      <div className="flex items-center my-2 text-blue-800">
-                        <AttachMoneyIcon />
-                        <span className="mx-2">
-                          <h6>Valor del gasto:</h6>
-                          <p className="font-normal text-black">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(gasto.Monto)}
-                            $
-                          </p>
-                        </span>
-                      </div>
-                      <div className="flex items-center text-blue-800">
-                        <CalendarMonthIcon />
-                        <span className="mx-2">
-                          <h6>Fecha del gasto:</h6>
-                          <p className="font-normal text-black">
-                            {formatDate(gasto.Fecha)}
-                          </p>
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-}
+                          <span
+                            className={`rounded-md p-1 ${
+                              gasto.Liquidado ? "bg-green-500" : "bg-red-500"
+                            }`}
+                          >
+                            {gasto.Liquidado ? "Liquidado" : "Pendiente"}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center my-2 text-blue-800">
+                          <SellIcon />
+                          <span className="mx-2">
+                            <h6>Nombre Gasto:</h6>
+                            <p className="font-normal text-black">
+                              {gasto.Nombre}
+                            </p>
+                          </span>
+                        </div>
+                        <div className="w-full flex items-center my-2 text-blue-800">
+                          <DescriptionIcon />
+                          <span className="mx-2 w-[90%] break-words">
+                            <h6>Descripcion Gasto: </h6>
+                            <p className="font-normal text-black">
+                              {gasto.Descripcion}
+                            </p>
+                          </span>
+                        </div>
+                        <div className="flex items-center my-2 text-blue-800">
+                          <AttachMoneyIcon />
+                          <span className="mx-2">
+                            <h6>Valor del gasto:</h6>
+                            <p className="font-normal text-black">
+                              {new Intl.NumberFormat("es-CO", {
+                                style: "currency",
+                                currency: "COP",
+                              }).format(gasto.Monto)}
+                              $
+                            </p>
+                          </span>
+                        </div>
+                        <div className="flex items-center text-blue-800">
+                          <CalendarMonthIcon />
+                          <span className="mx-2">
+                            <h6>Fecha del gasto:</h6>
+                            <p className="font-normal text-black">
+                              {formatDate(gasto.Fecha)}
+                            </p>
+                          </span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
           )}

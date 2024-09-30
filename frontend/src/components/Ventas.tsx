@@ -102,6 +102,8 @@ function Ventas() {
         console.log(data, 'data with id')
       } else if (decodeToken()?.user.role === "Administrador" && !id) {
         data = res.data.data;
+      } else {
+        data = res.data;
       }
       console.log(res, "response");
       setVentas(data);
@@ -183,7 +185,7 @@ function Ventas() {
                 />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
-                {filter().length > 0 &&
+                {filter() && filter().length > 0 &&
                   filter().map((venta) => (
                     <li>
                       <div className="flex flex-col m-2 p-2">

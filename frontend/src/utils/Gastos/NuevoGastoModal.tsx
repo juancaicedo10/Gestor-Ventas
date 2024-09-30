@@ -47,18 +47,27 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const [tiposGastos, setTiposGastos] = useState<TipoGasto[]>([]);
   const [sellers, setSellers] = useState<Seller[]>([]);
 
-
-  const [isDisabled, setIsDisabled] = useState<boolean>(false);``
+  const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  ``;
 
   const fetchSellers = async () => {
+    const Url =
+      decodeToken()?.user?.role === "Administrador"
+        ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+            decodeToken()?.user?.Id
+          }/all`
+        : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+            decodeToken()?.user?.Id
+          }`;
     try {
-      const response = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
-      setSellers(response.data);
+      const response = await axios.get(`${Url}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      if (Array.isArray(response.data)) {
+        setSellers(response.data);
+      } else {
+        setSellers([response.data]);
+      }
     } catch (error) {
       console.error("Error obteniendo vendedores:", error);
     }
@@ -80,7 +89,14 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
     setIsDisabled(true);
 
-    if (!fecha || !monto || !descripcion || Number(monto) > montoMaximo! || !selectedSeller || !selectedTipoGasto) {
+    if (
+      !fecha ||
+      !monto ||
+      !descripcion ||
+      Number(monto) > montoMaximo! ||
+      !selectedSeller ||
+      !selectedTipoGasto
+    ) {
       setIsFechaValid(!!fecha);
       setIsMontoValid(!!monto);
       setIsDescripcionValid(!!descripcion);
@@ -110,7 +126,11 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       setIsDisabled(false);
       onClose();
       handleSearch();
-      toast.success(decodeToken()?.user?.role === 'Administrador' ? `Gasto registrado correctamente` : `Gasto enviado a aprobacion correctamente`);
+      toast.success(
+        decodeToken()?.user?.role === "Administrador"
+          ? `Gasto registrado correctamente`
+          : `Gasto enviado a aprobacion correctamente`
+      );
     } catch (error) {
       console.error("Error creando gasto:", error);
       setIsDisabled(false);
@@ -122,11 +142,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   useEffect(() => {
     fetchSellers();
     fetchTiposGastos();
-
   }, []);
-
-
-
 
   useEffect(() => {
     if (!isOpen) {
@@ -145,12 +161,10 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       setIsSelectedSellerValid(true);
     }
 
-
-    if (decodeToken()?.user?.role === 'Vendedor') {
+    if (decodeToken()?.user?.role === "Vendedor") {
       setSelectedSeller(decodeToken()?.user?.Id);
       setIsSelectedSellerValid(true);
     }
-
   }, [isOpen]);
 
   const sellersOptions = sellers.map((seller) => ({
@@ -320,7 +334,9 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
                 type="submit"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
               >
-                {decodeToken()?.user?.role === 'Administrador' ? 'Guardar' : 'Enviar gasto a aprobacion'}
+                {decodeToken()?.user?.role === "Administrador"
+                  ? "Guardar"
+                  : "Enviar gasto a aprobacion"}
               </button>
               <button
                 type="button"
