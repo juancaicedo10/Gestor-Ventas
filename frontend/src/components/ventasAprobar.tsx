@@ -9,6 +9,7 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ModeIcon from '@mui/icons-material/Mode';
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
+import decodeToken from "../utils/tokenDecored";
 
 interface VentaAprobar {
   Id: number;
@@ -32,7 +33,7 @@ function VentasAprobar() {
   const getVentasAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/ventas/aprobar", {
+      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/aprobar/${decodeToken()?.user?.Id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -16,6 +16,7 @@ import Liquidaciones from "./components/Liquidaciones/Liquidaciones";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import GastosAprobar from "./components/GastosAprobar";
+import Administradores from "./components/Administradores/Administradores";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
         />
         <Route
           path="/ventas"
+          element={
+            <PrivateRoute>
+              <Ventas />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ventas/:id"
           element={
             <PrivateRoute>
               <Ventas />
@@ -103,6 +112,14 @@ function App() {
           element={
             <PrivateRoute>
               <Liquidaciones />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/administradores"
+          element={
+            <PrivateRoute>
+              <Administradores />
             </PrivateRoute>
           }
         />

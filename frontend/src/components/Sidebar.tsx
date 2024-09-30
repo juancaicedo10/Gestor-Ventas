@@ -8,13 +8,13 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import CloseIcon from "@mui/icons-material/Close";
 import decodeToken from "../utils/tokenDecored";
 import { useNavigate } from "react-router-dom";
-import HowToRegIcon from '@mui/icons-material/HowToReg';
-import PaymentsIcon from '@mui/icons-material/Payments';
-import FactCheckIcon from '@mui/icons-material/FactCheck';
-import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import SupervisedUserCircleIcon from '@mui/icons-material/SupervisedUserCircle';
-import SavingsIcon from '@mui/icons-material/Savings';
+import HowToRegIcon from "@mui/icons-material/HowToReg";
+import PaymentsIcon from "@mui/icons-material/Payments";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
+import SavingsIcon from "@mui/icons-material/Savings";
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -63,18 +63,18 @@ export default function Sidebar() {
         </button>
       </header>
       <ul className="text-xl md:text-2xl flex flex-col w-full">
-      {decodeToken()?.user.role === "Administrador" && (
-        <Link
-          to="/vendedores"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-          onClick={() => setShow(false)}
-        >
-          <SupervisedUserCircleIcon fontSize="inherit" />
-          <p hidden={!show} className="font-normal text-xl">
-            Vendedores
-          </p>
-        </Link>
-)}
+        {decodeToken()?.user.role === "Administrador" && (
+          <Link
+            to="/vendedores"
+            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            onClick={() => setShow(false)}
+          >
+            <SupervisedUserCircleIcon fontSize="inherit" />
+            <p hidden={!show} className="font-normal text-xl">
+              Vendedores
+            </p>
+          </Link>
+        )}
 
         <Link
           to="/clientes"
@@ -97,17 +97,28 @@ export default function Sidebar() {
             Ventas
           </p>
         </Link>
-            <Link
-              to="/gastos"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-            >
-              <PaymentsIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Gastos
-              </p>
-            </Link>
-            {decodeToken()?.user.role === "Administrador" && (
-            <>
+        <Link
+          to="/gastos"
+          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+        >
+          <PaymentsIcon fontSize="inherit" />
+          <p hidden={!show} className="font-normal text-xl">
+            Gastos
+          </p>
+        </Link>
+        {decodeToken()?.user.role === "Administrador" && (
+          <>
+         
+          <Link
+            to="/administradores"
+            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            onClick={() => setShow(false)}
+          >
+            <SupervisedUserCircleIcon fontSize="inherit" />
+            <p hidden={!show} className="font-normal text-xl">
+              Administradores
+            </p>
+          </Link>
             <Link
               to="/abonos-retiros"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"

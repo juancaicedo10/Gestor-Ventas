@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import decodeToken from "../tokenDecored";
 
 interface ModalProps {
   isOpen: boolean;
@@ -48,7 +49,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        "https://backendgestorventas.azurewebsites.net/api/vendedores",
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import decodeToken from "../tokenDecored";
 import { toast } from "react-toastify";
+import decodeToken from "../../utils/tokenDecored";
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,7 +9,7 @@ interface ModalProps {
   getClients: () => void;
 }
 
-const NuevoVendedorModal: React.FC<ModalProps> = ({
+const NuevoAdministradorModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   getClients,
@@ -20,7 +20,6 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
   const [cedula, setCedula] = useState("");
   const [contraseña, setContraseña] = useState("");
   const [direccion, setDireccion] = useState("");
-  const [foto, setFoto] = useState<File | null>(null); // Cambiar a tipo File
 
   const [nombreValido, setNombreValido] = useState(true);
   const [correoValido, setCorreoValido] = useState(true);
@@ -30,7 +29,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
   const [direccionValido, setDireccionValido] = useState(true);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, files } = event.target;
+    const { name, value } = event.target;
     switch (name) {
       case "nombre":
         setNombre(value);
@@ -55,11 +54,6 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
       case "contraseña":
         setContraseña(value);
         setContraseñaValido(true);
-        break;
-      case "Foto":
-        if (files && files.length > 0) {
-          setFoto(files[0]); // Asignar el archivo seleccionado
-        }
         break;
       default:
         break;
@@ -97,28 +91,25 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
 
     if (!esValido) return;
 
-    const formData = new FormData();
-    formData.append("NombreCompleto", nombre);
-    formData.append("NumeroDocumento", cedula);
-    formData.append("TipoDocumento", "1");
-    formData.append("Telefono", telefono);
-    formData.append("Correo", correo);
-    formData.append("Contrasena", contraseña);
-    formData.append("Direccion", direccion);
-    if (foto) {
-      formData.append("Foto", foto); // Agregar el archivo al FormData
-    }
-    formData.append("OficinaId", "1");
+    const admin = {
+      NombreCompleto: nombre,
+      NumeroDocumento: cedula,
+      TipoDocumento: "1",
+      Telefono: telefono,
+      Correo: correo,
+      Contrasena: contraseña,
+      Direccion: direccion,
+      OficinaId: "1",
+    };
 
     axios
-      .post(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, formData, {
+      .post("https://backendgestorventas.azurewebsites.net/api/administradores", admin, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
       .then(() => {
-        console.log("Vendedor CREADO EXITOSAMENTE");
+        console.log("Administrador CREADO EXITOSAMENTE");
         setNombre("");
         setCorreo("");
         setTelefono("");
@@ -130,13 +121,12 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
         setCedulaValido(true);
         setDireccionValido(true);
         setContraseñaValido(true);
-        setFoto(null);
         getClients();
-        toast.success("Vendedor creado correctamente");
+        toast.success("Administrador creado correctamente");
       })
       .catch((err) => {
         console.log(err)
-        toast.error("Error creando el vendedor", err);
+        toast.error("Error creando el Administrador", err);
       });
     onClose();
   };
@@ -148,7 +138,6 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
       setTelefono("");
       setCedula("");
       setDireccion("");
-      setFoto(null);
       setNombreValido(true);
       setCorreoValido(true);
       setTelefonoValido(true);
@@ -180,7 +169,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <header className="flex justify-between items-center mb-4">
               <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-blue-900">
-                Nuevo Vendedor
+                Nuevo Administrador
               </h5>
               <button
                 type="button"
@@ -200,7 +189,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
                 className={`p-2 rounded-md border w-full text-sm ${
                   !nombreValido ? "border-red-500" : ""
                 }`}
-                placeholder="Nombre del vendedor"
+                placeholder="Nombre del Administrador"
               />
               {!nombreValido && (
                 <p className="text-red-500 text-xs">
@@ -297,17 +286,6 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
                 </p>
               )}
             </label>
-            <div className="flex flex-col text-base md:text-lg font-normal mt-2">
-              <label className="text-gray-700">Foto (opcional):</label>
-              <span className="border border-gray rounded-md flex items-center justify-center h-[100px]">
-                <input
-                  type="file"
-                  name="Foto"
-                  onChange={handleChange}
-                  placeholder="Selecciona foto"
-                />
-              </span>
-            </div>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
@@ -315,8 +293,8 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
               className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
             >
               {decodeToken()?.user.role === "Administrador"
-                ? "Crear Vendedor"
-                : "Enviar vendedor a aprobacion"}
+                ? "Crear Administrador"
+                : "Enviar Administrador a aprobacion"}
             </button>
           </div>
         </form>
@@ -325,4 +303,4 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
   );
 };
 
-export default NuevoVendedorModal;
+export default NuevoAdministradorModal;

@@ -66,7 +66,7 @@ function Clientes() {
         });
     } else {
       axios
-        .get("https://backendgestorventas.azurewebsites.net/api/clientes")
+        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/${decodeToken()?.user?.Id}/all`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);

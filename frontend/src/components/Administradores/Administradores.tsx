@@ -5,17 +5,15 @@ import decodeToken from "../../utils/tokenDecored";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
-import SellIcon from "@mui/icons-material/Sell";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import NuevoVendedorModal from "../../utils/vendedores/NuevoVendedorModal";
-import ModificarVendedorModal from "../../utils/vendedores/ModificarVendedorModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
-import VendedorDeleteModal from "./ModalDeleteVendedor";
-import StorefrontIcon from "@mui/icons-material/Storefront";
 import Spinner from "../../utils/Spinner";
-import { Link } from "react-router-dom";
+import NuevoAdministradorModal from "./ModalCrearAdmin";
+import ModificarAdministradorModal from "./ModalEditAdmin";
+import RelacionAdministradorVendedorModal from "./AdminVendedorRelacionModal";
+import SyncAltIcon from "@mui/icons-material/SyncAlt";
 
-function Vendedores() {
+function Administradores() {
   // Definiciones de estado e interfaces
   interface Client {
     Id: number;
@@ -28,11 +26,12 @@ function Vendedores() {
     Foto: string;
   }
 
-  const [vendedores, setVendedores] = useState<Client[]>([]);
+  const [Administradores, setAdministradores] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isDeleteRequest, setIsDeleteRequest] = useState<boolean>(false);
+  const [isRelacionOpen, setIsRelacionOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [Id, setId] = useState<number>(0);
 
@@ -46,18 +45,15 @@ function Vendedores() {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  const closeDeleteModal = () => {
-    setIsDeleteRequest(false);
-    setId(0);
-  };
+  console.log(isDeleteRequest)
 
-  // Función para obtener la lista de vendedores
-  const getVendedores = () => {
+  // Función para obtener la lista de Administradores
+  const getAdministradores = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`)
+      .get("https://backendgestorventas.azurewebsites.net/api/administradores")
       .then((res) => {
-        setVendedores(res.data);
+        setAdministradores(res.data);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -71,34 +67,43 @@ function Vendedores() {
     const value = e.target.value;
 
     if (value !== "") {
-      const filtrados = vendedores.filter((vendedor) =>
-        vendedor.NombreCompleto.toLowerCase().includes(value.toLowerCase())
+      const filtrados = Administradores.filter((Administrador) =>
+        Administrador.NombreCompleto.toLowerCase().includes(value.toLowerCase())
       );
-      setVendedores(filtrados);
+      setAdministradores(filtrados);
     } else {
-      getVendedores();
+      getAdministradores();
     }
   };
 
   useEffect(() => {
-    getVendedores();
+    getAdministradores();
   }, []);
 
   return (
     <section className="w-full overflow-y-hidden">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-      <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
+        <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
             <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
-              Vendedores
+              Administradores
             </h1>
+            <button className="mx-4 text-blue-900">
+              <SyncAltIcon
+                fontSize="large"
+                onClick={() => setIsRelacionOpen(true)}
+              />
+            </button>
             <button className="mx-4 text-blue-900">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
           </div>
           <div className="flex justify-center items-center px-1">
-            <form className="mx-auto w-full md:w-1/2 mb-2" onSubmit={handleSearch}>
+            <form
+              className="mx-auto w-full md:w-1/2 mb-2"
+              onSubmit={handleSearch}
+            >
               <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                 Buscar
               </label>
@@ -124,7 +129,7 @@ function Vendedores() {
                   type="search"
                   id="default-search"
                   className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Buscar vendedor"
+                  placeholder="Buscar Administrador"
                   onChange={handleSearch}
                   required
                 />
@@ -147,45 +152,42 @@ function Vendedores() {
             <Spinner isLoading={isLoading} />
           ) : (
             <section className="w-full px-2">
-              <NuevoVendedorModal
+              <NuevoAdministradorModal
                 isOpen={isModalOpen}
                 onClose={toggleModal}
-                getClients={getVendedores}
+                getClients={getAdministradores}
               />
               <ul className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 place-items-start rounded-md overflow-hidden">
                 {isEditModalOpen && (
-                  <ModificarVendedorModal
+                  <ModificarAdministradorModal
                     Id={Id}
                     isOpen={isEditModalOpen}
-                    getVendedores={getVendedores}
+                    getAdministradores={getAdministradores}
                     onClose={() => toggleEditModal(Id)}
                   />
                 )}
-                {isDeleteRequest && (
-                  <VendedorDeleteModal
-                    isOpen={true}
-                    onClose={closeDeleteModal}
-                    getVendedores={getVendedores}
-                    Id={Id}
+                {
+                  <RelacionAdministradorVendedorModal
+                    isOpen={isRelacionOpen}
+                    onClose={() => setIsRelacionOpen(false)}
                   />
-                )}
-                {vendedores.map((vendedor) => {
+                }
+                {Administradores.map((Administrador) => {
                   return (
                     <li
                       className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
-                      key={vendedor.Id}
+                      key={Administrador.Id}
                     >
                       <div className="flex flex-col">
                         <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
-                        <img src={vendedor.Foto} className="w-16 h-16 rounded-full" />
                           <span>
                             <h1 className="font-normal text-xl">
-                              {vendedor.NombreCompleto.split(" ")
+                              {Administrador.NombreCompleto.split(" ")
                                 .slice(0, 2)
                                 .join(" ")}
                             </h1>
                             <p className="text-gray-300 font-light py-2 text-lg">
-                              CC. {vendedor.NumeroDocumento}
+                              CC. {Administrador.NumeroDocumento}
                             </p>
                           </span>
                           {decodeToken()?.user.role === "Administrador" && (
@@ -199,15 +201,15 @@ function Vendedores() {
                                   aria-expanded="true"
                                   onClick={() =>
                                     setOpenDropdownId(
-                                      openDropdownId !== vendedor.Id
-                                        ? vendedor.Id
+                                      openDropdownId !== Administrador.Id
+                                        ? Administrador.Id
                                         : null
                                     )
                                   }
                                 >
                                   <EditNoteIcon fontSize="medium" />
                                 </button>
-                                {openDropdownId === vendedor.Id && (
+                                {openDropdownId === Administrador.Id && (
                                   <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
                                     <div
                                       className="py-1"
@@ -218,7 +220,7 @@ function Vendedores() {
                                       <button
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                         onClick={() => {
-                                          setId(vendedor.Id);
+                                          setId(Administrador.Id);
                                           setIsEditModalOpen(true);
                                           setOpenDropdownId(null);
                                         }}
@@ -228,15 +230,12 @@ function Vendedores() {
                                       <button
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                         onClick={() => {
-                                          setId(vendedor.Id);
+                                          setId(Administrador.Id);
                                           setIsDeleteRequest(true);
                                           setOpenDropdownId(null);
                                         }}
                                       >
                                         Eliminar
-                                      </button>
-                                      <button className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full">
-                                        Ventas
                                       </button>
                                     </div>
                                   </div>
@@ -250,14 +249,14 @@ function Vendedores() {
                             <PinDropIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Direccion:</h3>
-                              <p>{vendedor.Direccion}</p>
+                              <p>{Administrador.Direccion}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
                             <EmailIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Email:</h3>
-                              <p>{vendedor.Correo}</p>
+                              <p>{Administrador.Correo}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
@@ -265,28 +264,14 @@ function Vendedores() {
                             <span className="mx-4">
                               <h3 className="font-bold">Telefono:</h3>
                               <p className="border-b border-blue-600 text-blue-600">
-                            <a href={`https://wa.me/${vendedor.Telefono}`} target="_blank" rel="noopener noreferrer">
-                              {vendedor.Telefono}
-                              </a>
+                                <a
+                                  href={`https://wa.me/${Administrador.Telefono}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {Administrador.Telefono}
+                                </a>
                               </p>
-                            </span>
-                          </li>
-                          <li className="flex items-center my-1">
-                            <SellIcon className="text-blue-800" />
-                            <span className="mx-4">
-                              <h3 className="font-bold">Ventas totales:</h3>
-                              <p>{ vendedor.TotalVentas }</p>
-                            </span>
-                          </li>
-                          <li className="flex items-center my-1">
-                            <StorefrontIcon className="text-blue-800" />
-                            <span className="mx-4">
-                              <h3 className="font-bold">Ventas totales:</h3>
-                              <Link to={`/ventas/vendedor/${vendedor.Id}`}>
-                                <p className="text-blue-600 hover:text-blue-900 cursor-pointer">
-                                  Ir a las ventas
-                                </p>
-                              </Link>
                             </span>
                           </li>
                         </div>
@@ -303,4 +288,4 @@ function Vendedores() {
   );
 }
 
-export default Vendedores;
+export default Administradores;

@@ -53,7 +53,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchSellers = async () => {
     try {
       const response = await axios.get(
-        "https://backendgestorventas.azurewebsites.net/api/vendedores",
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

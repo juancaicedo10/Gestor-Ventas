@@ -36,6 +36,7 @@ interface DatosVenta {
   ValorVenta: number;
   ValorCuotas: number;
   MoraTotal: number;
+  InteresTotal: number;
   TotalAbonado: number;
   SaldoRestante: number;
   TotalAPagar: number;
@@ -270,6 +271,7 @@ function Cuotas() {
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
               <th className="border-r border-black px-1">Mora Total</th>
+              <th className="border-r border-black px-1">Interes Total</th>
               <th className="border-r border-black px-1">Total Abonado</th>
               <th className="border-r border-black px-1">Valor a Pagar</th>
               <th className="px-1">Valor restante</th>
@@ -294,6 +296,12 @@ function Cuotas() {
                   style: "currency",
                   currency: "COP",
                 }).format(DatosVenta?.MoraTotal || 0)}
+              </td>
+              <td className="border-r border-black px-1">
+                {new Intl.NumberFormat("es-CO", {
+                  style: "currency",
+                  currency: "COP",
+                }).format(DatosVenta?.InteresTotal || 0)}
               </td>
               <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {

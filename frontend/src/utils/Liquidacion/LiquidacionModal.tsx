@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Select from "react-select";
 import Spinner from "../Spinner";
 import NotificacionesToLiquidar from "../../components/Notificaciones/NotificacionesToLiquidar";
+import decodeToken from "../tokenDecored";
 
 interface ModalProps {
   isOpen: boolean;
@@ -138,7 +139,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setBaseCapital(data?.BaseCapital ?? 0);
       setCartera(data?.Cartera ?? 0);
       setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
-      setClientesActivus(data?.ClientesActivos ?? 0);
       setIsDifeValid(data?.Diferencia === 0);
       setIsLoading(false);
     } catch (err) {
@@ -197,7 +197,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

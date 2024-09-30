@@ -69,7 +69,7 @@ function Liquidaciones() {
   const getLiquidaciones = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas")
+      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas/${decodeToken()?.user?.Id}`)
       .then((res) => {
         setLiquidaciones(res.data);
         setIsLoading(false);
@@ -96,7 +96,7 @@ function Liquidaciones() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

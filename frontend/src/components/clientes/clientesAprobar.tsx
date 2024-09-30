@@ -8,6 +8,7 @@ import ClientsImage from "../../images/clients.png";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { toast } from "react-toastify";
+import decodeToken from "../../utils/tokenDecored";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -26,7 +27,7 @@ function clientesAprobar() {
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/clientes/aprobar", {
+      .get(`https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${decodeToken()?.user?.Id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

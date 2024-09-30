@@ -47,7 +47,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getSellers = async () => {
     try {
-      const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/vendedores", {
+      const response = await axios.get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

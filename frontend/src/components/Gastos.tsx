@@ -125,7 +125,7 @@ function Gastos() {
   const getGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/gastos")
+      .get(`https://backendgestorventas.azurewebsites.net/api/gastos/${decodeToken()?.user?.Id}/all`)
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -140,7 +140,7 @@ function Gastos() {
   const getVendedores = async () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/vendedores")
+      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`)
       .then((res) => {
         setVendedores(res.data);
         console.log(res.data);

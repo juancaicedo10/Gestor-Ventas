@@ -8,6 +8,7 @@ import RegistrarAbonoRetiroModal from "../../utils/Abonos-Retiros/RegistrarAbono
 import Select from "react-select";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AttachMoney from "@mui/icons-material/AttachMoney";
+import decodeToken from "../../utils/tokenDecored";
 
 interface Retiro {
   NombreVendedor: string;
@@ -63,7 +64,7 @@ function AbonosyRetiros() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        "https://backendgestorventas.azurewebsites.net/api/vendedores",
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -251,3 +252,4 @@ function AbonosyRetiros() {
 }
 
 export default AbonosyRetiros;
+
