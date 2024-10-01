@@ -14,7 +14,6 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
 }) => {
-
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [adminSelected, setAdminSelected] = useState<number>(0);
@@ -31,7 +30,9 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
     setIsLoading(true);
     setAdminSelected(seleccionado);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/administradores/relacion/${seleccionado}`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/administradores/relacion/${seleccionado}`
+      )
       .then((res) => {
         setVendedores(res.data);
 
@@ -67,10 +68,13 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
     console.log("vendedoresSeleccionados", vendedoresSeleccionados);
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/administradores/relacion", {
-        AdministradorId: adminSelected,
-        Vendedores: vendedoresSeleccionados,
-      })
+      .post(
+        "https://backendgestorventas.azurewebsites.net/api/administradores/relacion",
+        {
+          AdministradorId: adminSelected,
+          Vendedores: vendedoresSeleccionados,
+        }
+      )
       .then((res) => {
         console.log(res);
         toast.success("Relación guardada correctamente");
@@ -160,9 +164,9 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
                 className="w-full mb-2"
               />
             </label>
-            <div className="min-h-[400px]">
+            <div className="min-h-[390px] max-h-[390px] overflow-auto">
               {isLoading ? (
-                <div className="w-full h-[400px] flex items-center justify-center">
+                <div className="w-full h-[390px] flex items-center justify-center">
                   <Spinner isLoading={true} />
                 </div>
               ) : (

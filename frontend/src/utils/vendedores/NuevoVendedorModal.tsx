@@ -105,6 +105,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
     formData.append("Correo", correo);
     formData.append("Contrasena", contraseña);
     formData.append("Direccion", direccion);
+    formData.append("AdministradorId", decodeToken()?.user?.Id);
     if (foto) {
       formData.append("Foto", foto); // Agregar el archivo al FormData
     }
