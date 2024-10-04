@@ -12,6 +12,7 @@ import NuevoAdministradorModal from "./ModalCrearAdmin";
 import ModificarAdministradorModal from "./ModalEditAdmin";
 import RelacionAdministradorVendedorModal from "./AdminVendedorRelacionModal";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
+import AdminDeleteModal from "./ModarDeleteAdmin";
 
 function Administradores() {
   // Definiciones de estado e interfaces
@@ -34,6 +35,7 @@ function Administradores() {
   const [isRelacionOpen, setIsRelacionOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [Id, setId] = useState<number>(0);
+  const [deleteMdal, setDeleteModal] = useState<boolean>(false);
 
   // Funciones para manejar los modales
   const toggleModal = () => {
@@ -45,7 +47,11 @@ function Administradores() {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
-  console.log(isDeleteRequest)
+  const toggleDeleteModal = () => {
+    setDeleteModal(!deleteMdal);
+  };
+
+  console.log(isDeleteRequest);
 
   // Función para obtener la lista de Administradores
   const getAdministradores = () => {
@@ -172,6 +178,14 @@ function Administradores() {
                     onClose={() => setIsRelacionOpen(false)}
                   />
                 }
+                {
+                  <AdminDeleteModal
+                    Id={Id}
+                    isOpen={deleteMdal}
+                    onClose={toggleDeleteModal}
+                    getAdministradores={getAdministradores}
+                  />
+                }
                 {Administradores.map((Administrador) => {
                   return (
                     <li
@@ -233,6 +247,7 @@ function Administradores() {
                                           setId(Administrador.Id);
                                           setIsDeleteRequest(true);
                                           setOpenDropdownId(null);
+                                          toggleDeleteModal();
                                         }}
                                       >
                                         Eliminar

@@ -36,7 +36,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
       setIsLoading(true);
       await axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/Administradores/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/administradores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
