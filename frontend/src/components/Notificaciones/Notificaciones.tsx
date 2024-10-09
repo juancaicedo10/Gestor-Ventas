@@ -25,6 +25,7 @@ interface Notificacion {
   ValorInteres: number;
   NombreGasto: string;
   VentaId: number;
+  Detalle: string;
 }
 
 interface Vendedor {
@@ -269,7 +270,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                     <span className="font-semibold text-blue-600">
                       {notificacion.ValorInteres}$
                     </span>{" "}
-                    y una multa de{" "}
+                     una multa de{" "}
                     <span className="font-semibold text-blue-600">
                       {notificacion.ValorMulta}$
                     </span>{" "}
@@ -282,6 +283,12 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                     >
                       {notificacion.NumeroVenta}
                     </Link>
+                    <br />
+                    <span className="font-semibold mr-1 text-blue-600">
+                    detalle:
+                      </span>
+                     {notificacion.Detalle}
+                      
                   </>
                 ) : (
                   notificacion.TipoId === 3 && (

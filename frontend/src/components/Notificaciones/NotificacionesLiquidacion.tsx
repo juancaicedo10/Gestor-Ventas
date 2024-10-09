@@ -26,6 +26,7 @@ interface Notificacion {
   Liquidacionconse: string;
   VentaId: number;
   NombreGasto: string;
+  Detalle: string;
 }
 
 const NotificacionesLiquidacion: React.FC<Props> = ({
@@ -141,6 +142,11 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                       {notificacion.NumeroVenta}
                     </span>
                   </Link>
+                  <br />
+                  <span className="font-semibold mr-1 text-blue-600">
+                    detalle:
+                  </span>
+                  {notificacion.Detalle}
                 </>
               ) : (
                 notificacion.TipoId === 3 && (

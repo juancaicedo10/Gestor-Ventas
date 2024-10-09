@@ -23,9 +23,15 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
   const [isSellerValid, setIsSellerValid] = useState<boolean>(false);
   const [isTipoValid, setIsTipoValid] = useState<boolean>(false);
-  const [optionSelected, setOptionSelected] = useState<string | undefined>(undefined);
+  const [optionSelected, setOptionSelected] = useState<string | undefined>(
+    undefined
+  );
+  const [isSendButtonLoading, setIsSendButtonLoading] =
+    useState<boolean>(false);
 
   console.log(selectedSeller);
+
+  console.log(isSendButtonLoading, "oe la buenq");
 
   const Tipos = [
     {
@@ -49,7 +55,9 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -68,6 +76,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
+    setIsSendButtonLoading(true);
 
     let isValid = true;
 
@@ -90,7 +99,10 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
       setIsSellerValid(false);
     }
 
-    if (!isValid) return;
+    if (!isValid) {
+      setIsSendButtonLoading(false);
+      return;
+    }
 
     const AbonoRetiro = {
       Valor: monto,
@@ -109,12 +121,14 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
         }
       )
       .then(() => {
-        console.log("Venta CREADA EXITOSAMENTE")
+        console.log("Venta CREADA EXITOSAMENTE");
+        setIsSendButtonLoading(false);
         onClose();
         getGastos();
       })
       .catch((err) => {
         console.log(err);
+        setIsSendButtonLoading(false);
         onClose();
       });
   };
@@ -129,6 +143,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
       setSelectedTipo("");
       setIsSellerValid(true);
       setIsTipoValid(true);
+      setIsSendButtonLoading(false);
     }
   }, [isOpen]);
 
@@ -236,9 +251,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                     )}
                   </div>
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label htmlFor="numero cuotas">
-                      Monto: 
-                    </label>
+                    <label htmlFor="numero cuotas">Monto:</label>
                     <input
                       type="number"
                       className={`p-2 rounded-md border w-full text-sm ${
@@ -285,13 +298,18 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm min-w-14"
+                  disabled={isSendButtonLoading}
                 >
-                  {`${
-                    selectedTipo
-                      ? `Realizar ${selectedTipo}`
-                      : `Realizar ${selectedTipo}`
-                  }`}
+                  {isSendButtonLoading ? (
+                    <div
+                      className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                      role="status"
+                    ></div>
+                  ) : (
+                    `Realizar ${selectedTipo || ""}`
+                  )}{" "}
+                  {/* Agregado un fallback para evitar [object Object] */}
                 </button>
               </div>
             </form>

@@ -34,6 +34,9 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [saldoMora, setSaldoMora] = useState<string>("");
   const [cuota, setCuota] = useState<Cuota | null>(null);
 
+  const [isSendButtonLoading, setIsSendButtonLoading] =
+    useState<boolean>(false);
+
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isFechaPagoValid, setIsFechaPagoValid] = useState(true);
   const [isSaldoInteresValid, setIsSaldoInteresValid] = useState(true);
@@ -43,6 +46,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
   const registrarAbono = async (e: any) => {
     e.preventDefault();
+    setIsSendButtonLoading(true);
 
     let esValido = true;
 
@@ -71,6 +75,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     }
 
     if (!esValido) {
+      setIsSendButtonLoading(false);
       return;
     }
 
@@ -93,10 +98,15 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       )
       .then(() => {
         console.log("CUOTA CREADA EXITOSAMENTE");
+        setIsSendButtonLoading(false);
         onClose();
         getCuotas();
         getDataCuotas();
         toast.success("Abono registrado correctamente");
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsSendButtonLoading(false);
       });
   };
 
@@ -104,7 +114,9 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     setIsLoading(true);
     try {
       await axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`)
+        .get(
+          `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`
+        )
         .then((response) => {
           setCuota(response.data);
           setFechaPago(
@@ -182,12 +194,14 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     }`}
                     placeholder="valor abono"
                     onChange={(e) => {
-                      let value = e.target.value = e.target.value
-                      .replace(/[^.0-9]/g, '')
+                      let value = (e.target.value = e.target.value.replace(
+                        /[^.0-9]/g,
+                        ""
+                      ));
                       setValorAbono(value); // Almacena el valor como cadena
                       setIsValorAbonoValid(true);
                     }}
-                    value={valorAbono}// Asegura que el valor del input se actualice correctamente
+                    value={valorAbono} // Asegura que el valor del input se actualice correctamente
                   />
                   {!isValorAbonoValid && (
                     <p className="text-red-500 text-xs">
@@ -204,8 +218,10 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     }`}
                     placeholder="saldo interes"
                     onChange={(e) => {
-                      let value = e.target.value = e.target.value
-                      .replace(/[^.0-9]/g, '')
+                      let value = (e.target.value = e.target.value.replace(
+                        /[^.0-9]/g,
+                        ""
+                      ));
                       setSaldoInteres(value);
                       setIsSaldoInteresValid(true);
                     }}
@@ -226,8 +242,10 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     }`}
                     placeholder="saldo mora"
                     onChange={(e) => {
-                      let value = e.target.value = e.target.value
-                      .replace(/[^.0-9]/g, '')
+                      let value = (e.target.value = e.target.value.replace(
+                        /[^.0-9]/g,
+                        ""
+                      ));
                       setSaldoMora(value);
                     }}
                     value={saldoMora}
@@ -277,8 +295,16 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  disabled={isSendButtonLoading}
                 >
-                  Registrar Abono
+                  {isSendButtonLoading ? (
+                    <div
+                      className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                      role="status"
+                    ></div>
+                  ) : (
+                    "Registrar Abono"
+                  )}
                 </button>
               </div>
             </form>

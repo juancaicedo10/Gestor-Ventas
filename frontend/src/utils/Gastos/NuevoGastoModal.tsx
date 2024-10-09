@@ -48,7 +48,6 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const [sellers, setSellers] = useState<Seller[]>([]);
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
-  ``;
 
   const fetchSellers = async () => {
     const Url =
@@ -102,6 +101,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       setIsDescripcionValid(!!descripcion);
       setIsTipoGastoValid(!!selectedTipoGasto);
       setIsSelectedSellerValid(!!selectedSeller);
+      setIsDisabled(false);
 
       return;
     }
@@ -159,6 +159,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
       setIsDescripcionValid(true);
       setIsTipoGastoValid(true);
       setIsSelectedSellerValid(true);
+      setIsDisabled(false);
     }
 
     if (decodeToken()?.user?.role === "Vendedor") {
@@ -333,10 +334,18 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
               <button
                 type="submit"
                 className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                disabled={isDisabled}
               >
-                {decodeToken()?.user?.role === "Administrador"
-                  ? "Guardar"
-                  : "Enviar gasto a aprobacion"}
+                {isDisabled ? (
+                  <div
+                    className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                    role="status"
+                  ></div>
+                ) : decodeToken()?.user?.role === "Administrador" ? (
+                  "Guardar"
+                ) : (
+                  "Enviar gasto a aprobacion"
+                )}
               </button>
               <button
                 type="button"

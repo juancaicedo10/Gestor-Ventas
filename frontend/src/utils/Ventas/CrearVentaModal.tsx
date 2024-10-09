@@ -572,9 +572,16 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
                   disabled={isDisabled}
                 >
-                  {decodeToken().user.role === "Administrador"
-                    ? "Crear Venta"
-                    : "Enviar Venta a aprobacion"}
+                  {isDisabled ? (
+                    <div
+                      className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                      role="status"
+                    ></div>
+                  ) : decodeToken().user.role === "Administrador" ? (
+                    "Crear Venta"
+                  ) : (
+                    "Enviar Venta a aprobacion"
+                  )}
                 </button>
               </div>
             </form>
