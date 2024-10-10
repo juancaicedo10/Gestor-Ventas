@@ -130,8 +130,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     }
   };
 
-  console.log(cuota);
-
   useEffect(() => {
     if (cuotaId !== 0) {
       getCuotaById();
@@ -258,7 +256,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     className={`p-2 rounded-md border w-full ${
                       !isFechaPagoValid ? "border-red-500" : ""
                     }`}
-                    disabled
                     value={fechaPago}
                   />
                   {!isFechaPagoValid && (

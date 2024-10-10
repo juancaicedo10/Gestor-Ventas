@@ -10,6 +10,10 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Spinner from "../utils/Spinner";
 import RegistrarAbonoModal from "../utils/Ventas/RegistrarAbonoModal";
 import { formatDate } from "../utils/Helpers/FormatDate";
+import decodeToken from "../utils/tokenDecored";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import InteresManualModal from "../utils/Ventas/InteresManualModal";
+import { FormatearFecha } from "../utils/FormatearFecha";
 
 interface Cuota {
   Id: number;
@@ -48,6 +52,8 @@ function Cuotas() {
   const Id = useParams()?.id;
   const NumeroVenta = useParams()?.numeroVenta;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isModalInteresManualOpen, setIsModalInteresManualOpen] =
+    useState<boolean>(false);
   const [cuotaId, setCuotaId] = useState<number>(0);
   const [DatosVenta, setDatosVenta] = useState<DatosVenta>();
   const [isDetallesAbonoOpen, setIsDetallesAbonoOpen] = useState<boolean>(true);
@@ -72,7 +78,9 @@ function Cuotas() {
 
   const getDatosVenta = async () => {
     await axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`
+      )
       .then((res) => {
         setDatosVenta(res.data);
         console.log("oe:", res.data);
@@ -81,8 +89,6 @@ function Cuotas() {
         console.log(err);
       });
   };
-
-  console.log("datos venta:", DatosVenta?.ValorVenta);
 
   useEffect(() => {
     setIsDetallesAbonoOpen(false);
@@ -113,30 +119,46 @@ function Cuotas() {
           getDataCuotas={getDatosVenta}
           cuotaId={cuotaId}
         />
+        <InteresManualModal
+          isOpen={isModalInteresManualOpen}
+          onClose={() => setIsModalInteresManualOpen(!isModalInteresManualOpen)}
+          getCuotas={getCuotas}
+          cuotaId={cuotaId}
+        />
       </section>
       <div className="flex justify-center flex-col items-center w-full px-1 overflow-hidden">
         <table className="border-2 border-black my-4 bg-[#f7f7f7] shadow-lg w-full md:w-3/4">
           <thead>
-            <tr className="border border-black text-xs md:text-sm lg:text-lg text-white bg-blue-800">
-              <th className="border-r border-black py-4 text-xs md:text-sm lg:text-lg">
+            <tr className="border border-black text-[7px] md:text-sm lg:text-lg text-white bg-blue-800">
+              <th className="border-r border-black py-4 text-[7px] md:text-sm lg:text-lg">
                 <NumbersIcon fontSize="small" />
               </th>
-              <th className="border-r border-black text-xs md:text-sm lg:text-lg">
+              <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
                 <SellIcon fontSize="inherit" /> Valor
               </th>
-              <th className="border-r border-black text-xs md:text-sm lg:text-lg">
+              <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
                 <DateRangeIcon fontSize="inherit" /> Fecha
               </th>
-              <th className="border-r border-black text-xs md:text-sm lg:text-lg">
+              <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
                 <SellIcon fontSize="inherit" />
                 Mora
               </th>
-              <th className="border-r border-black text-xs md:text-sm lg:text-lg">
+              <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
                 Interes
               </th>
-              <th className="px-1 text-center text-xs md:text-sm lg:text-lg">
+              <th className="px-1 border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                 <PriceCheckIcon fontSize="medium" />
               </th>
+              {decodeToken().user.role === "Administrador" && (
+                <>
+                  <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
+                    Int.Manual
+                  </th>
+                  <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
+                    Acciones
+                  </th>
+                </>
+              )}
             </tr>
           </thead>
           <tbody>
@@ -158,7 +180,9 @@ function Cuotas() {
                       <AddCircleIcon fontSize="inherit" />
                     </button>
                     <button
-                      className={`bg-blue-800 text-white text-xs rounded-sm p-1 ${cuota.abonos.length < 1 && "hidden"}`}
+                      className={`bg-blue-800 text-white text-xs rounded-sm p-1 ${
+                        cuota.abonos.length < 1 && "hidden"
+                      }`}
                       onClick={() => {
                         setIsDetallesAbonoOpen(!isDetallesAbonoOpen);
                         setCuotaId(cuota.Id);
@@ -168,40 +192,60 @@ function Cuotas() {
                       abonos
                     </button>
                   </td>
-                  <td className="text-center border-r border-black px-1 text-xs md:text-sm lg:text-lg">
+                  <td className="text-center border-r border-black px-1 text-[7px] md:text-sm lg:text-lg">
                     {new Intl.NumberFormat("en-US", {
                       style: "currency",
                       currency: "USD",
                     }).format(cuota.ValorCuota)}
                   </td>
-                  <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
+                  <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
                     {formatDate(cuota.FechaPago)}
                   </td>
-                  <td className="text-center border-r px-1 border-black text-xs md:text-sm lg:text-lg">
+                  <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
                     {new Intl.NumberFormat("es-CO", {
                       style: "currency",
                       currency: "COP",
                     }).format(cuota.SaldoMora)}
                     $
                   </td>
-                  <td className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+                  <td className="text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
                     {new Intl.NumberFormat("es-CO", {
                       style: "currency",
                       currency: "COP",
                     }).format(cuota.SaldoInteres)}
-                    $
                   </td>
-                  <td className="text-center border-r border-black text-xs md:text-sm lg:text-lg px-1">
+                  <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg px-1">
                     <span
                       className={`${
                         cuota.Pagada
-                          ? "bg-green-200 text-green-500 px-2 text-xs md:text-sm lg:text-lg rounded-sm"
-                          : "bg-red-200 text-red-500 px-1 text-xs md:text-sm lg:text-lg rounded-sm"
+                          ? "bg-green-200 text-green-500 px-2 text-[7px] md:text-sm lg:text-lg rounded-sm"
+                          : "bg-red-200 text-red-500 px-1 text-[7px] md:text-sm lg:text-lg rounded-sm"
                       }`}
                     >
                       {cuota.Pagada ? "Si" : "No"}
                     </span>
                   </td>
+                  {decodeToken().user.role === "Administrador" && (
+                    <>
+                      <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg">
+                        {new Intl.NumberFormat("es-CO", {
+                          style: "currency",
+                          currency: "COP",
+                        }).format(0)}
+                      </td>
+                      <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
+                        <button
+                          className="text-[7px]"
+                          onClick={() => {
+                            setIsModalInteresManualOpen(true);
+                            setCuotaId(cuota.Id);
+                          }}
+                        >
+                          <ModeEditIcon />
+                        </button>
+                      </td>
+                    </>
+                  )}
                 </tr>
                 <tr>
                   {isDetallesAbonoOpen &&
@@ -238,7 +282,9 @@ function Cuotas() {
                                       }).format(abono?.ValorAbono || 0)}
                                     </td>
                                     <td className="text-center px-1 text-xs md:text-sm lg:text-lg">
-                                    {formatDate(cuota.FechaPago)}
+                                      {formatDate(abono.FechaAbono) +
+                                        " " +
+                                        FormatearFecha(abono?.FechaAbono)}
                                     </td>
                                     <td className="text-center px-1 text-xs md:text-sm lg:text-lg">
                                       {new Intl.NumberFormat("es-CO", {
@@ -267,7 +313,7 @@ function Cuotas() {
         </table>
         <table className="border-2 border-black bg-[#f7f7f7] shadow-sm w-1/2">
           <thead>
-            <tr className="text-white bg-blue-800 text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+            <tr className="text-white bg-blue-800 text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
               <th className="border-r border-black px-1">Mora Total</th>
@@ -278,7 +324,7 @@ function Cuotas() {
             </tr>
           </thead>
           <tbody>
-            <tr className="text-center text-xs md:text-sm lg:text-lg border-r border-black px-1">
+            <tr className="text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
               <td className="py-2 border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
