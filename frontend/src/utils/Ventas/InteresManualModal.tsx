@@ -6,7 +6,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   getCuotas: () => void;
-  cuotaId: number
+  cuotaId: number;
 }
 
 const InteresManualModal: React.FC<ModalProps> = ({
@@ -23,7 +23,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
     undefined
   );
 
-  console.log(optionSelected, '')
+  console.log(optionSelected, "");
 
   const [isSendButtonLoading, setIsSendButtonLoading] =
     useState<boolean>(false);
@@ -66,19 +66,17 @@ const InteresManualModal: React.FC<ModalProps> = ({
       Valor: monto,
     };
 
-    let url = selectedTipo === "Multa" ? `http://localhost:3000/api/cuotas/cuota/mora/${cuotaId}` :  `http://localhost:3000/api/cuotas/cuota/interes/${cuotaId}`
-        
+    let url =
+      selectedTipo === "Multa"
+        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
+        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`;
 
     axios
-      .post(
-        url,
-        AbonoRetiro,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      .post(url, AbonoRetiro, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      })
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         setIsSendButtonLoading(false);
