@@ -68,8 +68,8 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     let url =
       selectedTipo === "Multa"
-        ? `https://backend-gestor-ventas.onrender.com/api/cuotas/cuota/mora/${cuotaId}`
-        : `https://backend-gestor-ventas.onrender.com/api/cuotas/cuota/interes/${cuotaId}`;
+        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
+        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`;
 
     axios
       .post(url, AbonoRetiro, {

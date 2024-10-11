@@ -43,7 +43,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
   ) => {
     try {
       const response = await axios.post(
-        "https://backend-gestor-ventas.onrender.com/api/notificaciones/liquidacion",
+        "https://backendgestorventas.azurewebsites.net/api/notificaciones/liquidacion",
         {
           Consecutivo: ConsecutivoNoti,
           VendedorId: VendedorIdNoti,

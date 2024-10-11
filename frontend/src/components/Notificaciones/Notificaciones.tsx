@@ -70,7 +70,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const getVendedores = async () => {
     try {
       const response = await axios.get(
-        `https://backend-gestor-ventas.onrender.com/api/vendedores/${decodeToken()?.user?.Id}/all`
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`
       );
       setVendedores(response.data);
     } catch (error) {
@@ -81,7 +81,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const getNotificacionesFiltered = async () => {
     try {
       const response = await axios.post(
-        'https://backend-gestor-ventas.onrender.com/api/notificaciones/filtro',
+        'https://backendgestorventas.azurewebsites.net/api/notificaciones/filtro',
         {
           VendedorId: selectedSeller,
           FechaInicio: selectedFechaInicio,

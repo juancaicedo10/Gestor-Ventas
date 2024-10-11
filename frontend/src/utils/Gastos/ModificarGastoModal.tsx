@@ -47,7 +47,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getSellers = async () => {
     try {
-      const response = await axios.get(`https://backend-gestor-ventas.onrender.com/api/vendedores/${decodeToken()?.user?.Id}/all`, {
+      const response = await axios.get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -60,7 +60,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getTiposGastos = async () => {
     try {
-      const response = await axios.get("https://backend-gestor-ventas.onrender.com/api/gastos/tipos");
+      const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos");
       setTiposGastos(response.data);
     } catch (error) {
       console.error("Error obteniendo tipos de gastos:", error);
@@ -69,7 +69,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getGastoById = async () => {
     try {
-      const response = await axios.get(`https://backend-gestor-ventas.onrender.com/api/gastos/${Id}`, {
+      const response = await axios.get(`https://backendgestorventas.azurewebsites.net/api/gastos/${Id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -127,7 +127,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .put(`https://backend-gestor-ventas.onrender.com/api/gastos/${Id}`, Gasto, {
+      .put(`https://backendgestorventas.azurewebsites.net/api/gastos/${Id}`, Gasto, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

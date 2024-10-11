@@ -13,7 +13,7 @@ const ModalDeleteGasto: React.FC<ModalProps> = ({ isOpen, onClose, Id, getGastos
     try {
       axios
         .delete(
-          `https://backend-gestor-ventas.onrender.com/api/gastos/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/gastos/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

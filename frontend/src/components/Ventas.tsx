@@ -52,8 +52,8 @@ function Ventas() {
   const downloadPdf = () => {
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "https://backend-gestor-ventas.onrender.com/api/ventas/pdf/all"
-        : `https://backend-gestor-ventas.onrender.com/api/ventas/pdf/${Id}`;
+        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
+        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
     axios({
       url: url,
       method: "GET",
@@ -84,15 +84,15 @@ function Ventas() {
       let res;
       if (id) {
         res = await axios.get(
-          `https://backend-gestor-ventas.onrender.com/api/ventas/${id}`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
         );
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `https://backend-gestor-ventas.onrender.com/api/ventas/vendedor/${Id}`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`
         );
       } else {
         res = await axios.get(
-          `https://backend-gestor-ventas.onrender.com/api/ventas/${Id}/all`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`
         );
       }
 

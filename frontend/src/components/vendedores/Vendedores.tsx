@@ -55,7 +55,7 @@ function Vendedores() {
   const getVendedores = () => {
     setIsLoading(true);
     axios
-      .get(`https://backend-gestor-ventas.onrender.com/api/vendedores/${decodeToken()?.user?.Id}/all`)
+      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`)
       .then((res) => {
         setVendedores(res.data);
         setIsLoading(false);

@@ -39,7 +39,7 @@ function VentasByVendedor() {
     setIsLoading(true);
     axios
       .get(
-        `https://backend-gestor-ventas.onrender.com/api/ventas/vendedor/${id}`
+        `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`
       )
       .then((res) => {
         setVentas(res.data);
@@ -53,7 +53,7 @@ function VentasByVendedor() {
 
     // Fetch vendedor info
     axios
-      .get(`https://backend-gestor-ventas.onrender.com/api/vendedores/${id}`)
+      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${id}`)
       .then((res) => setVendedor(res.data))
       .catch((err) => console.log(err));
   }, [id]);

@@ -110,7 +110,7 @@ function Gastos() {
   const getTiposGastos = async () => {
     setIsLoading(true);
     axios
-      .get("https://backend-gestor-ventas.onrender.com/api/gastos/tipos")
+      .get("https://backendgestorventas.azurewebsites.net/api/gastos/tipos")
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -126,7 +126,7 @@ function Gastos() {
     setIsLoading(true);
     axios
       .get(
-        `https://backend-gestor-ventas.onrender.com/api/gastos/${
+        `https://backendgestorventas.azurewebsites.net/api/gastos/${
           decodeToken()?.user?.Id
         }/all`
       )
@@ -145,10 +145,10 @@ function Gastos() {
     setIsLoading(true);
     let Url =
       decodeToken()?.user.role !== "Administrador"
-        ? `https://backend-gestor-ventas.onrender.com/api/vendedores/${
+        ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
             decodeToken()?.user?.Id
           }`
-        : `https://backend-gestor-ventas.onrender.com/api/vendedores/${
+        : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
             decodeToken()?.user?.Id
           }/all`;
     await axios
@@ -172,7 +172,7 @@ function Gastos() {
     setIsLoading(true);
     axios
       .get(
-        `https://backend-gestor-ventas.onrender.com/api/gastos/vendedor/${selectedSeller}`
+        `https://backendgestorventas.azurewebsites.net/api/gastos/vendedor/${selectedSeller}`
       )
       .then((res) => {
         setGastosPorVendedor(res.data);

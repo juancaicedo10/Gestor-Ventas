@@ -13,7 +13,7 @@ const AdminDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getAdmini
     try {
       axios
         .delete(
-          `https://backend-gestor-ventas.onrender.com/api/administradores/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/administradores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

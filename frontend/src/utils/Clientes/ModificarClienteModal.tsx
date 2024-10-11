@@ -38,7 +38,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
       setIsLoading(true);
       await axios
         .get(
-          `https://backend-gestor-ventas.onrender.com/api/clientes/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -140,7 +140,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     try {
       axios
         .put(
-          `https://backend-gestor-ventas.onrender.com/api/clientes/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,
