@@ -22,7 +22,7 @@ function Login() {
 
     try {
       const response = await axios.post(
-        "https://backendgestorventas.azurewebsites.net/login",
+        "https://backend-gestor-ventas.onrender.com/login",
         data
       );
       console.log("Login correcto");

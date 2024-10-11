@@ -55,7 +55,7 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`)
+        .get(`https://backend-gestor-ventas.onrender.com/api/clientes/vendedor/${VendedorId}`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);
@@ -66,7 +66,7 @@ function Clientes() {
         });
     } else {
       axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/${decodeToken()?.user?.Id}/all`)
+        .get(`https://backend-gestor-ventas.onrender.com/api/clientes/${decodeToken()?.user?.Id}/all`)
         .then((res) => {
           setClients(res.data);
           setIsLoading(false);

@@ -63,7 +63,7 @@ function Cuotas() {
   const getCuotas = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/${Id}`)
+      .get(`https://backend-gestor-ventas.onrender.com/api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -79,7 +79,7 @@ function Cuotas() {
   const getDatosVenta = async () => {
     await axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`
+        `https://backend-gestor-ventas.onrender.com/api/cuotas/datos/${Id}`
       )
       .then((res) => {
         setDatosVenta(res.data);

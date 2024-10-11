@@ -95,10 +95,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     try {
       let Url =
         decodeToken()?.user?.role !== "Administrador"
-          ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          ? `https://backend-gestor-ventas.onrender.com/api/vendedores/${
               decodeToken()?.user?.Id
             }`
-          : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          : `https://backend-gestor-ventas.onrender.com/api/vendedores/${
               decodeToken()?.user?.Id
             }/all`;
       await axios
@@ -122,10 +122,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getClients = async () => {
     let Url =
       decodeToken()?.user?.role === "Administrador"
-        ? `https://backendgestorventas.azurewebsites.net/api/clientes/${
+        ? `https://backend-gestor-ventas.onrender.com/api/clientes/${
             decodeToken()?.user?.Id
           }/all`
-        : `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${
+        : `https://backend-gestor-ventas.onrender.com/api/clientes/vendedor/${
             decodeToken().user.Id
           }`;
     try {
@@ -218,7 +218,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/ventas", venta, {
+      .post("https://backend-gestor-ventas.onrender.com/api/ventas", venta, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -35,12 +35,12 @@ function AbonosyRetiros() {
     console.log("selectedSeller:", selectedSeller);
     Promise.all([
       await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/abonos/${VendedorId}`
+        `https://backend-gestor-ventas.onrender.com/api/abonos/${VendedorId}`
       ),
       await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/retiros/${VendedorId}`
+        `https://backend-gestor-ventas.onrender.com/api/retiros/${VendedorId}`
       ),
-      await axios.get(`https://backendgestorventas.azurewebsites.net/api/abonos/bases/${VendedorId}`),
+      await axios.get(`https://backend-gestor-ventas.onrender.com/api/abonos/bases/${VendedorId}`),
     ])
       .then(([abonosRes, retirosRes, res]) => {
         const combinedData = [
@@ -64,7 +64,7 @@ function AbonosyRetiros() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
+        `https://backend-gestor-ventas.onrender.com/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

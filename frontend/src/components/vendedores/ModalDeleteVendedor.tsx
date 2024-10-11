@@ -13,7 +13,7 @@ const VendedorDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getVen
     try {
       axios
         .delete(
-          `https://backendgestorventas.azurewebsites.net/api/vendedores/${Id}`,
+          `https://backend-gestor-ventas.onrender.com/api/vendedores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

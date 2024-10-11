@@ -36,7 +36,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
       setIsLoading(true);
       await axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/administradores/${Id}`,
+          `https://backend-gestor-ventas.onrender.com/api/administradores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -127,7 +127,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
     try {
       axios
         .put(
-          `https://backendgestorventas.azurewebsites.net/api/Administradores/${Id}`,
+          `https://backend-gestor-ventas.onrender.com/api/Administradores/${Id}`,
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,

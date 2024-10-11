@@ -55,7 +55,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        `https://backend-gestor-ventas.onrender.com/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
         {
@@ -112,7 +112,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net/api/${optionSelected}`,
+        `https://backend-gestor-ventas.onrender.com/api/${optionSelected}`,
         AbonoRetiro,
         {
           headers: {

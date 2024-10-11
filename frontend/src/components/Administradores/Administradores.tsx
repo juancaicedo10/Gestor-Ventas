@@ -57,7 +57,7 @@ function Administradores() {
   const getAdministradores = () => {
     setIsLoading(true);
     axios
-      .get("https://backendgestorventas.azurewebsites.net/api/administradores")
+      .get("https://backend-gestor-ventas.onrender.com/api/administradores")
       .then((res) => {
         setAdministradores(res.data);
         setIsLoading(false);
