@@ -45,6 +45,8 @@ function Ventas() {
 
   const [inputValue, setInputValue] = useState<string>("");
 
+  console.log(inputValue);
+
   const { id } = useParams<{ id: string }>();
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
