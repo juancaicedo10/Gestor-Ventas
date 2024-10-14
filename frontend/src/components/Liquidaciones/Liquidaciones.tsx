@@ -79,7 +79,7 @@ function Liquidaciones() {
     setIsLoading(true);
     axios
       .get(
-        `http://localhost:4200/api/liquidaciones/all/todas/todas/${
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas/${
           decodeToken()?.user?.Id
         }`,
         {
@@ -103,7 +103,7 @@ function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     axios
-      .get(`http://localhost:4200/api/liquidaciones/${VendedorId}`, {
+      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`, {
         params: {
           page: currentPage >= 1 && selectedSeller === 0 ? 1 : currentPage + 1,
           limit: 8,
@@ -125,7 +125,7 @@ function Liquidaciones() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `http://localhost:4200/api/vendedores/${decodeToken()?.user?.Id}/all`,
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,

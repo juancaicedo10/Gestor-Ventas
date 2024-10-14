@@ -62,8 +62,8 @@ function Ventas() {
   const downloadPdf = () => {
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "http://localhost:4200/api/ventas/pdf/all"
-        : `http://localhost:4200/api/ventas/pdf/${Id}`;
+        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
+        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
     axios({
       url: url,
       method: "GET",
@@ -96,11 +96,11 @@ function Ventas() {
       let res;
       if (id) {
         res = await axios.get(
-          `http://localhost:4200/api/ventas/${id}`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
         );
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `http://localhost:4200/api/ventas/vendedor/${Id}`,
+          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`,
           {
             params: {
               page: currentPage + 1,
@@ -110,7 +110,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `http://localhost:4200/api/ventas/${Id}/all`,
+          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`,
           {
             params: {
               page: currentPage + 1,
@@ -151,7 +151,7 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
         res = await axios.get(
-          `http://localhost:4200/api/ventas/${Id}/filter`,
+          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/filter`,
           {
             params: {
               page: currentPage >= 1 ? 1 : currentPage + 1,
@@ -163,7 +163,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `http://localhost:4200/api/ventas/filtro/${filtro}/${Id}`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filtro/${filtro}/${Id}`
         );
       }
       setVentas(res.data.data);
