@@ -29,7 +29,7 @@ export default function Sidebar() {
   console.log(decodeToken().user);
   return (
     <aside
-      className={`z-50 h-full flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
+      className={`z-50 h-full overflow-y-auto flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
         show ? "w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4" : "w-16"
       }`}
     >
@@ -62,7 +62,7 @@ export default function Sidebar() {
           )}
         </button>
       </header>
-      <ul className="text-xl md:text-2xl flex flex-col w-full">
+      <ul className="text-xl flex flex-col w-full">
         {decodeToken()?.user.role === "Administrador" && (
           <Link
             to="/vendedores"
@@ -183,7 +183,7 @@ export default function Sidebar() {
       </ul>
       <Link
         to="/"
-        className="flex mt-auto text-white hover:text-white bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+        className="flex mt-auto min-h-[50px] text-white hover:text-white bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
         onClick={() => handleLogout()}
       >
         <LogoutIcon fontSize="large" />

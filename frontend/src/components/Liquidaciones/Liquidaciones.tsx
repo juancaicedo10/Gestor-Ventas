@@ -8,19 +8,19 @@ import SellIcon from "@mui/icons-material/Sell";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import LiquidacionModal from "../../utils/Liquidacion/LiquidacionModal";
-import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import SavingsIcon from '@mui/icons-material/Savings';
-import PriceCheckIcon from '@mui/icons-material/PriceCheck';
-import PaidIcon from '@mui/icons-material/Paid';
-import RequestQuoteIcon from '@mui/icons-material/RequestQuote';
-import MoneyOffIcon from '@mui/icons-material/MoneyOff';
-import LocalAtmIcon from '@mui/icons-material/LocalAtm';
-import CurrencyExchangeIcon from '@mui/icons-material/CurrencyExchange';
-import Notificaciones from "../Notificaciones/Notificaciones";  
-import NotificationsIcon from '@mui/icons-material/Notifications';
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import SavingsIcon from "@mui/icons-material/Savings";
+import PriceCheckIcon from "@mui/icons-material/PriceCheck";
+import PaidIcon from "@mui/icons-material/Paid";
+import RequestQuoteIcon from "@mui/icons-material/RequestQuote";
+import MoneyOffIcon from "@mui/icons-material/MoneyOff";
+import LocalAtmIcon from "@mui/icons-material/LocalAtm";
+import CurrencyExchangeIcon from "@mui/icons-material/CurrencyExchange";
+import Notificaciones from "../Notificaciones/Notificaciones";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidacion";
-import PersonIcon from '@mui/icons-material/Person';
-
+import PersonIcon from "@mui/icons-material/Person";
+import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 
 interface Liquidacion {
   Id: number;
@@ -37,11 +37,12 @@ interface Liquidacion {
   Multas: number;
   AbonoCapital: number;
   Efectivo: number;
-  Movimientos : number;
+  Movimientos: number;
   Consecutivo: string;
   Hora: string;
   BaseCapital: number;
   Cartera: number;
+  Detalle: string;
 }
 
 function Liquidaciones() {
@@ -52,7 +53,6 @@ function Liquidaciones() {
 
   const [vendedores, setVendedores] = useState([]);
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
-
 
   const [isMovimientosOpen, setIsMovimientosOpen] = useState(false);
 
@@ -69,7 +69,11 @@ function Liquidaciones() {
   const getLiquidaciones = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas/${decodeToken()?.user?.Id}`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas/${
+          decodeToken()?.user?.Id
+        }`
+      )
       .then((res) => {
         setLiquidaciones(res.data);
         setIsLoading(false);
@@ -83,7 +87,9 @@ function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`
+      )
       .then((res) => {
         setLiquidaciones(Array.isArray(res.data) ? res.data : [res.data]);
         setIsLoading(false);
@@ -92,20 +98,25 @@ function Liquidaciones() {
         console.log(err);
         setIsLoading(false);
       });
-  }
+  };
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get(
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setVendedores(res.data);
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   const vendedoresOptions = vendedores.map((vendedor: any) => ({
     value: vendedor.Id,
@@ -115,7 +126,7 @@ function Liquidaciones() {
   const handleVendedorChange = (selectedOption: any) => {
     setSelectedSeller(selectedOption.value);
     getLiquidacioneaByVendedor(Number(selectedOption.value));
-  }
+  };
 
   useEffect(() => {
     getVendedores();
@@ -125,30 +136,43 @@ function Liquidaciones() {
   return (
     <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
       <Sidebar />
-      <Notificaciones isOpen={isNotificationsOpen} onClose={() => setIsNotificationsOpen(false)}/>
-      <NotificacionesLiquidacion isOpen={isMovimientosOpen} onClose={() => setIsMovimientosOpen(false)} Consecutivo={consecutivo} VendedorId={vendedorId}/>
+      <Notificaciones
+        isOpen={isNotificationsOpen}
+        onClose={() => setIsNotificationsOpen(false)}
+      />
+      <NotificacionesLiquidacion
+        isOpen={isMovimientosOpen}
+        onClose={() => setIsMovimientosOpen(false)}
+        Consecutivo={consecutivo}
+        VendedorId={vendedorId}
+      />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col items-center w-full border-b shadow-md bg-white mb-4">
-        <div className="flex justify-between items-center w-full">
-  <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 w-full">
-    Liquidaciones
-  </h1>
-  <div className="flex space-x-4">
-    <button className="text-blue-900" onClick={() => setIsNotificationsOpen(true)}>
-      <NotificationsIcon fontSize="large" />
-    </button>
-    <button className="text-blue-900" onClick={toggleModal}>
-      <AddCircleIcon fontSize="large" />
-    </button>
-  </div>
-</div>
-<div className="flex justify-center py-4 w-full">
+          <div className="flex justify-between items-center w-full">
+            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 w-full">
+              Liquidaciones
+            </h1>
+            <div className="flex space-x-4">
+              <button
+                className="text-blue-900"
+                onClick={() => setIsNotificationsOpen(true)}
+              >
+                <NotificationsIcon fontSize="large" />
+              </button>
+              <button className="text-blue-900" onClick={toggleModal}>
+                <AddCircleIcon fontSize="large" />
+              </button>
+            </div>
+          </div>
+          <div className="flex justify-center py-4 w-full">
             <Select
               options={vendedoresOptions}
               placeholder="Seleccione un vendedor"
               className="w-1/2 mx-4 text-3xl font-semibold"
               onChange={handleVendedorChange}
-              value={vendedoresOptions.find((option) => option.value === selectedSeller)}
+              value={vendedoresOptions.find(
+                (option) => option.value === selectedSeller
+              )}
             />
           </div>
         </header>
@@ -168,11 +192,11 @@ function Liquidaciones() {
               />
               <section className="w-full px-2 grid grid-cols-1 md:grid-cols-2 gap-4 ">
                 {liquidaciones?.map((liquidacion) => {
-                                    const fecha = liquidacion.Fecha.split('T')[0];
-                                    
-                                    // Formatear la fecha manualmente
-                                    const [year, month, day] = fecha.split('-');
-                                    const formattedDate = `${day}/${month}/${year}`;
+                  const fecha = liquidacion.Fecha.split("T")[0];
+
+                  // Formatear la fecha manualmente
+                  const [year, month, day] = fecha.split("-");
+                  const formattedDate = `${day}/${month}/${year}`;
                   return (
                     <li
                       className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md"
@@ -191,10 +215,12 @@ function Liquidaciones() {
                               {formattedDate}
                             </p>
                             <p>
-                              <h6 className="font-normal text-lg pb-1">{ liquidacion.Hora }</h6>
+                              <h6 className="font-normal text-lg pb-1">
+                                {liquidacion.Hora}
+                              </h6>
                             </p>
                             <span className="font-bold text-2xl">
-                              { liquidacion.Consecutivo }
+                              {liquidacion.Consecutivo}
                             </span>
                           </span>
                           {decodeToken()?.user.role === "Administrador" && (
@@ -313,7 +339,7 @@ function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Efectivo:</h3>
                                 <p>
-                                {new Intl.NumberFormat("es-CO", {
+                                  {new Intl.NumberFormat("es-CO", {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Efectivo)}
@@ -325,7 +351,7 @@ function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Abonos:</h3>
                                 <p>
-                                {new Intl.NumberFormat("es-CO", {
+                                  {new Intl.NumberFormat("es-CO", {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Abonos)}
@@ -337,7 +363,7 @@ function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Cartera:</h3>
                                 <p>
-                                {new Intl.NumberFormat("es-CO", {
+                                  {new Intl.NumberFormat("es-CO", {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Cartera)}
@@ -349,7 +375,7 @@ function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Base Vendedor:</h3>
                                 <p>
-                                {new Intl.NumberFormat("es-CO", {
+                                  {new Intl.NumberFormat("es-CO", {
                                     style: "currency",
                                     currency: "COP",
                                   }).format(liquidacion.Base)}
@@ -362,13 +388,12 @@ function Liquidaciones() {
                                 <h3 className="font-bold">Movimientos:</h3>
                                 <p>
                                   <button
-                                  onClick={
-                                    () => {
+                                    onClick={() => {
                                       setConsecutivo(liquidacion.Consecutivo);
                                       setVendedorId(liquidacion.VendedorId);
                                       setIsMovimientosOpen(true);
-                                    }
-                                  }>
+                                    }}
+                                  >
                                     {liquidacion.Movimientos}
                                   </button>
                                 </p>
@@ -376,6 +401,19 @@ function Liquidaciones() {
                             </li>
                           </div>
                         </ul>
+                        {liquidacion.Detalle != "" &&
+                          <div className="text-lg flex items-center my-1">
+                            <LibraryBooksIcon className="text-blue-800" />
+                            <span className="mx-4">
+                              <h3 className="font-bold">Detalle:</h3>
+                              <p>
+                                <span className="font-light text-black">
+                                  {liquidacion.Detalle}
+                                </span>
+                              </p>
+                            </span>
+                          </div>
+                        }
                       </div>
                     </li>
                   );

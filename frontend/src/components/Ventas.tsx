@@ -12,6 +12,8 @@ import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 import decodeToken from "../utils/tokenDecored";
 import { formatDate } from "../utils/Helpers/FormatDate";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
+import TuneIcon from "@mui/icons-material/Tune";
+import VentasFilter from "./VentasFilter";
 
 function Ventas() {
   interface Venta {
@@ -38,22 +40,30 @@ function Ventas() {
 
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [fechaInicia, setIsFechaInicio] = useState("");
-  const [fechaFin, setIsFechaFin] = useState("");
+  const [inputValue, setInputValue] = useState<string>("");
 
   const { id } = useParams<{ id: string }>();
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
+
+  const [currentPage, setCurrentPage] = useState(0);
+
+  const [pageCount, setPageCount] = useState(1);
+
+  const handlePageClick = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
+  };
 
   const Id = decodeToken()?.user.Id;
 
   const downloadPdf = () => {
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
-        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
+        ? "http://localhost:4200/api/ventas/pdf/all"
+        : `http://localhost:4200/api/ventas/pdf/${Id}`;
     axios({
       url: url,
       method: "GET",
@@ -78,36 +88,43 @@ function Ventas() {
       });
   };
 
+  const [filtro, setFiltro] = useState<number>(0);
+
   const getVentas = async () => {
     setIsLoading(true);
     try {
       let res;
       if (id) {
-        res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
-        );
+        res = await axios.get(`http://localhost:4200/api/ventas/${id}`);
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`
+          `http://localhost:4200/api/ventas/vendedor/${Id}`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 8,
+            },
+          }
         );
       } else {
-        res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`
-        );
+        res = await axios.get(`http://localhost:4200/api/ventas/${Id}/all`, {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+          },
+        });
       }
 
       let data;
       if (decodeToken()?.user.role === "Administrador" && id) {
         data = res.data;
-        console.log(data, 'data with id')
       } else if (decodeToken()?.user.role === "Administrador" && !id) {
         data = res.data.data;
       } else {
         data = res.data;
       }
-      console.log(res, "response");
       setVentas(data);
-      console.log(data, "data");
+      setPageCount(res.data.totalPages);
     } catch (err) {
       console.log(err);
     } finally {
@@ -115,57 +132,108 @@ function Ventas() {
     }
   };
 
-  console.log(ventas, "ventas");
+  const handleFilterChange = (value: number) => {
+    setFiltro(value);
+  };
 
-  const filter = () => {
-    if (fechaInicia === "" || fechaFin === "") {
-      return ventas;
+  const handleFilterInputChange = async (value: string) => {
+    setInputValue(value);
+
+    try {
+      let res;
+      if (decodeToken()?.user.role === "Administrador") {
+        res = axios.get(`http://localhost:4200/api/ventas/${Id}/filter`, {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            TipoFiltro: 0,
+            Buscar: value,
+          },
+        });
+      } else {
+        res = axios.get(
+          `http://localhost:4200/api/ventas/filtro/${filtro}/${Id}`,
+          {
+            params: {
+              Buscar: value,
+            },
+          }
+        );
+      }
+      setVentas((await res).data.data);
+      setPageCount((await res).data.totalPages);
+    } catch (err) {
+      console.log(err);
     }
+  };
 
-    const start = new Date(fechaInicia);
-    const end = new Date(fechaFin);
-
-    return ventas.filter((item) => {
-      const itemDate = new Date(item.FechaInicio);
-      return itemDate >= start && itemDate <= end;
-    });
+  const getVentasFilter = async () => {
+    setIsLoading(true);
+    try {
+      let res;
+      if (decodeToken()?.user.role === "Administrador") {
+        res = await axios.get(`http://localhost:4200/api/ventas/${Id}/filter`, {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            TipoFiltro: filtro,
+          },
+        });
+      } else {
+        res = await axios.get(
+          `http://localhost:4200/api/ventas/filtro/${filtro}/${Id}`
+        );
+      }
+      setVentas(res.data.data);
+      setPageCount(res.data.totalPages);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    console.log(filter(), "filter");
-    getVentas();
-  }, []);
+    if (filtro === 0) {
+      getVentas();
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (filtro === 0) {
+      return;
+    }
+    getVentasFilter();
+    setCurrentPage(0);
+  }, [filtro]);
 
   return (
     <section>
       <Sidebar />
       <div className="ml-[64px]">
-        <header className="flex flex-col items-center md:flex-row md:justify-between w-full border-b shadow-md bg-white">
-          <div className="flex items-center md:w-1/3 w-full justify-center">
-            <input
-              type="date"
-              className="border-2 rounded-md text-black p-2 border-blue-600 w-[43%]"
-              onChange={(e) => setIsFechaInicio(e.target.value)}
-            />
-            <span className="px-2 text-blue-800 font-semibold text-2xl">a</span>
-            <input
-              type="date"
-              className="border-2 rounded-md text-black p-2 border-blue-600 w-[43%]"
-              onChange={(e) => setIsFechaFin(e.target.value)}
-            />
+        <header className="flex flex-col items-center w-full border-b shadow-md bg-white">
+          <div className="flex-1 flex justify-cente">
+            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 font-bold">
+              {decodeToken()?.user.role === "Administrador"
+                ? "Ventas"
+                : "Tus Ventas"}
+            </h1>
           </div>
-          <h1 className="w-1/3 text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 font-bold md:w-1/3">
-            {decodeToken()?.user.role === "Administrador"
-              ? "ventas"
-              : "Tus Ventas"}
-          </h1>
-          <div className="w-1/3 text-end">
-            <button className="text-blue-900 text-center md:text-end">
+          <div className="flex-1 flex justify-end space-x-4">
+            <button className="text-blue-900">
               <PictureAsPdfIcon fontSize="large" onClick={downloadPdf} />
             </button>
-            <button className="text-blue-900 text-center md:text-end">
+            <button className="text-blue-900">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
+            {decodeToken()?.user.role === "Administrador" && (
+              <button className="text-blue-900">
+                <TuneIcon
+                  fontSize="large"
+                  onClick={() => setIsFilterOpen(true)}
+                />
+              </button>
+            )}
           </div>
         </header>
         <section
@@ -183,10 +251,19 @@ function Ventas() {
                   onClose={toggleModal}
                   getVentas={getVentas}
                 />
+                <VentasFilter
+                  isOpen={isFilterOpen}
+                  onClose={() => {
+                    setIsFilterOpen(false);
+                  }}
+                  onChange={handleFilterChange}
+                  inputChange={handleFilterInputChange}
+                />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
-                {filter() && filter().length > 0 &&
-                  filter().map((venta) => (
+                {ventas &&
+                  ventas.length > 0 &&
+                  ventas.map((venta) => (
                     <li>
                       <div className="flex flex-col m-2 p-2">
                         <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[150px]">
@@ -352,6 +429,21 @@ function Ventas() {
                     </li>
                   ))}
               </ul>
+              <div className="flex justify-center mt-4">
+                {Array.from({ length: pageCount }, (_, index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 border rounded ${
+                      currentPage === index
+                        ? "bg-blue-700 text-white"
+                        : "bg-white text-blue-700"
+                    }`}
+                    onClick={() => handlePageClick(index)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </section>

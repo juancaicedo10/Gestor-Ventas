@@ -31,7 +31,9 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
   const [saldoInteres, setSaldoInteres] = useState<string>("");
+  const [saldoInteresManual, setSaldoInteresManual] = useState<string>("");
   const [saldoMora, setSaldoMora] = useState<string>("");
+  const [saldoMoraManual, setSaldoMoraManual] = useState<string>("");
   const [cuota, setCuota] = useState<Cuota | null>(null);
 
   const [isSendButtonLoading, setIsSendButtonLoading] =
@@ -82,13 +84,15 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .post(
         `
-        https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${cuotaId}`,
+        http://localhost:4200/api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
           SaldoInteres: Number(saldoInteres),
           SaldoMora: Number(saldoMora) ?? 0,
           DetallesAbono: detallesAbono,
+          SaldoInteresManual: Number(saldoInteresManual) ?? 0,
+          SaldoMoraManual: Number(saldoMoraManual) ?? 0,
         },
         {
           headers: {
@@ -135,6 +139,23 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       getCuotaById();
     }
   }, [cuotaId]);
+
+
+  useEffect(() => {
+    if (!isOpen) {
+      setValorAbono("");
+      setFechaPago("");
+      setDetallesAbono("");
+      setSaldoInteres("");
+      setSaldoInteresManual("");
+      setSaldoMora("");
+      setSaldoMoraManual("");
+      setIsValorAbonoValid(true);
+      setIsFechaPagoValid(true);
+      setIsSaldoInteresValid(true);
+      setIsDetallesAbonoValid(true);
+    }
+  }, [isOpen]);
 
   return (
     <div>
@@ -232,6 +253,25 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   )}
                 </div>
                 <div>
+                  <label htmlFor="interes">
+                    Saldo Interes Manual (opcional):{" "}
+                  </label>
+                  <input
+                    type="text"
+                    className={`p-2 rounded-md border w-full`}
+                    placeholder="saldo interes manual"
+                    onChange={(e) => {
+                      let value = (e.target.value = e.target.value.replace(
+                        /[^.0-9]/g,
+                        ""
+                      ));
+                      setSaldoInteresManual(value);
+                      setIsSaldoInteresValid(true);
+                    }}
+                    value={saldoInteresManual}
+                  />
+                </div>
+                <div>
                   <label htmlFor="mora">Saldo Mora:</label>
                   <input
                     type="text"
@@ -247,6 +287,22 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                       setSaldoMora(value);
                     }}
                     value={saldoMora}
+                  />
+                </div>
+                <div>
+                  <label htmlFor="mora">Saldo Mora Manual (opcional):</label>
+                  <input
+                    type="text"
+                    placeholder="saldo mora manual"
+                    className="p-2 rounded-md border w-full"
+                    onChange={(e) => {
+                      let value = (e.target.value = e.target.value.replace(
+                        /[^.0-9]/g,
+                        ""
+                      ));
+                      setSaldoMoraManual(value);
+                    }}
+                    value={saldoMoraManual}
                   />
                 </div>
                 <div>

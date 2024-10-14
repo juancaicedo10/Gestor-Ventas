@@ -6,6 +6,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   getCuotas: () => void;
+  getDataCuotas: () => void;
   cuotaId: number;
 }
 
@@ -14,6 +15,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
   onClose,
   getCuotas,
   cuotaId,
+  getDataCuotas,
 }) => {
   const [monto, setMonto] = useState<number>(0);
   const [selectedTipo, setSelectedTipo] = useState<string | undefined>("");
@@ -68,8 +70,8 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     let url =
       selectedTipo === "Multa"
-        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
-        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`;
+        ? `http://localhost:4200/api/cuotas/cuota/mora/${cuotaId}`
+        : `http://localhost:4200/api/cuotas/cuota/interes/${cuotaId}`;
 
     axios
       .post(url, AbonoRetiro, {
@@ -82,6 +84,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
         setIsSendButtonLoading(false);
         onClose();
         getCuotas();
+        getDataCuotas();
       })
       .catch((err) => {
         console.log(err);
