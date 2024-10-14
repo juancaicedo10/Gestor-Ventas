@@ -25,6 +25,8 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const [detalle, setDetalle] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+
   const [nombreValido, setNombreValido] = useState(true);
   const [correoValido, setCorreoValido] = useState(true);
   const [telefonoValido, setTelefonoValido] = useState(true);
@@ -99,9 +101,10 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     }
   };
 
-
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    setIsLoadingButton(true);
 
     let esValido = true;
     if (!nombre) {
@@ -135,7 +138,10 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
       esValido = false;
     }
 
-    if (!esValido) return;
+    if (!esValido) {
+      setIsLoadingButton(false);
+      return;
+    }
 
     try {
       axios
@@ -158,16 +164,16 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           }
         )
         .then(() => {
-          console.log("CLIENTE CREADO EXITOSAMENTE");
+          setIsLoadingButton(false);
           getClients();
+          onClose();
           toast.success("Cliente modificado correctamente");
-        })
-        .catch((err) => console.log(err));
+        });
     } catch (error) {
-      console.error("Error creando cliente:", error);
+      setIsLoadingButton(false);
+      onClose();
       toast.error("Error al modificar el cliente");
     }
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -344,9 +350,17 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    disabled={isLoadingButton}
                   >
-                    Modificar Cliente
+                    {isLoadingButton ? (
+                      <div
+                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                        role="status"
+                      ></div>
+                    ) : (
+                      "Modificar Cliente"
+                    )}
                   </button>
                 </div>
               </>

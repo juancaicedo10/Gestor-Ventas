@@ -45,8 +45,6 @@ function Ventas() {
 
   const [inputValue, setInputValue] = useState<string>("");
 
-  console.log(inputValue);
-
   const { id } = useParams<{ id: string }>();
 
   const toggleModal = () => setIsModalOpen(!isModalOpen);
@@ -56,8 +54,7 @@ function Ventas() {
   const [pageCount, setPageCount] = useState(1);
 
   const handlePageClick = (pageIndex: number) => {
-    console.log(pageIndex, "hola");
-    setCurrentPage(pageIndex);
+      setCurrentPage(pageIndex);
   };
 
   const Id = decodeToken()?.user.Id;
@@ -65,8 +62,8 @@ function Ventas() {
   const downloadPdf = () => {
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
-        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
+        ? "http://localhost:4200/api/ventas/pdf/all"
+        : `http://localhost:4200/api/ventas/pdf/${Id}`;
     axios({
       url: url,
       method: "GET",
@@ -98,10 +95,12 @@ function Ventas() {
     try {
       let res;
       if (id) {
-        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/${id}`);
+        res = await axios.get(
+          `http://localhost:4200/api/ventas/${id}`
+        );
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`,
+          `http://localhost:4200/api/ventas/vendedor/${Id}`,
           {
             params: {
               page: currentPage + 1,
@@ -110,21 +109,22 @@ function Ventas() {
           }
         );
       } else {
-        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`, {
-          params: {
-            page: currentPage + 1,
-            limit: 8,
-          },
-        });
+        res = await axios.get(
+          `http://localhost:4200/api/ventas/${Id}/all`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 8,
+            },
+          }
+        );
       }
 
       let data;
       if (decodeToken()?.user.role === "Administrador" && id) {
         data = res.data;
-      } else if (decodeToken()?.user.role === "Administrador" && !id) {
-        data = res.data.data;
       } else {
-        data = res.data;
+        data = res.data.data;
       }
       setVentas(data);
       setPageCount(res.data.totalPages);
@@ -141,33 +141,8 @@ function Ventas() {
 
   const handleFilterInputChange = async (value: string) => {
     setInputValue(value);
-
-    try {
-      let res;
-      if (decodeToken()?.user.role === "Administrador") {
-        res = axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/filter`, {
-          params: {
-            page: currentPage >= 1 ? 1 : currentPage + 1,
-            limit: 8,
-            TipoFiltro: 0,
-            Buscar: value,
-          },
-        });
-      } else {
-        res = axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filtro/${filtro}/${Id}`,
-          {
-            params: {
-              Buscar: value,
-            },
-          }
-        );
-      }
-      setVentas((await res).data.data);
-      setPageCount((await res).data.totalPages);
-    } catch (err) {
-      console.log(err);
-    }
+    setFiltro(0);
+    getVentasFilter();
   };
 
   const getVentasFilter = async () => {
@@ -175,17 +150,20 @@ function Ventas() {
     try {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
-        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/filter`, {
-          params: {
-            page: currentPage >= 1 ? 1 : currentPage + 1,
-            limit: 8,
-            TipoFiltro: filtro,
-            Buscar: inputValue
-          },
-        });
+        res = await axios.get(
+          `http://localhost:4200/api/ventas/${Id}/filter`,
+          {
+            params: {
+              page: currentPage >= 1 ? 1 : currentPage + 1,
+              limit: 8,
+              TipoFiltro: filtro,
+              Buscar: inputValue,
+            },
+          }
+        );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filtro/${filtro}/${Id}`
+          `http://localhost:4200/api/ventas/filtro/${filtro}/${Id}`
         );
       }
       setVentas(res.data.data);
@@ -198,7 +176,6 @@ function Ventas() {
   };
 
   useEffect(() => {
-    debugger;
     if (filtro === 0 && inputValue === "") {
       getVentas();
     } else if (filtro !== 0 || inputValue !== "") {

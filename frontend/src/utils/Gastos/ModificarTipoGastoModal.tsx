@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Spinner from "../Spinner";
 
 interface ModalProps {
   isOpen: boolean;
@@ -23,7 +24,11 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
   const [isDescripcionValid, setIsDescripcionValid] = useState<boolean>(false);
   const [isMontoMaximoValid, setIsMontoMaximoValid] = useState<boolean>(false);
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoadinBUtton, setIsLoadingButton] = useState<boolean>(false);
+
   const getTipoGastoById = () => {
+    setIsLoading(true);
     axios
       .get(
         `https://backendgestorventas.azurewebsites.net/api/gastos/tipos/${GastoId}`,
@@ -37,13 +42,17 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
         setNombreGasto(response.data.Nombre);
         setDescripcionGasto(response.data.Descripcion);
         setMontoMaximo(response.data.MontoMaximo);
+        setIsLoading(false);
+      })
+      .catch((err) => {
+        console.error(err);
       });
   };
 
-  console.log("montoMaximo", montoMaximo);
-
   const handleSubmit = (e: any) => {
     e.preventDefault();
+
+    setIsLoadingButton(true);
 
     let isValid = true;
 
@@ -60,7 +69,10 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
       setIsMontoMaximoValid(false);
     }
 
-    if (!isValid) return;
+    if (!isValid) {
+      setIsLoadingButton(false);
+      return;
+    }
 
     const TipoGasto = {
       Nombre: nombreGasto,
@@ -81,10 +93,12 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
       .then(() => {
         console.log("Venta CREADA EXITOSAMENTE");
         getGastos();
+        setIsLoadingButton(false);
         onClose();
       })
       .catch((err) => {
         console.log(err);
+        setIsLoadingButton(false);
         onClose();
       });
   };
@@ -97,6 +111,8 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
       setIsNombreGastoValid(true);
       setIsDescripcionValid(true);
       setIsMontoMaximoValid(true);
+      setIsLoadingButton(false);
+      setIsLoading(false);
     }
 
     if (isOpen) {
@@ -144,83 +160,97 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
                     &times;
                   </button>
                 </header>
-                <div className="mb-2">
-                  <section className="grid grid-cols-2 gap-4 mt-4">
-                    <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                      <label htmlFor="">Nombre del gasto: </label>
-                      <input
-                        type="text"
-                        name="nombreGasto"
-                        value={nombreGasto}
-                        className={`p-2 rounded-md border w-full text-sm ${
-                          !isNombreGastoValid ? "border-red-500" : ""
-                        }`}
-                        onChange={(e) => {
-                          setNombreGasto(e.target.value);
-                          setIsNombreGastoValid(true);
-                        }}
-                      />
-                      {!isNombreGastoValid && (
-                        <p className="text-red-500 text-xs">
-                          Este campo es obligatorio
-                        </p>
-                      )}
-                    </div>
-                    <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                      <label htmlFor="numero cuotas">Monto Maximo:</label>
-                      <input
-                        type="number"
-                        name="montoMaximo"
-                        value={montoMaximo}
-                        className={`p-2 rounded-md border w-full text-sm ${
-                          !isMontoMaximoValid ? "border-red-500" : ""
-                        }`}
-                        onChange={(e) => {
-                          setIsMontoMaximoValid(true);
-                          setMontoMaximo(Number(e.target.value));
-                        }}
-                      />
-                      {!isMontoMaximoValid && (
-                        <p className="text-red-500 text-xs">
-                          Este campo es obligatorio
-                        </p>
-                      )}
-                    </div>
-                  </section>
-                  <label
-                    htmlFor=""
-                    className="block text-base md:text-lg font-normal text-gray-700"
-                  >
-                    Descripcion del gasto:
-                  </label>
-                  <textarea
-                    name="descripcionGasto"
-                    value={descripcionGasto}
-                    id=""
-                    cols={10}
-                    rows={4}
-                    className={`p-2 rounded-md border w-full text-sm font-normal ${
-                      !isDescripcionValid ? "border-red-500" : ""
-                    }`}
-                    onChange={(e) => {
-                      setIsDescripcionValid(true);
-                      setDescripcionGasto(e.target.value);
-                    }}
-                    style={{ resize: "none" }}
-                  ></textarea>
-                  {!isDescripcionValid && (
-                    <p className="text-red-500 text-xs">
-                      Este campo es obligatorio
-                    </p>
-                  )}
-                </div>
+                {isLoading ? (
+                  <div className="h-44 flex items-center justify-center">
+                    <Spinner isLoading={isLoading} />
+                  </div>
+                ) : (
+                  <div className="mb-2">
+                    <section className="grid grid-cols-2 gap-4 mt-4">
+                      <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
+                        <label htmlFor="">Nombre del gasto: </label>
+                        <input
+                          type="text"
+                          name="nombreGasto"
+                          value={nombreGasto}
+                          className={`p-2 rounded-md border w-full text-sm ${
+                            !isNombreGastoValid ? "border-red-500" : ""
+                          }`}
+                          onChange={(e) => {
+                            setNombreGasto(e.target.value);
+                            setIsNombreGastoValid(true);
+                          }}
+                        />
+                        {!isNombreGastoValid && (
+                          <p className="text-red-500 text-xs">
+                            Este campo es obligatorio
+                          </p>
+                        )}
+                      </div>
+                      <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
+                        <label htmlFor="numero cuotas">Monto Maximo:</label>
+                        <input
+                          type="number"
+                          name="montoMaximo"
+                          value={montoMaximo}
+                          className={`p-2 rounded-md border w-full text-sm ${
+                            !isMontoMaximoValid ? "border-red-500" : ""
+                          }`}
+                          onChange={(e) => {
+                            setIsMontoMaximoValid(true);
+                            setMontoMaximo(Number(e.target.value));
+                          }}
+                        />
+                        {!isMontoMaximoValid && (
+                          <p className="text-red-500 text-xs">
+                            Este campo es obligatorio
+                          </p>
+                        )}
+                      </div>
+                    </section>
+                    <label
+                      htmlFor=""
+                      className="block text-base md:text-lg font-normal text-gray-700"
+                    >
+                      Descripcion del gasto:
+                    </label>
+                    <textarea
+                      name="descripcionGasto"
+                      value={descripcionGasto}
+                      id=""
+                      cols={10}
+                      rows={4}
+                      className={`p-2 rounded-md border w-full text-sm font-normal ${
+                        !isDescripcionValid ? "border-red-500" : ""
+                      }`}
+                      onChange={(e) => {
+                        setIsDescripcionValid(true);
+                        setDescripcionGasto(e.target.value);
+                      }}
+                      style={{ resize: "none" }}
+                    ></textarea>
+                    {!isDescripcionValid && (
+                      <p className="text-red-500 text-xs">
+                        Este campo es obligatorio
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  disabled={isLoadinBUtton}
                 >
-                  Modificar Tipo Gasto
+                  {isLoadinBUtton ? (
+                    <div
+                      className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                      role="status"
+                    ></div>
+                  ) : (
+                    'Modificar Tipo de gasto'
+                  )}
                 </button>
               </div>
             </form>

@@ -88,9 +88,7 @@ function Gastos() {
     setId(id);
   };
 
-  const toggleCloseConfirmation = (id: number) => {
-    console.log("Eliminando el tipo de gasto con id: ", id);
-  };
+  console.log(toggleEditModal);
 
   //modales del creado del gasto
 
@@ -319,7 +317,7 @@ function Gastos() {
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
                                         toggleTipoGastoEditModal(gasto.GastoId);
-                                        setOpenDropdownId(null);
+                                        setOpenDropdownTipoId(null);
                                       }}
                                     >
                                       Modificar
@@ -327,8 +325,7 @@ function Gastos() {
                                     <button
                                       className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                       onClick={() => {
-                                        toggleCloseConfirmation(gasto.GastoId);
-                                        setOpenDropdownId(null);
+                                        setOpenDropdownTipoId(null);
                                         setIsOpenDeleteTipoGastoModal(true);
                                         setTipoGastoId(gasto.GastoId);
                                       }}
@@ -470,36 +467,6 @@ function Gastos() {
                                   >
                                     <EditNoteIcon fontSize="medium" />
                                   </button>
-                                  {openDropdownId === gasto.Id && (
-                                    <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
-                                      <div
-                                        className="py-1"
-                                        role="menu"
-                                        aria-orientation="vertical"
-                                        aria-labelledby="options-menu"
-                                      >
-                                        <button
-                                          className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                          onClick={() => {
-                                            toggleEditModal(gasto.Id);
-                                            setOpenDropdownId(null);
-                                          }}
-                                        >
-                                          Modificar
-                                        </button>
-                                        <button
-                                          className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
-                                          onClick={() => {
-                                            toggleCloseConfirmation(gasto.Id);
-                                            setOpenDropdownId(null);
-                                            setId(gasto.Id);
-                                          }}
-                                        >
-                                          Eliminar
-                                        </button>
-                                      </div>
-                                    </div>
-                                  )}
                                 </div>
                               </div>
                             )}

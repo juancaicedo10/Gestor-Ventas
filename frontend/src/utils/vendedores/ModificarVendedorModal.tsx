@@ -24,6 +24,8 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
   const [oficinaId, setOficinaId] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
+  const [isLoadingButton, setIsLoadingButton] = useState(false);
+
   const [nombreValido, setNombreValido] = useState(true);
   const [correoValido, setCorreoValido] = useState(true);
   const [telefonoValido, setTelefonoValido] = useState(true);
@@ -68,33 +70,35 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "nombre") {
-      setNombre(event.target.value)
+      setNombre(event.target.value);
       setNombreValido(true);
-    };
+    }
     if (event.target.name === "correo") {
-      setCorreo(event.target.value)
+      setCorreo(event.target.value);
       setCorreoValido(true);
-    };
+    }
     if (event.target.name === "telefono") {
-      setTelefono(event.target.value)
+      setTelefono(event.target.value);
       setTelefonoValido(true);
-    };
+    }
     if (event.target.name === "cedula") {
-      setCedula(event.target.value)
+      setCedula(event.target.value);
       setCedulaValido(true);
-    };
+    }
     if (event.target.name === "direccion") {
-      setDireccion(event.target.value)
+      setDireccion(event.target.value);
       setDireccionValido(true);
-    };
+    }
     if (event.target.name === "contraseña") {
-      setContraseña(event.target.value)
+      setContraseña(event.target.value);
       setContraseñaValido(true);
-    };
+    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+
+    setIsLoadingButton(true);
 
     let esValido = true;
     if (!nombre) {
@@ -122,7 +126,10 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
       esValido = false;
     }
 
-    if (!esValido) return;
+    if (!esValido) {
+      setIsLoadingButton(false);
+      return;
+    }
 
     try {
       axios
@@ -147,12 +154,14 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
         .then(() => {
           console.log("CLIENTE CREADO EXITOSAMENTE");
           getVendedores();
-        })
-        .catch((err) => console.log(err));
+          setIsLoadingButton(false);
+          onClose();
+        });
     } catch (error) {
       console.error("Error creando cliente:", error);
+      setIsLoadingButton(false);
+      onClose();
     }
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -311,9 +320,17 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    disabled={isLoadingButton}
                   >
-                    Modificar Vendedor
+                    {isLoadingButton ? (
+                      <div
+                        className="inline-block h-5 w-5 animate-spin rounded-full border-4 border-solid border-current border-e-transparent align-[-0.125em] text-surface motion-reduce:animate-[spin_1.5s_linear_infinite] dark:text-white"
+                        role="status"
+                      ></div>
+                    ) : (
+                      "Modificar Vendedor"
+                    )}
                   </button>
                 </div>
               </>

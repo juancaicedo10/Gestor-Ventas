@@ -61,6 +61,15 @@ function Liquidaciones() {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  //pagination
+
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+
+  const handlePageClick = (page: number) => {
+    setCurrentPage(page);
+  };
+
   // Funciones para manejar los modales
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -70,12 +79,19 @@ function Liquidaciones() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/all/todas/todas/${
+        `http://localhost:4200/api/liquidaciones/all/todas/todas/${
           decodeToken()?.user?.Id
-        }`
+        }`,
+        {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+          },
+        }
       )
       .then((res) => {
-        setLiquidaciones(res.data);
+        setLiquidaciones(res.data.data);
+        setPageCount(res.data.totalPages);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -87,11 +103,17 @@ function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     axios
-      .get(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`
-      )
+      .get(`http://localhost:4200/api/liquidaciones/${VendedorId}`, {
+        params: {
+          page: currentPage >= 1 && selectedSeller === 0 ? 1 : currentPage + 1,
+          limit: 8,
+        },
+      })
       .then((res) => {
-        setLiquidaciones(Array.isArray(res.data) ? res.data : [res.data]);
+        setLiquidaciones(
+          Array.isArray(res.data.data) ? res.data.data : [res.data.data]
+        );
+        setPageCount(res.data.totalPages);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -103,9 +125,7 @@ function Liquidaciones() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
-          decodeToken()?.user?.Id
-        }/all`,
+        `http://localhost:4200/api/vendedores/${decodeToken()?.user?.Id}/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -124,14 +144,19 @@ function Liquidaciones() {
   }));
 
   const handleVendedorChange = (selectedOption: any) => {
+    setCurrentPage(0);
     setSelectedSeller(selectedOption.value);
     getLiquidacioneaByVendedor(Number(selectedOption.value));
   };
 
   useEffect(() => {
+    if (selectedSeller === 0) {
+      getLiquidaciones();
+    } else if (selectedSeller) {
+      getLiquidacioneaByVendedor(selectedSeller);
+    }
     getVendedores();
-    getLiquidaciones();
-  }, []);
+  }, [currentPage]);
 
   return (
     <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
@@ -184,7 +209,7 @@ function Liquidaciones() {
           {isLoading ? (
             <Spinner isLoading={isLoading} />
           ) : (
-            <>
+            <div className="w-full flex flex-col">
               <LiquidacionModal
                 isOpen={isModalOpen}
                 onClose={toggleModal}
@@ -401,7 +426,7 @@ function Liquidaciones() {
                             </li>
                           </div>
                         </ul>
-                        {liquidacion.Detalle != "" &&
+                        {liquidacion.Detalle != "" && (
                           <div className="text-lg flex items-center my-1">
                             <LibraryBooksIcon className="text-blue-800" />
                             <span className="mx-4">
@@ -413,13 +438,28 @@ function Liquidaciones() {
                               </p>
                             </span>
                           </div>
-                        }
+                        )}
                       </div>
                     </li>
                   );
                 })}
               </section>
-            </>
+              <div className="flex justify-center mt-4 font-normal text-xl">
+                {Array.from({ length: pageCount }, (_, index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 border rounded ${
+                      currentPage === index
+                        ? "bg-blue-700 text-white"
+                        : "bg-white text-blue-700"
+                    }`}
+                    onClick={() => handlePageClick(index)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
           )}
         </div>
       </div>
