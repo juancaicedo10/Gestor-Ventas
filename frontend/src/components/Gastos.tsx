@@ -114,7 +114,6 @@ function Gastos() {
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -133,7 +132,6 @@ function Gastos() {
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -203,8 +201,6 @@ function Gastos() {
     value: seller.Id,
     label: seller.NombreCompleto,
   }));
-
-  console.log(SellersOptions, "options");
 
   const handleSelectSeller = (sellerId: string | undefined) => {
     if (sellerId !== null) {

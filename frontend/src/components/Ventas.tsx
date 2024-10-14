@@ -147,7 +147,7 @@ function Ventas() {
       if (decodeToken()?.user.role === "Administrador") {
         res = axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/filter`, {
           params: {
-            page: currentPage + 1,
+            page: currentPage >= 1 ? 1 : currentPage + 1,
             limit: 8,
             TipoFiltro: 0,
             Buscar: value,
@@ -180,6 +180,7 @@ function Ventas() {
             page: currentPage >= 1 ? 1 : currentPage + 1,
             limit: 8,
             TipoFiltro: filtro,
+            Buscar: inputValue
           },
         });
       } else {
@@ -197,9 +198,10 @@ function Ventas() {
   };
 
   useEffect(() => {
-    if (filtro === 0) {
+    debugger;
+    if (filtro === 0 && inputValue === "") {
       getVentas();
-    } else if (filtro !== 0) {
+    } else if (filtro !== 0 || inputValue !== "") {
       getVentasFilter();
     }
   }, [currentPage]);
