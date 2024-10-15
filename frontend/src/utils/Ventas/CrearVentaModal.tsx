@@ -120,19 +120,15 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   };
 
   const getClients = async () => {
-    let Url =
-      decodeToken()?.user?.role === "Administrador"
-        ? `https://backendgestorventas.azurewebsites.net/api/clientes/${
-            decodeToken()?.user?.Id
-          }/all`
-        : `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${
-            decodeToken().user.Id
-          }`;
+    const VendedorId = selectedSeller;
     try {
       await axios
-        .get(`${Url}`, {
+        .get(`${"http://localhost:4200/api/clientes"}`, {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
+          },
+          params: {
+            VendedorId: VendedorId,
           },
         })
         .then((response) => {
@@ -243,13 +239,27 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   };
 
   useEffect(() => {
-    getSellers();
-    getClients();
+    const fetchSellers = async () => {
+      await getSellers();
+      const token = decodeToken();
+      if (token?.user?.role === "Vendedor") {
+        setIsSelectedSellerValid(true);
+        setSelectedSeller(token?.user?.Id);
+      }
+    };
+
+    fetchSellers();
   }, []);
 
   useEffect(() => {
+    if (selectedSeller && selectedSeller !== 0) {
+      getClients();
+    }
+  }, [selectedSeller]);
+
+  useEffect(() => {
     if (!isOpen) {
-      setSelectedSeller(0);
+      decodeToken()?.user?.role === "Administrador" && setSelectedSeller(0);
       setSelectedClient("");
       setValorVenta(0);
       setNumeroCuotas(0);
@@ -268,13 +278,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsSelectedClientValid(true);
       setIsSelectedSellerValid(true);
       setIsDisabled(false);
-    }
-
-    if (decodeToken()?.user?.role === "Vendedor") {
-      setIsSelectedSellerValid(true);
-      console.log(isSelectedSellerValid, "seller");
-      console.log(sellers);
-      setSelectedSeller(decodeToken()?.user?.Id);
     }
   }, [isOpen]);
 
