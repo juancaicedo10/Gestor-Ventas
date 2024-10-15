@@ -123,7 +123,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     const VendedorId = selectedSeller;
     try {
       await axios
-        .get(`${"http://localhost:4200/api/clientes"}`, {
+        .get(`${"https://backendgestorventas.azurewebsites.net/api/clientes"}`, {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
