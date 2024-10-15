@@ -117,6 +117,7 @@ function Clientes() {
       return;
     }
     const handler = setTimeout(() => {
+      setCurrentPage(0);
       getClients();
     }, 400);
 
