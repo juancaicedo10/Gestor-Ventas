@@ -199,7 +199,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       isValid = false;
     }
 
-    if (!isValid) return;
+    if (!isValid) {
+      setIsDisabled(false);
+      return};
 
     const venta = {
       ClienteId: selectedClient,
