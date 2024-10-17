@@ -54,7 +54,7 @@ function Ventas() {
   const [pageCount, setPageCount] = useState(1);
 
   const handlePageClick = (pageIndex: number) => {
-      setCurrentPage(pageIndex);
+    setCurrentPage(pageIndex);
   };
 
   const Id = decodeToken()?.user.Id;
@@ -134,6 +134,18 @@ function Ventas() {
       setIsLoading(false);
     }
   };
+  
+  const [visibleRange, setVisibleRange] = useState([0, 5]);
+
+  const handleNextRange = () => {
+    setVisibleRange([visibleRange[0] + 5, visibleRange[1] + 5]);
+  };
+
+  const handlePrevRange = () => {
+    setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
+  };
+
+  const visiblePages = Array.from({ length: pageCount }, (_, index) => index).slice(visibleRange[0], visibleRange[1]);
 
   const handleFilterChange = (value: number) => {
     setFiltro(value);
@@ -414,7 +426,15 @@ function Ventas() {
                   ))}
               </ul>
               <div className="flex justify-center mt-4">
-                {Array.from({ length: pageCount }, (_, index) => (
+                {visibleRange[0] > 0 && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    onClick={handlePrevRange}
+                  >
+                    Anterior
+                  </button>
+                )}
+                {visiblePages.map((index) => (
                   <button
                     key={index}
                     className={`mx-1 px-3 py-1 border rounded ${
@@ -427,6 +447,14 @@ function Ventas() {
                     {index + 1}
                   </button>
                 ))}
+                {visibleRange[1] < pageCount && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    onClick={handleNextRange}
+                  >
+                    Siguiente
+                  </button>
+                )}
               </div>
             </div>
           )}

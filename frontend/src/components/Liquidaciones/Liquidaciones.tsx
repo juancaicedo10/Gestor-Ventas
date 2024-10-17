@@ -103,12 +103,16 @@ function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`, {
-        params: {
-          page: currentPage >= 1 && selectedSeller === 0 ? 1 : currentPage + 1,
-          limit: 8,
-        },
-      })
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${VendedorId}`,
+        {
+          params: {
+            page:
+              currentPage >= 1 && selectedSeller === 0 ? 1 : currentPage + 1,
+            limit: 8,
+          },
+        }
+      )
       .then((res) => {
         setLiquidaciones(
           Array.isArray(res.data.data) ? res.data.data : [res.data.data]
@@ -125,7 +129,9 @@ function Liquidaciones() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -157,6 +163,23 @@ function Liquidaciones() {
     }
     getVendedores();
   }, [currentPage]);
+
+  //pagintaion
+
+  const [visibleRange, setVisibleRange] = useState([0, 5]);
+
+  const handleNextRange = () => {
+    setVisibleRange([visibleRange[0] + 5, visibleRange[1] + 5]);
+  };
+
+  const handlePrevRange = () => {
+    setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
+  };
+
+  const visiblePages = Array.from(
+    { length: pageCount },
+    (_, index) => index
+  ).slice(visibleRange[0], visibleRange[1]);
 
   return (
     <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
@@ -444,11 +467,19 @@ function Liquidaciones() {
                   );
                 })}
               </section>
-              <div className="flex justify-center mt-4 font-normal text-xl">
-                {Array.from({ length: pageCount }, (_, index) => (
+              <div className="flex justify-center mt-4 text-sm">
+                {visibleRange[0] > 0 && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded-md bg-white text-blue-700 font-normal"
+                    onClick={handlePrevRange}
+                  >
+                    Anterior
+                  </button>
+                )}
+                {visiblePages.map((index) => (
                   <button
                     key={index}
-                    className={`mx-1 px-3 py-1 border rounded ${
+                    className={`mx-1 px-3 py-1 border rounded-md font-normal ${
                       currentPage === index
                         ? "bg-blue-700 text-white"
                         : "bg-white text-blue-700"
@@ -458,6 +489,14 @@ function Liquidaciones() {
                     {index + 1}
                   </button>
                 ))}
+                {visibleRange[1] < pageCount && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700 font-normal"
+                    onClick={handleNextRange}
+                  >
+                    Siguiente
+                  </button>
+                )}
               </div>
             </div>
           )}

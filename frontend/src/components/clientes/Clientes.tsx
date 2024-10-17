@@ -65,13 +65,16 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       axios
-        .get(`https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`, {
-          params: {
-            page: currentPage + 1,
-            limit: 8,
-            search: searchValue,
-          },
-        })
+        .get(
+          `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 8,
+              search: searchValue,
+            },
+          }
+        )
         .then((res) => {
           setClients(res.data.data);
           setPageCount(res.data.totalPages);
@@ -84,7 +87,9 @@ function Clientes() {
     } else {
       axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/clientes/${decodeToken()?.user?.Id}/all`,
+          `https://backendgestorventas.azurewebsites.net/api/clientes/${
+            decodeToken()?.user?.Id
+          }/all`,
           {
             params: {
               page: currentPage + 1,
@@ -125,6 +130,21 @@ function Clientes() {
       clearTimeout(handler);
     };
   }, [searchValue, currentPage]);
+
+  const [visibleRange, setVisibleRange] = useState([0, 5]);
+
+  const handleNextRange = () => {
+    setVisibleRange([visibleRange[0] + 5, visibleRange[1] + 5]);
+  };
+
+  const handlePrevRange = () => {
+    setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
+  };
+
+  const visiblePages = Array.from(
+    { length: pageCount },
+    (_, index) => index
+  ).slice(visibleRange[0], visibleRange[1]);
 
   return (
     <section className="w-full overflow-hidden min-h-screen">
@@ -343,11 +363,19 @@ function Clientes() {
                   );
                 })}
               </ul>
-              <div className="flex justify-center mt-4 font-semibold text-xl">
-                {Array.from({ length: pageCount }, (_, index) => (
+              <div className="flex justify-center mt-4 text-sm">
+                {visibleRange[0] > 0 && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded-md bg-white text-blue-700 font-normal"
+                    onClick={handlePrevRange}
+                  >
+                    Anterior
+                  </button>
+                )}
+                {visiblePages.map((index) => (
                   <button
                     key={index}
-                    className={`mx-1 px-3 py-1 border rounded ${
+                    className={`mx-1 px-3 py-1 border rounded-md font-normal ${
                       currentPage === index
                         ? "bg-blue-700 text-white"
                         : "bg-white text-blue-700"
@@ -357,6 +385,14 @@ function Clientes() {
                     {index + 1}
                   </button>
                 ))}
+                {visibleRange[1] < pageCount && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700 font-normal"
+                    onClick={handleNextRange}
+                  >
+                    Siguiente
+                  </button>
+                )}
               </div>
             </>
           )}
