@@ -10,13 +10,14 @@ import ModeIcon from '@mui/icons-material/Mode';
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
 import decodeToken from "../utils/tokenDecored";
+import { formatDate } from "../utils/Helpers/FormatDate";
 
 interface VentaAprobar {
   Id: number;
   NombreCliente: string;
   NombreVendedor: string;
   ValorVenta: number;
-  FechaInicio: Date;
+  FechaInicio: string;
   FechaFin: Date;
   NumeroCuotas: number;
   DetallesVenta: number;
@@ -24,6 +25,7 @@ interface VentaAprobar {
   TasaInteres: number;
   ValorSeguro: number;
   NumeroVenta: string;
+  FechaInicioPago: string;
 }
 
 function VentasAprobar() {
@@ -173,10 +175,21 @@ function VentasAprobar() {
                           <CalendarMonthIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
-                              Fecha de inicio Estimada:
+                              Fecha de Creacion:
                             </h6>
                             <span>
-                              {new Date(venta.FechaInicio).toLocaleDateString()}
+                              {formatDate(venta.FechaInicio)}
+                            </span>
+                          </span>
+                        </p>
+                        <p className="text-lg text-blue-900 flex items-center">
+                          <CalendarMonthIcon />
+                          <span className="m-1">
+                            <h6 className="font-semibold">
+                              Fecha de Inicio:
+                            </h6>
+                            <span>
+                              {formatDate(venta.FechaInicioPago)}
                             </span>
                           </span>
                         </p>
