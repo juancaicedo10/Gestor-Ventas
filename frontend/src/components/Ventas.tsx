@@ -134,7 +134,7 @@ function Ventas() {
       setIsLoading(false);
     }
   };
-  
+
   const [visibleRange, setVisibleRange] = useState([0, 5]);
 
   const handleNextRange = () => {
@@ -145,7 +145,10 @@ function Ventas() {
     setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
   };
 
-  const visiblePages = Array.from({ length: pageCount }, (_, index) => index).slice(visibleRange[0], visibleRange[1]);
+  const visiblePages = Array.from(
+    { length: pageCount },
+    (_, index) => index
+  ).slice(visibleRange[0], visibleRange[1]);
 
   const handleFilterChange = (value: number) => {
     setFiltro(value);
@@ -163,21 +166,32 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/filter`,
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage >= 1 ? 1 : currentPage + 1,
               limit: 8,
               TipoFiltro: filtro,
               Buscar: inputValue,
+              AdministradorId: Id,
             },
           }
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filtro/${filtro}/${Id}`
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          {
+            params: {
+              page: currentPage >= 1 ? 1 : currentPage + 1,
+              limit: 8,
+              TipoFiltro: filtro,
+              Buscar: inputValue,
+              VendedorId: Id,
+            },
+          }
         );
       }
+
       setVentas(res.data.data);
       setPageCount(res.data.totalPages);
     } catch (err) {
@@ -222,14 +236,12 @@ function Ventas() {
             <button className="text-blue-900">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
-            {decodeToken()?.user.role === "Administrador" && (
-              <button className="text-blue-900">
-                <TuneIcon
-                  fontSize="large"
-                  onClick={() => setIsFilterOpen(true)}
-                />
-              </button>
-            )}
+            <button className="text-blue-900">
+              <TuneIcon
+                fontSize="large"
+                onClick={() => setIsFilterOpen(true)}
+              />
+            </button>
           </div>
         </header>
         <section
