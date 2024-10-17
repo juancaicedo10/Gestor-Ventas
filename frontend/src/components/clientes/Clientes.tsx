@@ -117,10 +117,6 @@ function Clientes() {
   };
 
   useEffect(() => {
-    if (searchValue === "") {
-      getClients();
-      return;
-    }
     const handler = setTimeout(() => {
       setCurrentPage(0);
       getClients();
@@ -129,7 +125,11 @@ function Clientes() {
     return () => {
       clearTimeout(handler);
     };
-  }, [searchValue, currentPage]);
+  }, [searchValue]);
+
+  useEffect(() => {
+    getClients();
+  }, [currentPage]);
 
   const [visibleRange, setVisibleRange] = useState([0, 5]);
 
