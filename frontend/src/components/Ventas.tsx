@@ -169,7 +169,7 @@ function Ventas() {
           `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
           {
             params: {
-              page: currentPage >= 1 ? 1 : currentPage + 1,
+              page: currentPage + 1,
               limit: 8,
               TipoFiltro: filtro,
               Buscar: inputValue,
@@ -182,7 +182,7 @@ function Ventas() {
           `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
           {
             params: {
-              page: currentPage >= 1 ? 1 : currentPage + 1,
+              page: currentPage + 1,
               limit: 8,
               TipoFiltro: filtro,
               Buscar: inputValue,
@@ -202,6 +202,7 @@ function Ventas() {
   };
 
   useEffect(() => {
+    debugger;
     if (filtro === 0 && inputValue === "") {
       getVentas();
     } else if (filtro !== 0 || inputValue !== "") {
