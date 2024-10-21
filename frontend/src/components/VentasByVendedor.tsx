@@ -8,6 +8,7 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../utils/Helpers/FormatDate";
+import { get } from "lodash";
 
 function VentasByVendedor() {
   interface Venta {
@@ -32,17 +33,24 @@ function VentasByVendedor() {
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [vendedor, setVendedor] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [pageCount, setPageCount] = useState(1);
 
   console.log(id);
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`
-      )
+    axios.get(
+      `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`,
+      {
+        params: {
+          page: currentPage + 1,
+          limit: 8,
+        },
+      })
       .then((res) => {
-        setVentas(res.data);
+        setVentas(res.data.data);
+        setPageCount(res.data.totalPages);
 
         setIsLoading(false);
       })
@@ -56,7 +64,26 @@ function VentasByVendedor() {
       .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${id}`)
       .then((res) => setVendedor(res.data))
       .catch((err) => console.log(err));
-  }, [id]);
+  }, [id, currentPage]);
+
+  const [visibleRange, setVisibleRange] = useState([0, 5]);
+
+  const handleNextRange = () => {
+    setVisibleRange([visibleRange[0] + 5, visibleRange[1] + 5]);
+  };
+
+  const handlePrevRange = () => {
+    setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
+  };
+
+  const visiblePages = Array.from(
+    { length: pageCount },
+    (_, index) => index
+  ).slice(visibleRange[0], visibleRange[1]);
+
+  const handlePageClick = (pageIndex: number) => {
+    setCurrentPage(pageIndex);
+  };
 
 
   return (
@@ -228,6 +255,37 @@ function VentasByVendedor() {
               </div>
             )}
           </section>
+          <div className="flex justify-center mt-4">
+                {visibleRange[0] > 0 && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    onClick={handlePrevRange}
+                  >
+                    Anterior
+                  </button>
+                )}
+                {visiblePages.map((index) => (
+                  <button
+                    key={index}
+                    className={`mx-1 px-3 py-1 border rounded ${
+                      currentPage === index
+                        ? "bg-blue-700 text-white"
+                        : "bg-white text-blue-700"
+                    }`}
+                    onClick={() => handlePageClick(index)}
+                  >
+                    {index + 1}
+                  </button>
+                ))}
+                {visibleRange[1] < pageCount && (
+                  <button
+                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    onClick={handleNextRange}
+                  >
+                    Siguiente
+                  </button>
+                )}
+              </div>
         </section>
       )}
     </section>
