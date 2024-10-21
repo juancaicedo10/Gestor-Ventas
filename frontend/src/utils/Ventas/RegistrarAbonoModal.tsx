@@ -46,6 +46,8 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
   console.log(isLoading);
 
+  const [date, setDate] = useState("");
+
   const registrarAbono = async (e: any) => {
     e.preventDefault();
     setIsSendButtonLoading(true);
@@ -137,6 +139,11 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   useEffect(() => {
     if (cuotaId !== 0) {
       getCuotaById();
+      const today = new Date();
+      const offset = today.getTimezoneOffset();
+      const colombiaTime = new Date(today.getTime() - (offset * 60 * 1000));
+      const formattedDate = colombiaTime.toISOString().split('T')[0];
+      setDate(formattedDate);
     }
   }, [cuotaId]);
 
@@ -312,7 +319,8 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     className={`p-2 rounded-md border w-full ${
                       !isFechaPagoValid ? "border-red-500" : ""
                     }`}
-                    value={fechaPago}
+                    value={date}
+                    disabled
                   />
                   {!isFechaPagoValid && (
                     <p className="text-red-500 text-xs">
