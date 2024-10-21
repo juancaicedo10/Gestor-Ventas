@@ -8,7 +8,6 @@ import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../utils/Helpers/FormatDate";
-import { get } from "lodash";
 
 function VentasByVendedor() {
   interface Venta {
