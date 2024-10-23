@@ -202,7 +202,6 @@ function Ventas() {
   };
 
   useEffect(() => {
-    debugger;
     if (filtro === 0 && inputValue === "") {
       getVentas();
     } else if (filtro !== 0 || inputValue !== "") {
