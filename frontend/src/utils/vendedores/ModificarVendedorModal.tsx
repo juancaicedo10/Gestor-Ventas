@@ -142,7 +142,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
             Telefono: telefono,
             Correo: correo,
             Direccion: direccion,
-            Contraseña: contraseña,
+            Contrasena: contraseña,
             OficinaId: oficinaId,
           },
           {
