@@ -17,7 +17,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
   cuotaId,
   getDataCuotas,
 }) => {
-  const [monto, setMonto] = useState<number>(0);
+  const [monto, setMonto] = useState<string>("");
   const [selectedTipo, setSelectedTipo] = useState<string | undefined>("");
   const [isMontoValid, setIsMontoValid] = useState<boolean>(false);
   const [isTipoValid, setIsTipoValid] = useState<boolean>(false);
@@ -95,7 +95,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
   useEffect(() => {
     if (!isOpen) {
-      setMonto(0);
+      setMonto("");
       setIsMontoValid(true);
       setSelectedTipo("");
       setIsTipoValid(true);
@@ -187,8 +187,11 @@ const InteresManualModal: React.FC<ModalProps> = ({
                         !isMontoValid ? "border-red-500" : ""
                       }`}
                       onChange={(e) => {
-                        setIsMontoValid(true);
-                        setMonto(Number(e.target.value));
+                        let value = (e.target.value = e.target.value.replace(
+                          /[^.0-9]/g,
+                          ""
+                        ));
+                        setMonto(value);
                       }}
                     />
                     {!isMontoValid && (
