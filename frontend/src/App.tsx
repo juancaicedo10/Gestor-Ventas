@@ -17,6 +17,7 @@ import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import GastosAprobar from "./components/GastosAprobar";
 import Administradores from "./components/Administradores/Administradores";
+import VentasByCliente from "./components/VentasByCliente";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
         />
         <Route path="/perfil" element={<Perfil />} />
         <Route path="/ventas/vendedor/:id" element={<VentasByVendedor />} />
+        <Route path="/ventas/cliente/:id" element={<VentasByCliente />} />
         <Route
           path="/cuotas/:id/:numeroVenta"
           element={

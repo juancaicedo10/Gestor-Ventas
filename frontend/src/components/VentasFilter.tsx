@@ -8,27 +8,10 @@ interface Props {
   inputChange?: (value: string) => void;
 }
 
-const VentasFilter: React.FC<Props> = ({
-  isOpen,
-  onClose,
-  onChange,
-  inputChange,
-}) => {
+const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
   const [selectedOption, setSelectedOption] = useState<string | undefined>(
     undefined
   );
-  const [searchValue, setSearchValue] = useState<string>("");
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(event.target.value);
-  };
-
-  const handleSearchClick = () => {
-    if (inputChange) {
-      inputChange(searchValue);
-      onClose();
-    }
-  };
 
   useEffect(() => {
     return () => {
@@ -75,7 +58,7 @@ const VentasFilter: React.FC<Props> = ({
           >
             <CloseIcon fontSize="large" className="relative left-0" />
           </button>
-          <h2 className="font-bold text-blue-800 p-2 w-full text-center my-auto text-3xl">
+          <h2 className="font-bold text-blue-800 p-2 w-full text-center my-auto text-xl md:text-2xl lg:text-3xl">
             Filtrar Ventas
           </h2>
         </div>
@@ -84,7 +67,7 @@ const VentasFilter: React.FC<Props> = ({
         <div className="w-full flex items-center flex-col">
           <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between">
             <button
-              className={`w-full py-2 text-white font-bold text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
                 selectedOption === "Vencidas" ? "bg-yellow-700" : "bg-[#c98b54]"
               }`}
               onClick={() => handleButtonClick("Vencidas")}
@@ -92,7 +75,7 @@ const VentasFilter: React.FC<Props> = ({
               Vencidas
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
                 selectedOption === "Proximas" ? "bg-green-700" : "bg-green-500"
               }`}
               onClick={() => handleButtonClick("Proximas")}
@@ -100,7 +83,7 @@ const VentasFilter: React.FC<Props> = ({
               Proximas
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
                 selectedOption === "Por Vencer"
                   ? "bg-yellow-700"
                   : "bg-yellow-500"
@@ -110,7 +93,7 @@ const VentasFilter: React.FC<Props> = ({
               Por Vencer
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
                 selectedOption === "Alerta" ? "bg-red-700" : "bg-red-500"
               }`}
               onClick={() => handleButtonClick("Alerta")}
@@ -118,7 +101,7 @@ const VentasFilter: React.FC<Props> = ({
               Alerta
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
                 selectedOption === "Al Corriente"
                   ? "bg-purple-700"
                   : "bg-purple-500"
@@ -126,21 +109,6 @@ const VentasFilter: React.FC<Props> = ({
               onClick={() => handleButtonClick("Al Corriente")}
             >
               Al Corriente
-            </button>
-          </section>
-          <section className="w-3/4 py-1 flex items-center justify-between mt-5">
-            <input
-              type="text"
-              value={searchValue}
-              onChange={handleSearchChange}
-              placeholder="Buscar..."
-              className="w-3/4 py-2 px-4 border"
-            />
-            <button
-              onClick={handleSearchClick}
-              className="w-1/4 py-2 text-white font-semibold text-xl rounded-r-md bg-blue-800 hover:bg-blue-900 transition-colors"
-            >
-              Buscar
             </button>
           </section>
         </div>

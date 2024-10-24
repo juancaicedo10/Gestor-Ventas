@@ -30,7 +30,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [valorAbono, setValorAbono] = useState<string>("");
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
-  const [saldoInteres, setSaldoInteres] = useState<string>("");
   const [saldoInteresManual, setSaldoInteresManual] = useState<string>("");
   const [saldoMora, setSaldoMora] = useState<string>("");
   const [saldoMoraManual, setSaldoMoraManual] = useState<string>("");
@@ -41,7 +40,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isFechaPagoValid, setIsFechaPagoValid] = useState(true);
-  const [isSaldoInteresValid, setIsSaldoInteresValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
 
   console.log(isLoading);
@@ -66,12 +64,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       console.log("fecha pago invalido", esValido);
     }
 
-    if (!saldoInteres) {
-      setIsSaldoInteresValid(false);
-      esValido = false;
-      console.log("saldo interes invalid ", esValido);
-    }
-
     if (!detallesAbono) {
       setIsDetallesAbonoValid(false);
       esValido = false;
@@ -90,7 +82,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
-          SaldoInteres: Number(saldoInteres),
           SaldoMora: Number(saldoMora) ?? 0,
           DetallesAbono: detallesAbono,
           SaldoInteresManual: Number(saldoInteresManual) ?? 0,
@@ -141,25 +132,22 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       getCuotaById();
       const today = new Date();
       const offset = today.getTimezoneOffset();
-      const colombiaTime = new Date(today.getTime() - (offset * 60 * 1000));
-      const formattedDate = colombiaTime.toISOString().split('T')[0];
+      const colombiaTime = new Date(today.getTime() - offset * 60 * 1000);
+      const formattedDate = colombiaTime.toISOString().split("T")[0];
       setDate(formattedDate);
     }
   }, [cuotaId]);
-
 
   useEffect(() => {
     if (!isOpen) {
       setValorAbono("");
       setFechaPago("");
       setDetallesAbono("");
-      setSaldoInteres("");
       setSaldoInteresManual("");
       setSaldoMora("");
       setSaldoMoraManual("");
       setIsValorAbonoValid(true);
       setIsFechaPagoValid(true);
-      setIsSaldoInteresValid(true);
       setIsDetallesAbonoValid(true);
     }
   }, [isOpen]);
@@ -236,30 +224,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <label htmlFor="interes">Saldo Interes: </label>
-                  <input
-                    type="text"
-                    className={`p-2 rounded-md border w-full ${
-                      !isSaldoInteresValid ? "border-red-500" : ""
-                    }`}
-                    placeholder="saldo interes"
-                    onChange={(e) => {
-                      let value = (e.target.value = e.target.value.replace(
-                        /[^.0-9]/g,
-                        ""
-                      ));
-                      setSaldoInteres(value);
-                      setIsSaldoInteresValid(true);
-                    }}
-                    value={saldoInteres}
-                  />
-                  {!isSaldoInteresValid && (
-                    <p className="text-red-500 text-xs">
-                      Este campo es obligatorio
-                    </p>
-                  )}
-                </div>
-                <div>
                   <label htmlFor="interes">
                     Saldo Interes Manual (opcional):{" "}
                   </label>
@@ -273,7 +237,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                         ""
                       ));
                       setSaldoInteresManual(value);
-                      setIsSaldoInteresValid(true);
                     }}
                     value={saldoInteresManual}
                   />
@@ -282,9 +245,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   <label htmlFor="mora">Saldo Mora:</label>
                   <input
                     type="text"
-                    className={`p-2 rounded-md border w-full ${
-                      !isFechaPagoValid ? "border-red-500" : ""
-                    }`}
+                    className={`p-2 rounded-md border w-full`}
                     placeholder="saldo mora"
                     onChange={(e) => {
                       let value = (e.target.value = e.target.value.replace(
@@ -316,9 +277,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   <label htmlFor="fecha">Fecha Pago:</label>
                   <input
                     type="date"
-                    className={`p-2 rounded-md border w-full ${
-                      !isFechaPagoValid ? "border-red-500" : ""
-                    }`}
+                    className={`p-2 rounded-md border w-full`}
                     value={date}
                     disabled
                   />

@@ -6,11 +6,12 @@ import Spinner from "../utils/Spinner";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
-import ModeIcon from '@mui/icons-material/Mode';
+import ModeIcon from "@mui/icons-material/Mode";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
 import decodeToken from "../utils/tokenDecored";
 import { formatDate } from "../utils/Helpers/FormatDate";
+import { FormatearFecha } from "../utils/FormatearFecha";
 
 interface VentaAprobar {
   Id: number;
@@ -18,6 +19,7 @@ interface VentaAprobar {
   NombreVendedor: string;
   ValorVenta: number;
   FechaInicio: string;
+  FechaServer: string;
   FechaFin: Date;
   NumeroCuotas: number;
   DetallesVenta: number;
@@ -35,11 +37,16 @@ function VentasAprobar() {
   const getVentasAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/aprobar/${decodeToken()?.user?.Id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const res = await axios.get(
+        `https://backendgestorventas.azurewebsites.net/api/ventas/aprobar/${
+          decodeToken()?.user?.Id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       setSellsToApprove(res.data);
     } catch (err) {
       console.error(err);
@@ -92,7 +99,7 @@ function VentasAprobar() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     getVentasAprobar();
@@ -127,102 +134,94 @@ function VentasAprobar() {
                 </div>
               </div>
             ) : (
-              <ul
-              className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2"
-            >
+              <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2">
                 {sellsToApprove.map((venta) => (
-                    <li key={venta.Id} className="flex flex-col w-full mb-2">
-                      <div className="w-full">
-                        <button
-                          className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
-                          onClick={() => handleAprobar(venta.Id)}
-                        >
-                          Aprobar
-                        </button>
-                        <button
-                          className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
-                          onClick={() => handleRechazar(venta.Id)}
-                        >
-                          Rechazar
-                        </button>
-                      </div>
-                      <div className="bg-blue-900 rounded-md p-2 md:p-4">
-                        <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
-                          <span className="font-semibold mr-2">Cliente:</span>{" "}
-                          <h6 className="font-normal">{venta.NombreCliente}</h6>
-                        </p>
-                        <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
-                          <span className="font-semibold mr-2">Vendedor:</span>{" "}
-                          <h6 className="font-normal">{venta.NombreVendedor}</h6>
-                        </p>
-                      </div>
-                      <div className="bg-white rounded-md border shadow-sm p-2">
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <AttachMoneyIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold">
-                              Valor de la venta:
-                            </h6>
-                            <span>
-                              {new Intl.NumberFormat("en-US", {
-                                style: "currency",
-                                currency: "USD",
-                              }).format(venta.ValorVenta)}
-                            </span>
+                  <li key={venta.Id} className="flex flex-col w-full mb-2">
+                    <div className="w-full">
+                      <button
+                        className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
+                        onClick={() => handleAprobar(venta.Id)}
+                      >
+                        Aprobar
+                      </button>
+                      <button
+                        className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
+                        onClick={() => handleRechazar(venta.Id)}
+                      >
+                        Rechazar
+                      </button>
+                    </div>
+                    <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                      <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
+                        <span className="font-semibold mr-2">Cliente:</span>{" "}
+                        <h6 className="font-normal">{venta.NombreCliente}</h6>
+                      </p>
+                      <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
+                        <span className="font-semibold mr-2">Vendedor:</span>{" "}
+                        <h6 className="font-normal">{venta.NombreVendedor}</h6>
+                      </p>
+                    </div>
+                    <div className="bg-white rounded-md border shadow-sm p-2">
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <AttachMoneyIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Valor de la venta:</h6>
+                          <span>
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(venta.ValorVenta)}
                           </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <CalendarMonthIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold">
-                              Fecha de Creacion:
-                            </h6>
-                            <span>
-                              {formatDate(venta.FechaInicio)}
-                            </span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <CalendarMonthIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Fecha de Creacion:</h6>
+                          <span>
+                            {`${formatDate(venta.FechaServer)} ${FormatearFecha(
+                              venta.FechaServer
+                            )}`}
                           </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <CalendarMonthIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold">
-                              Fecha de Inicio:
-                            </h6>
-                            <span>
-                              {formatDate(venta.FechaInicioPago)}
-                            </span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <AccountBalanceIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold">Numero de cuotas:</h6>
-                            <span>{venta.NumeroCuotas}</span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <AccessAlarm />
-                          <span className="m-1">
-                            <h6 className="font-semibold">Periodicidad:</h6>
-                            <span>cada {venta.Periodicidad} dias</span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <ModeIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold flex">Tasa Interes:</h6>
-                            <span>{venta.TasaInteres} %</span>
-                          </span>
-                        </p>
-                        <p className="text-lg text-blue-900 flex items-center">
-                          <ModeIcon />
-                          <span className="m-1">
-                            <h6 className="font-semibold flex">Detalles:</h6>
-                            <span>{venta.DetallesVenta}</span>
-                          </span>
-                        </p>
-                      </div>
-                    </li>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <CalendarMonthIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Fecha de Inicio:</h6>
+                          <span>{formatDate(venta.FechaInicioPago)}</span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <AccountBalanceIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Numero de cuotas:</h6>
+                          <span>{venta.NumeroCuotas}</span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <AccessAlarm />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Periodicidad:</h6>
+                          <span>cada {venta.Periodicidad} dias</span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <ModeIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold flex">Tasa Interes:</h6>
+                          <span>{venta.TasaInteres} %</span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
+                        <ModeIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold flex">Detalles:</h6>
+                          <span>{venta.DetallesVenta}</span>
+                        </span>
+                      </p>
+                    </div>
+                  </li>
                 ))}
               </ul>
             )}

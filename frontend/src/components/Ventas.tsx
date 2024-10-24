@@ -14,6 +14,7 @@ import { formatDate } from "../utils/Helpers/FormatDate";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
 import VentasFilter from "./VentasFilter";
+import { FormatearFecha } from "../utils/FormatearFecha";
 
 function Ventas() {
   interface Venta {
@@ -36,6 +37,7 @@ function Ventas() {
     Estado: string;
     ColorEstado: string;
     ColorTexto: string;
+    FechaServer: string;
   }
 
   const [ventas, setVentas] = useState<Venta[]>([]);
@@ -172,7 +174,6 @@ function Ventas() {
               page: currentPage + 1,
               limit: 8,
               TipoFiltro: filtro,
-              Buscar: inputValue,
               AdministradorId: Id,
             },
           }
@@ -185,7 +186,6 @@ function Ventas() {
               page: currentPage + 1,
               limit: 8,
               TipoFiltro: filtro,
-              Buscar: inputValue,
               VendedorId: Id,
             },
           }
@@ -201,21 +201,74 @@ function Ventas() {
     }
   };
 
+  const getVentasFilterBuscar = async (Buscar: string) => {
+    setIsLoading(true);
+    try {
+      let res;
+      if (decodeToken()?.user.role === "Administrador") {
+        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/filter`, {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            Buscar: Buscar,
+            AdministradorId: Id,
+          },
+        });
+      } else {
+        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/filter`, {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            TipoFiltro: filtro,
+            Buscar: Buscar,
+            VendedorId: Id,
+          },
+        });
+      }
+
+      setVentas(res.data.data);
+      setPageCount(res.data.totalPages);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    if (filtro === 0 && inputValue === "") {
+    if (filtro === 0) {
       getVentas();
-    } else if (filtro !== 0 || inputValue !== "") {
+    } else if (filtro !== 0) {
       getVentasFilter();
     }
-  }, [currentPage]);
+  }, [currentPage, inputValue === ""]);
 
   useEffect(() => {
     setCurrentPage(0);
-    if (filtro === 0) {
-      return;
+    if (filtro !== 0) {
+      getVentasFilter();
     }
-    getVentasFilter();
   }, [filtro]);
+
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+    const value = e.target.value;
+    setInputValue(value);
+  };
+
+  useEffect(() => {
+    setCurrentPage(0);
+    if (inputValue !== "") {
+      const handler = setTimeout(() => {
+        setCurrentPage(0);
+        getVentasFilterBuscar(inputValue);
+      }, 400);
+
+      return () => {
+        clearTimeout(handler);
+      };
+    }
+  }, [inputValue]);
 
   return (
     <section>
@@ -243,6 +296,47 @@ function Ventas() {
               />
             </button>
           </div>
+          <form
+            className="mx-auto w-full md:w-1/2 mb-2"
+            onSubmit={handleSearch}
+          >
+            <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
+              Buscar
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-gray-500"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                  />
+                </svg>
+              </div>
+              <input
+                type="search"
+                id="default-search"
+                className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Buscar cliente"
+                onChange={handleSearch}
+                required
+              />
+              <button
+                type="submit"
+                className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+              >
+                Buscar
+              </button>
+            </div>
+          </form>
         </header>
         <section
           className={`flex items-center justify-center ${
@@ -343,6 +437,18 @@ function Ventas() {
                               Periodicidad
                             </span>
                             : {venta.PeriodicidadNombre}
+                          </li>
+                          <li className="p-1">
+                            <DateRangeIcon
+                              fontSize="small"
+                              className="text-blue-900"
+                            />
+                            <span className="font-semibold text-blue-900">
+                              Fecha Creacion:
+                            </span>{" "}
+                            {`${formatDate(venta.FechaServer)} ${FormatearFecha(
+                              venta.FechaServer
+                            )}`}
                           </li>
                           <li className="p-1">
                             <DateRangeIcon

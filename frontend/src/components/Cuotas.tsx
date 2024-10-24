@@ -24,6 +24,7 @@ interface Cuota {
   SaldoInteres: number;
   Pagada: boolean;
   SaldoInteresManual: number;
+  NombreCliente: string;
   abonos: [Abono];
 }
 
@@ -64,8 +65,8 @@ function Cuotas() {
   const [openAbonos, setOpenAbonos] = useState<number[]>([]);
 
   const toggleAbonoDetails = (cuotaId: number) => {
-    console.log(cuotaId, 'cuotaId');
-    console.log(openAbonos, 'open abonos');
+    console.log(cuotaId, "cuotaId");
+    console.log(openAbonos, "open abonos");
     if (openAbonos.includes(cuotaId)) {
       setOpenAbonos(openAbonos.filter((id) => id !== cuotaId));
     } else {
@@ -94,7 +95,6 @@ function Cuotas() {
       )
       .then((res) => {
         setDatosVenta(res.data);
-
       })
       .catch((err) => {
         console.log(err);
@@ -118,7 +118,13 @@ function Cuotas() {
         </Link>
         <h1 className="font-semibold text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center w-full">
           Cuotas para la venta: <br />
-          <span className="font-bold text-blue-700">{NumeroVenta}</span>{" "}
+          <span className="font-bold text-blue-700">{NumeroVenta}</span> <br />
+          <span className="font-semibold text-blue-700 text-sm md:text-2xl">
+            Cliente:{" "}
+          </span>
+          <span className="font-semibold text-black text-sm md:text-2xl">
+            {cuotas[0]?.NombreCliente}
+          </span>
         </h1>
       </header>
       <section className="w-full px-2">
@@ -152,10 +158,7 @@ function Cuotas() {
               </th>
               <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
                 <SellIcon fontSize="inherit" />
-                Mora
-              </th>
-              <th className="border-r border-black text-[7px] md:text-sm lg:text-lg">
-                Interes
+                Multa
               </th>
               <th className="px-1 border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                 <PriceCheckIcon fontSize="medium" />
@@ -173,168 +176,165 @@ function Cuotas() {
             </tr>
           </thead>
           <tbody>
-            {cuotas.map((cuota, idx) => (
-              <React.Fragment key={idx}>
-                <tr className="border border-black">
-                  <td className="text-center border-r border-black py-4 px-1 text-xs md:text-sm lg:text-lg flex flex-col justify-center items-center">
-                    {cuota.NumeroCuota}
-                    <button
-                      className={`text-xl ${
-                        cuota.Pagada ? "hidden" : "text-blue-900"
-                      }`}
-                      onClick={() => {
-                        setIsModalOpen(true);
-                        setCuotaId(cuota.Id);
-                      }}
-                      disabled={cuota.Pagada}
-                    >
-                      <AddCircleIcon fontSize="inherit" />
-                    </button>
-                    <button
-                      className={`bg-blue-800 text-white text-[7px] md:text-xs rounded-sm p-1 ${
-                        cuota.abonos.length < 1 && "hidden"
-                      }`}
-                      onClick={() => {
-                        toggleAbonoDetails(cuota.Id);
-                      }}
-                      disabled={cuota.abonos.length < 1}
-                    >
-                      abonos
-                    </button>
-                  </td>
-                  <td className="text-center border-r border-black px-1 text-[7px] md:text-sm lg:text-lg">
-                    {new Intl.NumberFormat("en-US", {
-                      style: "currency",
-                      currency: "USD",
-                    }).format(cuota.ValorCuota)}
-                  </td>
-                  <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
-                    {formatDate(cuota.FechaPago)}
-                  </td>
-                  <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
-                    {new Intl.NumberFormat("es-CO", {
-                      style: "currency",
-                      currency: "COP",
-                    }).format(cuota.SaldoMora)}
-                    $
-                  </td>
-                  <td className="text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
-                    {new Intl.NumberFormat("es-CO", {
-                      style: "currency",
-                      currency: "COP",
-                    }).format(cuota.SaldoInteres)}
-                  </td>
-                  <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg px-1">
-                    <span
-                      className={`${
-                        cuota.Pagada
-                          ? "bg-green-200 text-green-500 px-2 text-[7px] md:text-sm lg:text-lg rounded-sm"
-                          : "bg-red-200 text-red-500 px-1 text-[7px] md:text-sm lg:text-lg rounded-sm"
-                      }`}
-                    >
-                      {cuota.Pagada ? "Si" : "No"}
-                    </span>
-                  </td>
-                  <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg">
-                    {new Intl.NumberFormat("es-CO", {
-                      style: "currency",
-                      currency: "COP",
-                    }).format(cuota.SaldoInteresManual)}
-                  </td>
-                  {decodeToken().user.role === "Administrador" && (
-                    <>
-                      <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
-                        <button
-                          className="text-[7px]"
-                          onClick={() => {
-                            setIsModalInteresManualOpen(true);
-                            setCuotaId(cuota.Id);
-                          }}
-                        >
-                          <ModeEditIcon />
-                        </button>
-                      </td>
-                    </>
-                  )}
-                </tr>
-                <tr>
-                  {openAbonos.includes(cuota.Id) && (
-                    <td colSpan={8}>
-                      <div className="w-full flex flex-col justify-center items-center">
-                        <section className="w-full md:w-3/4 flex flex-col items-center justify-center bg-white shadow-md my-2 rounded-md p-2">
-                          <table className="w-full text-sm text-center">
-                            <thead className="font-semibold">
-                              <tr>
-                                <th className="text-[7px] md:text-sm lg:text-lg text-blue-800">
-                                  Valor Abono
-                                </th>
-                                <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                  Fecha Abono
-                                </th>
-                                <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                  Abono Interes
-                                </th>
-                                <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                  Abono Mora
-                                </th>
-                                <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                  interes Manual
-                                </th>
-                                <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                  Mora Manual
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {cuota.abonos.map((abono, index) => (
-                                <tr key={index}>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                    {" "}
-                                    {new Intl.NumberFormat("es-CO", {
-                                      style: "currency",
-                                      currency: "COP",
-                                    }).format(abono?.ValorAbono || 0)}
-                                  </td>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg flex flex-col ">
-                                    {formatDate(abono.FechaAbono) +
-                                      " " +
-                                      FormatearFecha(abono?.FechaAbono)}
-                                  </td>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                    {new Intl.NumberFormat("es-CO", {
-                                      style: "currency",
-                                      currency: "COP",
-                                    }).format(abono?.InteresAbono || 0)}
-                                  </td>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                    {new Intl.NumberFormat("es-CO", {
-                                      style: "currency",
-                                      currency: "COP",
-                                    }).format(abono?.MoraAbono || 0)}
-                                  </td>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                    {new Intl.NumberFormat("es-CO", {
-                                      style: "currency",
-                                      currency: "COP",
-                                    }).format(abono?.SaldoInteresManual || 0)}
-                                  </td>
-                                  <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                    {new Intl.NumberFormat("es-CO", {
-                                      style: "currency",
-                                      currency: "COP",
-                                    }).format(abono?.SaldoMoraManual || 0)}
-                                  </td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </section>
-                      </div>
+            {cuotas.map((cuota, idx) => {
+              const valorCuotaTotal = cuota.ValorCuota + cuota.SaldoInteres;
+              return (
+                <React.Fragment key={idx}>
+                  <tr className="border border-black" key={idx}>
+                    <td className="text-center border-r border-black py-4 px-1 text-xs md:text-sm lg:text-lg flex flex-col justify-center items-center">
+                      {cuota.NumeroCuota}
+                      <button
+                        className={`text-xl ${
+                          cuota.Pagada ? "hidden" : "text-blue-900"
+                        }`}
+                        onClick={() => {
+                          setIsModalOpen(true);
+                          setCuotaId(cuota.Id);
+                        }}
+                        disabled={cuota.Pagada}
+                      >
+                        <AddCircleIcon fontSize="inherit" />
+                      </button>
+                      <button
+                        className={`bg-blue-800 text-white text-[7px] md:text-xs rounded-sm p-1 ${
+                          cuota.abonos.length < 1 && "hidden"
+                        }`}
+                        onClick={() => {
+                          toggleAbonoDetails(cuota.Id);
+                        }}
+                        disabled={cuota.abonos.length < 1}
+                      >
+                        abonos
+                      </button>
                     </td>
-                  )}
-                </tr>
-              </React.Fragment>
-            ))}
+                    <td className="text-center border-r border-black px-1 text-[7px] md:text-sm lg:text-lg">
+                      {new Intl.NumberFormat("en-US", {
+                        style: "currency",
+                        currency: "USD",
+                      }).format(valorCuotaTotal)}
+                    </td>
+                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
+                      {formatDate(cuota.FechaPago)}
+                    </td>
+                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
+                      {new Intl.NumberFormat("es-CO", {
+                        style: "currency",
+                        currency: "COP",
+                      }).format(cuota.SaldoMora)}
+                      $
+                    </td>
+                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg px-1">
+                      <span
+                        className={`${
+                          cuota.Pagada
+                            ? "bg-green-200 text-green-500 px-2 text-[7px] md:text-sm lg:text-lg rounded-sm"
+                            : "bg-red-200 text-red-500 px-1 text-[7px] md:text-sm lg:text-lg rounded-sm"
+                        }`}
+                      >
+                        {cuota.Pagada ? "Si" : "No"}
+                      </span>
+                    </td>
+                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg">
+                      {new Intl.NumberFormat("es-CO", {
+                        style: "currency",
+                        currency: "COP",
+                      }).format(cuota.SaldoInteresManual)}
+                    </td>
+                    {decodeToken().user.role === "Administrador" && (
+                      <>
+                        <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
+                          <button
+                            className="text-[7px]"
+                            onClick={() => {
+                              setIsModalInteresManualOpen(true);
+                              setCuotaId(cuota.Id);
+                            }}
+                          >
+                            <ModeEditIcon />
+                          </button>
+                        </td>
+                      </>
+                    )}
+                  </tr>
+                  <tr>
+                    {openAbonos.includes(cuota.Id) && (
+                      <td colSpan={8}>
+                        <div className="w-full flex flex-col justify-center items-center">
+                          <section className="w-full md:w-3/4 flex flex-col items-center justify-center bg-white shadow-md my-2 rounded-md p-2">
+                            <table className="w-full text-sm text-center">
+                              <thead className="font-semibold">
+                                <tr>
+                                  <th className="text-[7px] md:text-sm lg:text-lg text-blue-800">
+                                    Valor Abono
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    Fecha Abono
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    Abono Interes
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    Abono Mora
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    interes Manual
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    Mora Manual
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                {cuota.abonos.map((abono, index) => (
+                                  <tr key={index}>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      {" "}
+                                      {new Intl.NumberFormat("es-CO", {
+                                        style: "currency",
+                                        currency: "COP",
+                                      }).format(abono?.ValorAbono || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg flex flex-col ">
+                                      {formatDate(abono.FechaAbono) +
+                                        " " +
+                                        FormatearFecha(abono?.FechaAbono)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      {new Intl.NumberFormat("es-CO", {
+                                        style: "currency",
+                                        currency: "COP",
+                                      }).format(abono?.InteresAbono || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      {new Intl.NumberFormat("es-CO", {
+                                        style: "currency",
+                                        currency: "COP",
+                                      }).format(abono?.MoraAbono || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      {new Intl.NumberFormat("es-CO", {
+                                        style: "currency",
+                                        currency: "COP",
+                                      }).format(abono?.SaldoInteresManual || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      {new Intl.NumberFormat("es-CO", {
+                                        style: "currency",
+                                        currency: "COP",
+                                      }).format(abono?.SaldoMoraManual || 0)}
+                                    </td>
+                                  </tr>
+                                ))}
+                              </tbody>
+                            </table>
+                          </section>
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                </React.Fragment>
+              );
+            })}
           </tbody>
         </table>
         <table className="border-2 border-black bg-[#f7f7f7] shadow-sm w-1/2">
@@ -342,9 +342,7 @@ function Cuotas() {
             <tr className="text-white bg-blue-800 text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
-              <th className="border-r border-black px-1">Mora Abonada</th>
-              <th className="border-r border-black px-1">Mora Manual</th>
-              <th className="border-r border-black px-1">Interes Abonado</th>
+              <th className="border-r border-black px-1">Multa Manual</th>
               <th className="border-r border-black px-1">Interes Manual</th>
               <th className="border-r border-black px-1">Total Abonado</th>
               <th className="border-r border-black px-1">Valor a Pagar</th>
@@ -369,19 +367,7 @@ function Cuotas() {
                 {new Intl.NumberFormat("es-CO", {
                   style: "currency",
                   currency: "COP",
-                }).format(DatosVenta?.MoraTotal || 0)}
-              </td>
-              <td className="border-r border-black px-1">
-                {new Intl.NumberFormat("es-CO", {
-                  style: "currency",
-                  currency: "COP",
                 }).format(DatosVenta?.MoraManual || 0)}
-              </td>
-              <td className="border-r border-black px-1">
-                {new Intl.NumberFormat("es-CO", {
-                  style: "currency",
-                  currency: "COP",
-                }).format(DatosVenta?.InteresTotal || 0)}
               </td>
               <td className="border-r border-black px-1">
                 {new Intl.NumberFormat("es-CO", {

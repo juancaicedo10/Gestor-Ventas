@@ -15,6 +15,7 @@ import Spinner from "../../utils/Spinner";
 import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import { Link } from "react-router-dom";
 
 function Clientes() {
   interface Client {
@@ -117,19 +118,21 @@ function Clientes() {
   };
 
   useEffect(() => {
+    if (searchValue !== "") {
     const handler = setTimeout(() => {
-      setCurrentPage(0);
+      setCurrentPage(0); // Reinicia la página solo cuando se realiza una nueva búsqueda
       getClients();
     }, 400);
 
     return () => {
       clearTimeout(handler);
     };
+  }
   }, [searchValue]);
 
   useEffect(() => {
-    getClients();
-  }, [currentPage]);
+   getClients();
+  }, [currentPage, searchValue === ""]);
 
   const [visibleRange, setVisibleRange] = useState([0, 5]);
 
@@ -300,9 +303,15 @@ function Clientes() {
                                       >
                                         Eliminar
                                       </button>
-                                      <button className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full">
+                                      <Link
+                                        to={`/ventas/cliente/${client.Id}`}
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-center"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        onClick={() => setOpenDropdownId(null)}
+                                      >
                                         Compras
-                                      </button>
+                                      </Link>
                                     </div>
                                   </div>
                                 )}

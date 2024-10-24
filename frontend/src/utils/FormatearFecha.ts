@@ -1,4 +1,8 @@
 export const FormatearFecha = (fecha: string): string => {
+
+    if (!fecha) {
+      return '';
+    }
     // Extraer la parte de la hora de la cadena
     const horaParte = fecha.slice(11, 19); // "23:50:30"
     

@@ -10,7 +10,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../utils/Helpers/FormatDate";
 import { FormatearFecha } from "../utils/FormatearFecha";
 
-function VentasByVendedor() {
+function VentasByCliente() {
   interface Venta {
     Id: number;
     FechaInicio: string;
@@ -20,19 +20,20 @@ function VentasByVendedor() {
     SaldoMoraTotal: number;
     DetallesVenta: string;
     ValorVenta: number;
-    NombreVendedor: string;
+    Nombrecliente: string;
     NombreCliente: string;
     PeriodicidadNombre: string;
     CuotasPagadas: number;
     ValorAbonado: number;
     FechaServer: string;
+    NombreVendedor: string;
   }
 
   const { id } = useParams<{ id: string }>();
 
   console.log(id);
   const [ventas, setVentas] = useState<Venta[]>([]);
-  const [vendedor, setVendedor] = useState<any>({});
+  const [cliente, setcliente] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
@@ -42,7 +43,7 @@ function VentasByVendedor() {
   useEffect(() => {
     setIsLoading(true);
     axios.get(
-      `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`,
+      `https://backendgestorventas.azurewebsites.net/api/ventas/cliente/${id}`,
       {
         params: {
           page: currentPage + 1,
@@ -60,10 +61,10 @@ function VentasByVendedor() {
         setIsLoading(false);
       });
 
-    // Fetch vendedor info
+    // Fetch cliente info
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${id}`)
-      .then((res) => setVendedor(res.data))
+      .get(`https://backendgestorventas.azurewebsites.net/api/clientes/${id}`)
+      .then((res) => setcliente(res.data))
       .catch((err) => console.log(err));
   }, [id, currentPage]);
 
@@ -98,8 +99,8 @@ function VentasByVendedor() {
         <section className="w-full">
           <header className="bg-white text-center border-b shadow-md ml-[65px]">
             <h1 className="text-xl md:text-3xl font-bold text-blue-900 py-4 text-center">
-              Ventas de:{" "} <br />
-              <span className="text-blue-600">{vendedor.NombreCompleto}</span>
+              Compras por:{" "} <br />
+              <span className="text-blue-600">{cliente.NombreCompleto}</span>
             </h1>
           </header>
           <section
@@ -302,4 +303,4 @@ function VentasByVendedor() {
   );
 }
 
-export default VentasByVendedor;
+export default VentasByCliente;
