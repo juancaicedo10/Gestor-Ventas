@@ -27,6 +27,7 @@ function VentasByCliente() {
     ValorAbonado: number;
     FechaServer: string;
     NombreVendedor: string;
+    TelefonoCliente: string;
   }
 
   const { id } = useParams<{ id: string }>();
@@ -166,6 +167,24 @@ function VentasByCliente() {
                             </span>{" "}
                             {venta.NombreCliente}
                           </li>
+                          <li className="p-1 w-full flex">
+                            <PersonIcon
+                              fontSize="small"
+                              className="text-blue-900"
+                            />
+                            <span className="font-semibold text-blue-900">
+                              Contacto:
+                            </span>{" "}
+                              <p className="border-blue-600 text-blue-600 ml-1 border-b">
+                                <a
+                                  href={`https://wa.me/${venta.TelefonoCliente}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {venta.TelefonoCliente}
+                                </a>
+                              </p>
+                          </li>
                           <li className="p-1">
                             <AccessAlarmIcon
                               fontSize="small"
@@ -176,6 +195,7 @@ function VentasByCliente() {
                             </span>
                             : {venta.PeriodicidadNombre}
                           </li>
+                          
                           <li className="p-1 text-blue-900 flex items-center">
                             <DateRangeIcon fontSize="small" />
                             <span className="font-semibold text-blue-900">
