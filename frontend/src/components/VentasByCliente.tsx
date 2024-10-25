@@ -9,6 +9,7 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
 import { formatDate } from "../utils/Helpers/FormatDate";
 import { FormatearFecha } from "../utils/FormatearFecha";
+import PhoneIcon from "@mui/icons-material/Phone";
 
 function VentasByCliente() {
   interface Venta {
@@ -168,7 +169,7 @@ function VentasByCliente() {
                             {venta.NombreCliente}
                           </li>
                           <li className="p-1 w-full flex">
-                            <PersonIcon
+                            <PhoneIcon
                               fontSize="small"
                               className="text-blue-900"
                             />

@@ -8,6 +8,7 @@ import AddCircleIcon from "@mui/icons-material/AddCircle";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import Spinner from "../utils/Spinner";
+import PhoneIcon from "@mui/icons-material/Phone";
 import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 import decodeToken from "../utils/tokenDecored";
 import { formatDate } from "../utils/Helpers/FormatDate";
@@ -430,7 +431,7 @@ function Ventas() {
                             {venta.NombreCliente}
                           </li>
                           <li className="p-1 w-full flex">
-                            <PersonIcon
+                            <PhoneIcon
                               fontSize="small"
                               className="text-blue-900"
                             />
