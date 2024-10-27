@@ -41,6 +41,8 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
 
+  console.log("cuotaId", isLoading);
+
 
   const [date, setDate] = useState("");
 
