@@ -39,7 +39,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     useState<boolean>(false);
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
-  const [isFechaPagoValid, setIsFechaPagoValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
 
   console.log(isLoading);
@@ -58,12 +57,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       console.log("valor abono invalido", esValido);
     }
 
-    if (!fechaPago) {
-      setIsFechaPagoValid(false);
-      esValido = false;
-      console.log("fecha pago invalido", esValido);
-    }
-
     if (!detallesAbono) {
       setIsDetallesAbonoValid(false);
       esValido = false;
@@ -78,7 +71,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .post(
         `
-        https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${cuotaId}`,
+        http://localhost:4300/api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
@@ -147,7 +140,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       setSaldoMora("");
       setSaldoMoraManual("");
       setIsValorAbonoValid(true);
-      setIsFechaPagoValid(true);
       setIsDetallesAbonoValid(true);
     }
   }, [isOpen]);
@@ -281,11 +273,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                     value={date}
                     disabled
                   />
-                  {!isFechaPagoValid && (
-                    <p className="text-red-500 text-xs">
-                      Este campo es obligatorio
-                    </p>
-                  )}
                 </div>
                 <div>
                   <label htmlFor="detalle">Detalles Abono:</label>

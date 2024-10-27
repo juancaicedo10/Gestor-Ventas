@@ -250,7 +250,7 @@ function Cuotas() {
                               setCuotaId(cuota.Id);
                             }}
                           >
-                            <ModeEditIcon />
+                            {!cuota.Pagada && <ModeEditIcon />}
                           </button>
                         </td>
                       </>
