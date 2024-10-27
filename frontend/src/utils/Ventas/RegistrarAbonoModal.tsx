@@ -41,7 +41,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
 
-  console.log(isLoading);
 
   const [date, setDate] = useState("");
 
@@ -71,7 +70,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .post(
         `
-        http://localhost:4300/api/cuotas/cuota/abonar/${cuotaId}`,
+        https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
