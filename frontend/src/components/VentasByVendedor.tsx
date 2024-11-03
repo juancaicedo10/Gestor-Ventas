@@ -44,7 +44,7 @@ function VentasByVendedor() {
   useEffect(() => {
     setIsLoading(true);
     axios.get(
-      `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}`,
+      `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}/historial`,
       {
         params: {
           page: currentPage + 1,
