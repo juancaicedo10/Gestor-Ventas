@@ -22,6 +22,9 @@ function Perfil() {
   const Id = tokenData?.user?.Id || "";
   const role = tokenData?.user?.role || "";
 
+  const isAdimn = role === "Administrador";
+
+
   const string =
     role === "Administrador" ? `administradores/${Id}` : `vendedores/${Id}`;
 
@@ -157,6 +160,7 @@ function Perfil() {
               name="nombre"
               value={nombre}
               onChange={handleChange}
+              disabled={!isAdimn}
             />
             <label htmlFor="correo" className="font-normal text-base">
               Correo
@@ -167,6 +171,7 @@ function Perfil() {
               name="correo"
               value={correo}
               onChange={handleChange}
+              disabled={!isAdimn}
             />
             <label htmlFor="telefono" className="font-normal text-base">
               Telefono
@@ -177,6 +182,7 @@ function Perfil() {
               name="telefono"
               value={telefono}
               onChange={handleChange}
+              disabled={!isAdimn}
             />
             <label htmlFor="cedula" className="font-normal text-base">
               Cédula
@@ -187,6 +193,7 @@ function Perfil() {
               name="cedula"
               value={cedula}
               onChange={handleChange}
+             disabled={!isAdimn}
             />
             <label htmlFor="direccion" className="font-normal text-base">
               Dirección
@@ -197,6 +204,7 @@ function Perfil() {
               name="direccion"
               value={direccion}
               onChange={handleChange}
+              disabled={!isAdimn}
             />
             <label htmlFor="contraseña" className="font-normal text-base">
               Contraseña
@@ -208,6 +216,7 @@ function Perfil() {
                 id="contraseña"
                 onChange={handleChange}
                 value={contraseña}
+                disabled={!isAdimn}
                 className={`p-2 border-2 w-full rounded-md ${
                   error ? "border-red-500" : ""
                 }`}
@@ -229,9 +238,9 @@ function Perfil() {
                   ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
                   : "bg-blue-800 hover:bg-blue-900 text-white"
               }`}
-              disabled={isLoading}
+              disabled={isLoading || decodeToken()?.user?.role !== "Administrador"}
             >
-              {isLoading ? "Cargado..." : "Actualizar Perfil"}
+              {isLoading ? "Cargado..." : decodeToken()?.user?.role !== "Administrador" ? "No permitido" : "Actualizar Perfil" }
             </button>
           </form>
         )}

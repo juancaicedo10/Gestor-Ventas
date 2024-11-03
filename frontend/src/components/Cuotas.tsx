@@ -65,8 +65,6 @@ function Cuotas() {
   const [openAbonos, setOpenAbonos] = useState<number[]>([]);
 
   const toggleAbonoDetails = (cuotaId: number) => {
-    console.log(cuotaId, "cuotaId");
-    console.log(openAbonos, "open abonos");
     if (openAbonos.includes(cuotaId)) {
       setOpenAbonos(openAbonos.filter((id) => id !== cuotaId));
     } else {
@@ -164,7 +162,7 @@ function Cuotas() {
                 <PriceCheckIcon fontSize="medium" />
               </th>
               <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
-                Int.Manual
+                Interes
               </th>
               {decodeToken().user.role === "Administrador" && (
                 <>
@@ -216,12 +214,11 @@ function Cuotas() {
                     <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
                       {formatDate(cuota.FechaPago)}
                     </td>
-                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
+                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg text-blue-500 font-semibold">
                       {new Intl.NumberFormat("es-CO", {
                         style: "currency",
                         currency: "COP",
                       }).format(cuota.SaldoMora)}
-                      $
                     </td>
                     <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg px-1">
                       <span
@@ -234,7 +231,7 @@ function Cuotas() {
                         {cuota.Pagada ? "Si" : "No"}
                       </span>
                     </td>
-                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg">
+                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-500 font-semibold">
                       {new Intl.NumberFormat("es-CO", {
                         style: "currency",
                         currency: "COP",
@@ -256,9 +253,9 @@ function Cuotas() {
                       </>
                     )}
                   </tr>
-                  <tr>
+                  <tr className="w-full">
                     {openAbonos.includes(cuota.Id) && (
-                      <td colSpan={8}>
+                      <td colSpan={6}>
                         <div className="w-full flex flex-col justify-center items-center">
                           <section className="w-full md:w-3/4 flex flex-col items-center justify-center bg-white shadow-md my-2 rounded-md p-2">
                             <table className="w-full text-sm text-center">
@@ -275,12 +272,6 @@ function Cuotas() {
                                   </th>
                                   <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
                                     Abono Mora
-                                  </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                    interes Manual
-                                  </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                    Mora Manual
                                   </th>
                                 </tr>
                               </thead>
@@ -311,18 +302,6 @@ function Cuotas() {
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
                                     </td>
-                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                      {new Intl.NumberFormat("es-CO", {
-                                        style: "currency",
-                                        currency: "COP",
-                                      }).format(abono?.SaldoInteresManual || 0)}
-                                    </td>
-                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                      {new Intl.NumberFormat("es-CO", {
-                                        style: "currency",
-                                        currency: "COP",
-                                      }).format(abono?.SaldoMoraManual || 0)}
-                                    </td>
                                   </tr>
                                 ))}
                               </tbody>
@@ -342,8 +321,8 @@ function Cuotas() {
             <tr className="text-white bg-blue-800 text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
-              <th className="border-r border-black px-1">Multa Manual</th>
-              <th className="border-r border-black px-1">Interes Manual</th>
+              <th className="border-r border-black px-1">Total Multa</th>
+              <th className="border-r border-black px-1">Total Interes</th>
               <th className="border-r border-black px-1">Total Abonado</th>
               <th className="border-r border-black px-1">Valor a Pagar</th>
               <th className="px-1">Valor restante</th>

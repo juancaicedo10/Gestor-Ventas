@@ -95,7 +95,6 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setCartera(data?.Cartera ?? 0);
       setBaseVendedor(data?.Base ?? 0);
       setDifere(data?.Diferencia ?? 0);
-      setClientesActivus(data?.ClientesActivos ?? 0);
       setIsLoading(false);
     } catch (err) {
      {
@@ -139,6 +138,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setBaseCapital(data?.BaseCapital ?? 0);
       setCartera(data?.Cartera ?? 0);
       setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
+      setClientesActivus(data?.ClientesActivos ?? 0);
       setIsDifeValid(data?.Diferencia === 0);
       setIsLoading(false);
     } catch (err) {

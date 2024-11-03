@@ -108,7 +108,7 @@ export default function Sidebar() {
         </Link>
         {decodeToken()?.user.role === "Administrador" && (
           <>
-         
+         {decodeToken()?.user.Id === 14 && (
           <Link
             to="/administradores"
             className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
@@ -119,6 +119,7 @@ export default function Sidebar() {
               Administradores
             </p>
           </Link>
+)}
             <Link
               to="/abonos-retiros"
               className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
