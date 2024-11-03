@@ -104,7 +104,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     try {
       await axios
         .get(
-          `http://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`
+          `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/${cuotaId}`
         )
         .then((response) => {
           setCuota(response.data);
@@ -215,12 +215,12 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                 </div>
                 <div>
                   <label htmlFor="interes">
-                    Saldo Interes
+                    Abono Interes:{" "}
                   </label>
                   <input
                     type="text"
                     className={`p-2 rounded-md border w-full`}
-                    placeholder="saldo interes"
+                    placeholder="abono interes"
                     onChange={(e) => {
                       let value = (e.target.value = e.target.value.replace(
                         /[^.0-9]/g,
@@ -232,11 +232,11 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   />
                 </div>
                 <div>
-                  <label htmlFor="mora">Saldo Mora:</label>
+                  <label htmlFor="mora">Abono Multas:</label>
                   <input
                     type="text"
                     className={`p-2 rounded-md border w-full`}
-                    placeholder="saldo mora"
+                    placeholder="abono multas"
                     onChange={(e) => {
                       let value = (e.target.value = e.target.value.replace(
                         /[^.0-9]/g,
