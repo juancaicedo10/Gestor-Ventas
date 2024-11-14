@@ -65,50 +65,77 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
       </header>
       <section>
         <div className="w-full flex items-center flex-col">
-          <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between">
+          <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between ">
             <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
                 selectedOption === "Vencidas" ? "bg-yellow-700" : "bg-[#c98b54]"
               }`}
               onClick={() => handleButtonClick("Vencidas")}
             >
-              Vencidas
+              <span>
+                <h6 className="text-xl md:text-2xl lg:text-3xl">Vencidas</h6>
+                <span className="text-sm md:text-base font-normal">
+                  6 a 15 días de vencimiento
+                </span>
+              </span>
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
                 selectedOption === "Proximas" ? "bg-green-700" : "bg-green-500"
               }`}
               onClick={() => handleButtonClick("Proximas")}
             >
-              Proximas
+              <span>
+                <h6 className="text-xl md:text-2xl lg:text-3xl">Proximas</h6>
+                <span className="text-sm md:text-base font-normal">
+                  Faltan de 1 a 5 dias
+                </span>
+              </span>
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
                 selectedOption === "Por Vencer"
                   ? "bg-yellow-700"
                   : "bg-yellow-500"
               }`}
               onClick={() => handleButtonClick("Por Vencer")}
             >
-              Por Vencer
+              <span>
+                <h6 className="text-xl md:text-2xl lg:text-3xl">Por Vencer</h6>
+                <span className="text-sm md:text-base font-normal">
+                  De hoy a 5 días de vencimiento
+                </span>
+              </span>
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
                 selectedOption === "Alerta" ? "bg-red-700" : "bg-red-500"
               }`}
               onClick={() => handleButtonClick("Alerta")}
             >
-              Alerta
+              <span>
+                <h6 className="text-xl md:text-2xl lg:text-3xl">Alerta</h6>
+                <span className="text-sm md:text-base font-normal">
+                  16 días de vencimiento o más
+                </span>
+              </span>
             </button>
             <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
                 selectedOption === "Al Corriente"
                   ? "bg-purple-700"
                   : "bg-purple-500"
               }`}
               onClick={() => handleButtonClick("Al Corriente")}
             >
-              Al Corriente
+              <span>
+                <h6 className="text-xl md:text-2xl lg:text-3xl">
+                  Al Corriente
+                </h6>
+                <span className="text-sm md:text-base font-normal">
+                 Faltan 6 días o más
+                </span>
+              </span>
             </button>
           </section>
         </div>

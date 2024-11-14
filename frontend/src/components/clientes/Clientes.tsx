@@ -242,7 +242,7 @@ function Clientes() {
                 {clients.map((client) => {
                   return (
                     <li
-                      className="w-full p-2 rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
+                      className="w-full p-2 rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100 min-h-full"
                       key={client.Id}
                     >
                       <div className="flex flex-col">

@@ -376,7 +376,7 @@ function Ventas() {
                             <span className="font-bold">Venta:</span>{" "}
                             {venta.NumeroVenta}
                           </h1>
-                          <p className="text-gray-300 text-lg mx-3 text-center">
+                          <p className="text-gray-300 text-lg mx-3 text-center min-h-[60px]">
                             <span className="font-medium">Cliente:</span>{" "}
                             {venta.NombreCliente}
                           </p>

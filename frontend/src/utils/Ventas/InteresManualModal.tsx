@@ -21,16 +21,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
   const [selectedTipo, setSelectedTipo] = useState<string | undefined>("");
   const [isMontoValid, setIsMontoValid] = useState<boolean>(false);
   const [isTipoValid, setIsTipoValid] = useState<boolean>(false);
-  const [optionSelected, setOptionSelected] = useState<string | undefined>(
-    undefined
-  );
-
-  console.log(optionSelected, "");
+  const [fechaPago, setFechaPago] = useState<Date>(new Date());
 
   const [isSendButtonLoading, setIsSendButtonLoading] =
     useState<boolean>(false);
-
-  console.log(isSendButtonLoading, "oe la buenq");
 
   const Tipos = [
     {
@@ -41,6 +35,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
       value: "Interes",
       label: "Interes",
     },
+    {
+      value: "Reagenda",
+      label: "Reagendar",
+    },
   ];
 
   const handleSubmit = (e: any) => {
@@ -49,7 +47,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     let isValid = true;
 
-    if (!monto) {
+    if (!monto && selectedTipo !== "Reagenda") {
       isValid = false;
       setIsMontoValid(false);
     }
@@ -66,12 +64,15 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     const AbonoRetiro = {
       Valor: monto,
+      FechaPago: fechaPago,
     };
 
     let url =
       selectedTipo === "Multa"
         ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
-        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`;
+        : selectedTipo === "Interes"
+        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`
+        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/reagenda/${cuotaId}`;
 
     axios
       .post(url, AbonoRetiro, {
@@ -112,15 +113,6 @@ const InteresManualModal: React.FC<ModalProps> = ({
     if (TipoId !== null) {
       setIsTipoValid(true);
       setSelectedTipo(TipoId);
-      if (TipoId === "Abono") {
-        setOptionSelected("abonos");
-      } else if (TipoId === "Retiro") {
-        setOptionSelected("retiros");
-      } else if (TipoId === "Abono a Base Capital") {
-        setOptionSelected("abonos/capital");
-      } else if (TipoId === "Retiro a Base Capital") {
-        setOptionSelected("retiros/capital");
-      }
     }
   };
 
@@ -153,7 +145,11 @@ const InteresManualModal: React.FC<ModalProps> = ({
                     className="text-3xl leading-6 font-bold text-blue-900"
                     id="modal-title"
                   >
-                    Registrar {selectedTipo || ""} Manual
+                    {selectedTipo === "Multa"
+                      ? "Registrar Multa"
+                      : selectedTipo === "Interes"
+                      ? "Registrar Interes"
+                      : "Reagendar Fecha de Pago"}
                   </h3>
                   <button
                     type="button"
@@ -164,7 +160,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
                   </button>
                 </header>
                 <div className="mb-2">
-                  <div className="block text-base md:text-lg font-normal mb-8 text-gray-700">
+                  <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label htmlFor="tipo">Tipo: </label>
                     <Select
                       options={TiposOptions}
@@ -179,27 +175,42 @@ const InteresManualModal: React.FC<ModalProps> = ({
                       </p>
                     )}
                   </div>
-                  <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
-                    <label htmlFor="numero cuotas">Valor:</label>
-                    <input
-                      type="number"
-                      className={`p-2 rounded-md border w-full text-sm ${
-                        !isMontoValid ? "border-red-500" : ""
-                      }`}
-                      onChange={(e) => {
-                        let value = (e.target.value = e.target.value.replace(
-                          /[^.0-9]/g,
-                          ""
-                        ));
-                        setMonto(value);
-                      }}
-                    />
-                    {!isMontoValid && (
-                      <p className="text-red-500 text-xs">
-                        Este campo es obligatorio
-                      </p>
-                    )}
-                  </div>
+                  {selectedTipo === "Reagenda" ? (
+                    <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
+                      <label htmlFor="numero cuotas">Fecha de Reajuste:</label>
+                      <input
+                        type="date"
+                        className={`p-2 rounded-md border w-full text-sm ${
+                          !fechaPago ? "border-red-500" : ""
+                        }`}
+                        onChange={(e) => {
+                          setFechaPago(new Date(e.target.value));
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
+                      <label htmlFor="numero cuotas">Valor:</label>
+                      <input
+                        type="number"
+                        className={`p-2 rounded-md border w-full text-sm ${
+                          !isMontoValid ? "border-red-500" : ""
+                        }`}
+                        onChange={(e) => {
+                          let value = (e.target.value = e.target.value.replace(
+                            /[^.0-9]/g,
+                            ""
+                          ));
+                          setMonto(value);
+                        }}
+                      />
+                      {!isMontoValid && (
+                        <p className="text-red-500 text-xs">
+                          Este campo es obligatorio
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
