@@ -17,6 +17,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import VentasFilter from "./VentasFilter";
 import { FormatearFecha } from "../utils/FormatearFecha";
 import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
+import VisualizarVentaModal from "../utils/Ventas/VisualizarVentaModal";
 
 function Ventas() {
   interface Venta {
@@ -49,6 +50,9 @@ function Ventas() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [ventaSelected, setVentaSelected] = useState<Venta | null>(null);
+
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const [inputValue, setInputValue] = useState<string>("");
 
@@ -113,29 +117,30 @@ function Ventas() {
           {
             params: {
               page: currentPage + 1,
-              limit: 8,
+              limit: 16,
             },
           }
         );
-      } else if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
+      } else if (
+        decodeToken()?.user.role === "Administrador" &&
+        VendedorSelectedContext
+      ) {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
-              limit: 8,
+              limit: 16,
             },
           }
         );
-
-      }
-       else {
+      } else {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`,
           {
             params: {
               page: currentPage + 1,
-              limit: 8,
+              limit: 16,
             },
           }
         );
@@ -185,7 +190,7 @@ function Ventas() {
           {
             params: {
               page: currentPage + 1,
-              limit: 8,
+              limit: 16,
               TipoFiltro: filtro,
               AdministradorId: Id,
             },
@@ -197,7 +202,7 @@ function Ventas() {
           {
             params: {
               page: currentPage + 1,
-              limit: 8,
+              limit: 16,
               TipoFiltro: filtro,
               VendedorId: Id,
             },
@@ -219,24 +224,30 @@ function Ventas() {
     try {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
-        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/filter`, {
-          params: {
-            page: currentPage + 1,
-            limit: 8,
-            Buscar: Buscar,
-            AdministradorId: Id,
-          },
-        });
+        res = await axios.get(
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 16,
+              Buscar: Buscar,
+              AdministradorId: Id,
+            },
+          }
+        );
       } else {
-        res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/ventas/filter`, {
-          params: {
-            page: currentPage + 1,
-            limit: 8,
-            TipoFiltro: filtro,
-            Buscar: Buscar,
-            VendedorId: Id,
-          },
-        });
+        res = await axios.get(
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 16,
+              TipoFiltro: filtro,
+              Buscar: Buscar,
+              VendedorId: Id,
+            },
+          }
+        );
       }
 
       setVentas(res.data.data);
@@ -373,14 +384,24 @@ function Ventas() {
                   }}
                   onChange={handleFilterChange}
                 />
+                <VisualizarVentaModal
+                  isOpen={isDetailsOpen}
+                  onClose={() => setIsDetailsOpen(false)}
+                  ventaSelected={ventaSelected}
+                />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
                 {ventas &&
                   ventas.length > 0 &&
                   ventas.map((venta) => (
-                    <li>
+                    <li
+                      onClick={() => {
+                        setVentaSelected(venta);
+                        setIsDetailsOpen(true);
+                      }}
+                    >
                       <div className="flex flex-col m-2 p-2">
-                        <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[150px]">
+                        <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[120px]">
                           <SellIcon fontSize="large" className="text-white" />
                           <h1 className="text-xl pb-2 text-center">
                             <span className="font-bold">Venta:</span>{" "}
@@ -400,175 +421,6 @@ function Ventas() {
                             {venta.Estado}
                           </span>
                         </header>
-                        <p className="rounded-md border-2 p-2 mt-2 text-sm bg-white min-h-[100px]">
-                          <span className="font-bold text-xl text-blue-600">
-                            Descripcion: <br />
-                          </span>{" "}
-                          {venta.DetallesVenta}
-                        </p>
-                        <ul className="flex flex-col rounded-md border-2 p-2 text-sm my-2 bg-white">
-                          <h4 className="text-xl font-bold pb-2 text-blue-600">
-                            Detalles:
-                          </h4>
-                          <li className="p-1">
-                            <SellIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Numero Venta:
-                            </span>{" "}
-                            {venta.NumeroVenta}
-                          </li>
-                          <li className="p-1">
-                            <PersonIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Vendedor:
-                            </span>{" "}
-                            {venta.NombreVendedor}
-                          </li>
-                          <li className="p-1">
-                            <PersonIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Cliente:
-                            </span>{" "}
-                            {venta.NombreCliente}
-                          </li>
-                          <li className="p-1 w-full flex">
-                            <PhoneIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Contacto:
-                            </span>{" "}
-                              <p className="border-blue-600 text-blue-600 ml-1 border-b">
-                                <a
-                                  href={`https://wa.me/${venta.TelefonoCliente}`}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                >
-                                  {venta.TelefonoCliente}
-                                </a>
-                              </p>
-                          </li>
-                          <li className="p-1">
-                            <AccessAlarmIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Periodicidad
-                            </span>
-                            : {venta.PeriodicidadNombre}
-                          </li>
-                          <li className="p-1">
-                            <DateRangeIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Fecha Creacion:
-                            </span>{" "}
-                            {`${formatDate(venta.FechaServer)} ${FormatearFecha(
-                              venta.FechaServer
-                            )}`}
-                          </li>
-                          <li className="p-1">
-                            <DateRangeIcon
-                              fontSize="small"
-                              className="text-blue-900"
-                            />
-                            <span className="font-semibold text-blue-900">
-                              Fecha Inicio:
-                            </span>{" "}
-                            {formatDate(venta.FechaInicio)}
-                          </li>
-                          <li className="p-1 text-blue-900 flex items-center">
-                            <DateRangeIcon fontSize="small" />
-                            <span className="font-semibold text-blue-900">
-                              Fecha Fin:
-                            </span>{" "}
-                            <p className="text-black">
-                              {formatDate(venta.FechaFin)}
-                            </p>
-                          </li>
-                        </ul>
-                        <div className="rounded-md border-2 p-2 w-full py-2 bg-white">
-                          <h4 className="font-bold text-xl text-blue-600">
-                            Datos Financieros:
-                          </h4>
-                          <ul className="grid grid-cols-2 w-full py-2 ">
-                            <li>
-                              <div className="text-start flex flex-col">
-                                <span className="font-semibold text-blue-900">
-                                  Valor Venta:
-                                </span>
-                                {new Intl.NumberFormat("es-CO", {
-                                  style: "currency",
-                                  currency: "COP",
-                                }).format(venta.ValorVenta)}
-                              </div>
-                              <div className="text-start">
-                                <span className="font-semibold flex flex-col text-blue-900">
-                                  N Cuotas:
-                                </span>
-                                {venta.NumeroCuotas}
-                              </div>
-                              <div>
-                                <span className="font-semibold flex flex-col text-blue-900">
-                                  valor Seguro:
-                                </span>
-                                {new Intl.NumberFormat("es-CO", {
-                                  style: "currency",
-                                  currency: "COP",
-                                }).format(venta.ValorSeguro)}
-                                $
-                              </div>
-                            </li>
-                            <li>
-                              <div className="text-start flex flex-col">
-                                <span className="font-semibold text-blue-900">
-                                  Abonado:
-                                </span>
-                                {new Intl.NumberFormat("es-CO", {
-                                  style: "currency",
-                                  currency: "COP",
-                                }).format(venta.ValorAbonado)}
-                                $
-                              </div>
-                              <div className="text-start">
-                                <span className="font-semibold flex flex-col text-blue-900">
-                                  Pagadas:
-                                </span>
-                                {venta.CuotasPagadas}
-                              </div>
-                              <div>
-                                <span className="font-semibold flex flex-col text-blue-900">
-                                  % Interes:
-                                </span>
-                                {venta.TasaInteres}%
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                        <div className="rounded-md border-2 my-2 p-2 bg-white">
-                          <h6 className="font-bold text-xl text-blue-600">
-                            Ir a detalles de cuotas:
-                          </h6>
-                          <Link
-                            to={`/cuotas/${venta.Id}/${venta.NumeroVenta}`}
-                            className="text-blue-900 font-semibold border-b-2 border-blue-900"
-                          >
-                            Cuotas Detalles
-                          </Link>
-                        </div>
                       </div>
                     </li>
                   ))}
