@@ -57,6 +57,8 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
     onClose();
   };
 
+  const backgroundColor = ["bg-yellow-700", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"]
+
   return (
     <div
       className={`z-50 fixed right-0 top-0 h-full bg-white transition-all duration-500 ease-in-out ${
@@ -84,7 +86,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
             {filtros.map((filtro) => (
               <button
                 key={filtro.Id}
-                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${filtro.ColorTailwind}`}
+                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${backgroundColor[filtro.Id - 1]}`}
                 onClick={() => handleButtonClick(filtro.Id)}
               >
                   <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
