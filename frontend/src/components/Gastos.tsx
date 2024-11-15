@@ -18,6 +18,7 @@ import PaymentsIcon from "@mui/icons-material/Payments";
 import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
 import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
 import { formatDate } from "../utils/Helpers/FormatDate.tsx";
+import { useVendedorContext } from "../utils/Context/VendedorSelectedContext.tsx";
 
 interface Gasto {
   GastoId: number;
@@ -46,6 +47,8 @@ function Gastos() {
   const [activeView, setActiveView] = useState<
     "tiposDeGastos" | "gastosPorVendedor"
   >("tiposDeGastos");
+
+  const { VendedorSelectedContext } = useVendedorContext();
 
   const [gastos, setGastos] = useState<Gasto[]>([]);
   const [vendedores, setVendedores] = useState<Vendedor[]>([]);
@@ -155,7 +158,6 @@ function Gastos() {
         } else {
           setVendedores([response.data]);
         }
-        console.log(vendedores);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -191,6 +193,10 @@ function Gastos() {
       setSelectedSeller(decodeToken()?.user.Id);
       getGastosByVendedor();
     } else {
+      if (VendedorSelectedContext) {
+        setSelectedSeller(VendedorSelectedContext);
+        getGastosByVendedor();
+      }
       getGastos();
     }
   }, [activeView === "gastosPorVendedor"]);

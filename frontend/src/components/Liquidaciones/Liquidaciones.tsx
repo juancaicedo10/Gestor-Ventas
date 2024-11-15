@@ -21,6 +21,7 @@ import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidacion";
 import PersonIcon from "@mui/icons-material/Person";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 
 interface Liquidacion {
   Id: number;
@@ -45,7 +46,7 @@ interface Liquidacion {
   Detalle: string;
 }
 
-function Liquidaciones() {
+export default function Liquidaciones() {
   const [liquidaciones, setLiquidaciones] = useState<Liquidacion[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
@@ -53,6 +54,8 @@ function Liquidaciones() {
 
   const [vendedores, setVendedores] = useState([]);
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
+
+  const { VendedorSelectedContext } = useVendedorContext();
 
   const [isMovimientosOpen, setIsMovimientosOpen] = useState(false);
 
@@ -101,6 +104,7 @@ function Liquidaciones() {
   };
 
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
+    setSelectedSeller(VendedorId);
     setIsLoading(true);
     axios
       .get(
@@ -156,12 +160,16 @@ function Liquidaciones() {
   };
 
   useEffect(() => {
+    getVendedores();
+    if (VendedorSelectedContext) {
+      getLiquidacioneaByVendedor(VendedorSelectedContext);
+      return;
+    }
     if (selectedSeller === 0) {
       getLiquidaciones();
     } else if (selectedSeller) {
       getLiquidacioneaByVendedor(selectedSeller);
     }
-    getVendedores();
   }, [currentPage]);
 
   //pagintaion
@@ -505,5 +513,3 @@ function Liquidaciones() {
     </section>
   );
 }
-
-export default Liquidaciones;

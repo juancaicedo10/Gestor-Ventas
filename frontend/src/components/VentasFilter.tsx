@@ -1,45 +1,59 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
+import Spinner from "../utils/Spinner";
+
+interface Filtro {
+  Id: number;
+  Nombre: string;
+  ColorTailwind: string;
+  ColorHoverTailwind: string;
+}
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
   onChange: (value: number) => void;
-  inputChange?: (value: string) => void;
 }
 
 const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
-  const [selectedOption, setSelectedOption] = useState<string | undefined>(
+  const [filtros, setFiltros] = useState<Filtro[]>([]);
+  const [selectedOption, setSelectedOption] = useState<number | undefined>(
     undefined
   );
 
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   useEffect(() => {
+    // Llama a la API para obtener los filtros de ventas
+    const fetchFiltros = async () => {
+      setIsLoading(true);
+      try {
+        const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/filtros", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        await setFiltros(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error al cargar los filtros:", error);
+        setIsLoading(false);
+      }
+    };
+
+    if (isOpen) {
+      fetchFiltros();
+    }
+
     return () => {
       setSelectedOption(undefined);
     };
-  }, [!isOpen]);
+  }, [isOpen]);
 
-  const handleButtonClick = (option: string) => {
-    setSelectedOption(selectedOption === option ? undefined : option);
-
-    switch (option) {
-      case "Vencidas":
-        onChange(1);
-        break;
-      case "Proximas":
-        onChange(2);
-        break;
-      case "Por Vencer":
-        onChange(3);
-        break;
-      case "Alerta":
-        onChange(4);
-        break;
-      case "Al Corriente":
-        onChange(5);
-        break;
-    }
-
+  const handleButtonClick = (filtroId: number) => {
+    setSelectedOption(selectedOption === filtroId ? undefined : filtroId);
+    onChange(filtroId);
     onClose();
   };
 
@@ -53,7 +67,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
       <header className="w-full bg-white py-2 shadow-md flex-col mb-3">
         <div className="w-full flex">
           <button
-            className={`flex items-center justify-center p-2 text-3xl text-blue-800 font-extrabold`}
+            className="flex items-center justify-center p-2 text-3xl text-blue-800 font-extrabold"
             onClick={onClose}
           >
             <CloseIcon fontSize="large" className="relative left-0" />
@@ -66,77 +80,22 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
       <section>
         <div className="w-full flex items-center flex-col">
           <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between ">
-            <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
-                selectedOption === "Vencidas" ? "bg-yellow-700" : "bg-[#c98b54]"
-              }`}
-              onClick={() => handleButtonClick("Vencidas")}
-            >
-              <span>
-                <h6 className="text-xl md:text-2xl lg:text-3xl">Vencidas</h6>
-                <span className="text-sm md:text-base font-normal">
-                  6 a 15 días de vencimiento
-                </span>
-              </span>
-            </button>
-            <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
-                selectedOption === "Proximas" ? "bg-green-700" : "bg-green-500"
-              }`}
-              onClick={() => handleButtonClick("Proximas")}
-            >
-              <span>
-                <h6 className="text-xl md:text-2xl lg:text-3xl">Proximas</h6>
-                <span className="text-sm md:text-base font-normal">
-                  Faltan de 1 a 5 dias
-                </span>
-              </span>
-            </button>
-            <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
-                selectedOption === "Por Vencer"
-                  ? "bg-yellow-700"
-                  : "bg-yellow-500"
-              }`}
-              onClick={() => handleButtonClick("Por Vencer")}
-            >
-              <span>
-                <h6 className="text-xl md:text-2xl lg:text-3xl">Por Vencer</h6>
-                <span className="text-sm md:text-base font-normal">
-                  De hoy a 5 días de vencimiento
-                </span>
-              </span>
-            </button>
-            <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
-                selectedOption === "Alerta" ? "bg-red-700" : "bg-red-500"
-              }`}
-              onClick={() => handleButtonClick("Alerta")}
-            >
-              <span>
-                <h6 className="text-xl md:text-2xl lg:text-3xl">Alerta</h6>
-                <span className="text-sm md:text-base font-normal">
-                  16 días de vencimiento o más
-                </span>
-              </span>
-            </button>
-            <button
-              className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner mb-3 ${
-                selectedOption === "Al Corriente"
-                  ? "bg-purple-700"
-                  : "bg-purple-500"
-              }`}
-              onClick={() => handleButtonClick("Al Corriente")}
-            >
-              <span>
-                <h6 className="text-xl md:text-2xl lg:text-3xl">
-                  Al Corriente
-                </h6>
-                <span className="text-sm md:text-base font-normal">
-                 Faltan 6 días o más
-                </span>
-              </span>
-            </button>
+            {isLoading && <Spinner isLoading={isLoading}/>}
+            {filtros.map((filtro) => (
+              <button
+                key={filtro.Id}
+                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+                  selectedOption === filtro.Id
+                    ? filtro.ColorHoverTailwind
+                    : filtro.ColorTailwind
+                }`}
+                onClick={() => handleButtonClick(filtro.Id)}
+              >
+                  <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
+                    {filtro.Nombre}
+                  </h6>
+              </button>
+            ))}
           </section>
         </div>
       </section>

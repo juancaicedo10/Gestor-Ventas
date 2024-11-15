@@ -14,6 +14,7 @@ import VendedorDeleteModal from "./ModalDeleteVendedor";
 import StorefrontIcon from "@mui/icons-material/Storefront";
 import Spinner from "../../utils/Spinner";
 import { Link } from "react-router-dom";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 
 function Vendedores() {
   // Definiciones de estado e interfaces
@@ -36,6 +37,9 @@ function Vendedores() {
   const [isLoading, setIsLoading] = useState(false);
   const [Id, setId] = useState<number>(0);
 
+  const { setVendedorSelectedContext, VendedorSelectedContext } =
+    useVendedorContext();
+
   // Funciones para manejar los modales
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -55,7 +59,11 @@ function Vendedores() {
   const getVendedores = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`)
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`
+      )
       .then((res) => {
         setVendedores(res.data);
         setIsLoading(false);
@@ -88,7 +96,7 @@ function Vendedores() {
     <section className="w-full overflow-y-hidden">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-      <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
+        <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
             <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               Vendedores
@@ -98,7 +106,10 @@ function Vendedores() {
             </button>
           </div>
           <div className="flex justify-center items-center px-1">
-            <form className="mx-auto w-full md:w-1/2 mb-2" onSubmit={handleSearch}>
+            <form
+              className="mx-auto w-full md:w-1/2 mb-2"
+              onSubmit={handleSearch}
+            >
               <label className="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">
                 Buscar
               </label>
@@ -172,12 +183,17 @@ function Vendedores() {
                 {vendedores.map((vendedor) => {
                   return (
                     <li
-                      className="w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100"
+                      className={`w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100 ${
+                        VendedorSelectedContext === vendedor.Id && "border-2 border-blue-600"
+                      }`}
                       key={vendedor.Id}
                     >
                       <div className="flex flex-col">
                         <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
-                        <img src={vendedor.Foto} className="w-16 h-16 rounded-full" />
+                          <img
+                            src={vendedor.Foto}
+                            className="w-16 h-16 rounded-full"
+                          />
                           <span>
                             <h1 className="font-normal text-xl">
                               {vendedor.NombreCompleto.split(" ")
@@ -235,6 +251,17 @@ function Vendedores() {
                                       >
                                         Eliminar
                                       </button>
+                                      <button
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        onClick={() => {
+                                          setVendedorSelectedContext(
+                                            vendedor.Id
+                                          );
+                                          setOpenDropdownId(null);
+                                        }}
+                                      >
+                                        Seleccionar
+                                      </button>
                                       <Link
                                         to={`/ventas/vendedor/${vendedor.Id}`}
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-center"
@@ -271,9 +298,13 @@ function Vendedores() {
                             <span className="mx-4">
                               <h3 className="font-bold">Telefono:</h3>
                               <p className="border-b border-blue-600 text-blue-600">
-                            <a href={`https://wa.me/${vendedor.Telefono}`} target="_blank" rel="noopener noreferrer">
-                              {vendedor.Telefono}
-                              </a>
+                                <a
+                                  href={`https://wa.me/${vendedor.Telefono}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                >
+                                  {vendedor.Telefono}
+                                </a>
                               </p>
                             </span>
                           </li>
@@ -281,7 +312,7 @@ function Vendedores() {
                             <SellIcon className="text-blue-800" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
-                              <p>{ vendedor.TotalVentas }</p>
+                              <p>{vendedor.TotalVentas}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">

@@ -9,6 +9,7 @@ import Select from "react-select";
 import DescriptionIcon from "@mui/icons-material/Description";
 import AttachMoney from "@mui/icons-material/AttachMoney";
 import decodeToken from "../../utils/tokenDecored";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 
 interface Retiro {
   NombreVendedor: string;
@@ -26,13 +27,13 @@ function AbonosyRetiros() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [sellers, setSellers] = useState<[]>([]);
   const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
+  const { VendedorSelectedContext } = useVendedorContext();
 
   const [Base, setBase] = useState<number>(0);
   const [BaseCapital, setBaseCapital] = useState<number>(0);
 
   const getAbonosyRetiros = async (VendedorId: number) => {
     setIsLoading(true);
-    console.log("selectedSeller:", selectedSeller);
     Promise.all([
       await axios.get(
         `https://backendgestorventas.azurewebsites.net/api/abonos/${VendedorId}`
@@ -40,7 +41,9 @@ function AbonosyRetiros() {
       await axios.get(
         `https://backendgestorventas.azurewebsites.net/api/retiros/${VendedorId}`
       ),
-      await axios.get(`https://backendgestorventas.azurewebsites.net/api/abonos/bases/${VendedorId}`),
+      await axios.get(
+        `https://backendgestorventas.azurewebsites.net/api/abonos/bases/${VendedorId}`
+      ),
     ])
       .then(([abonosRes, retirosRes, res]) => {
         const combinedData = [
@@ -59,12 +62,12 @@ function AbonosyRetiros() {
       });
   };
 
-  console.log("retiros:", retiros);
-
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`,
+        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -72,6 +75,9 @@ function AbonosyRetiros() {
         }
       );
       setSellers(res.data);
+      if (VendedorSelectedContext) {
+        setSelectedSeller(VendedorSelectedContext);
+      }
     } catch (err) {
       console.error(err);
     }
@@ -79,14 +85,16 @@ function AbonosyRetiros() {
 
   useEffect(() => {
     getVendedores();
-    console.log("selectedSeller:", selectedSeller);
+    if (VendedorSelectedContext) {
+      getAbonosyRetiros(VendedorSelectedContext);
+      return;
+    }
     getAbonosyRetiros(Number(selectedSeller));
   }, []);
 
   const handleVendedorChange = async (selectedOption: any) => {
     setIsLoading(true);
     setSelectedSeller(selectedOption.value);
-    console.log(isLoading);
     await getAbonosyRetiros(Number(selectedOption.value));
   };
 
@@ -252,4 +260,3 @@ function AbonosyRetiros() {
 }
 
 export default AbonosyRetiros;
-

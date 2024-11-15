@@ -16,6 +16,7 @@ import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
 import VentasFilter from "./VentasFilter";
 import { FormatearFecha } from "../utils/FormatearFecha";
+import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
 
 function Ventas() {
   interface Venta {
@@ -41,6 +42,8 @@ function Ventas() {
     FechaServer: string;
     TelefonoCliente: string;
   }
+
+  const { VendedorSelectedContext } = useVendedorContext();
 
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -98,10 +101,12 @@ function Ventas() {
     setIsLoading(true);
     try {
       let res;
+      // si la solicitud viene con un id, se obtiene la venta por id
       if (id) {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
         );
+        // si el rol del usuario es vendedor, se obtienen las ventas del vendedor
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`,
@@ -112,7 +117,19 @@ function Ventas() {
             },
           }
         );
-      } else {
+      } else if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
+        res = await axios.get(
+          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${VendedorSelectedContext}`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 8,
+            },
+          }
+        );
+
+      }
+       else {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`,
           {
@@ -156,12 +173,6 @@ function Ventas() {
 
   const handleFilterChange = (value: number) => {
     setFiltro(value);
-  };
-
-  const handleFilterInputChange = async (value: string) => {
-    setInputValue(value);
-    setFiltro(0);
-    getVentasFilter();
   };
 
   const getVentasFilter = async () => {
@@ -361,7 +372,6 @@ function Ventas() {
                     setIsFilterOpen(false);
                   }}
                   onChange={handleFilterChange}
-                  inputChange={handleFilterInputChange}
                 />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">

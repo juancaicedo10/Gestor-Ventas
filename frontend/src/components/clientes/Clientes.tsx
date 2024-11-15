@@ -16,6 +16,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Link } from "react-router-dom";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 
 function Clientes() {
   interface Client {
@@ -55,6 +56,8 @@ function Clientes() {
     setIsEditModalOpen(!isEditModalOpen);
   };
 
+  const { VendedorSelectedContext } = useVendedorContext();
+
   const toggleCloseConfirmation = (id: number) => {
     setId(id);
     setIsDeleteRequest(!isDeleteRequest);
@@ -68,6 +71,27 @@ function Clientes() {
       axios
         .get(
           `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 8,
+              search: searchValue,
+            },
+          }
+        )
+        .then((res) => {
+          setClients(res.data.data);
+          setPageCount(res.data.totalPages);
+          setIsLoading(false);
+        })
+        .catch((err) => {
+          console.log(err);
+          setIsLoading(false);
+        });
+    } else if (VendedorSelectedContext && VendedorSelectedContext !== 0 && decodeToken()?.user.role === "Administrador") {
+      axios
+        .get(
+          `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
