@@ -84,11 +84,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
             {filtros.map((filtro) => (
               <button
                 key={filtro.Id}
-                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
-                  selectedOption === filtro.Id
-                    ? filtro.ColorHoverTailwind
-                    : filtro.ColorTailwind
-                }`}
+                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${filtro.ColorTailwind}`}
                 onClick={() => handleButtonClick(filtro.Id)}
               >
                   <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
