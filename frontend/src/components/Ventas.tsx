@@ -1,21 +1,15 @@
 import Sidebar from "./Sidebar";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import PersonIcon from "@mui/icons-material/Person";
 import SellIcon from "@mui/icons-material/Sell";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
-import DateRangeIcon from "@mui/icons-material/DateRange";
 import Spinner from "../utils/Spinner";
-import PhoneIcon from "@mui/icons-material/Phone";
 import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 import decodeToken from "../utils/tokenDecored";
-import { formatDate } from "../utils/Helpers/FormatDate";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
 import VentasFilter from "./VentasFilter";
-import { FormatearFecha } from "../utils/FormatearFecha";
 import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
 import VisualizarVentaModal from "../utils/Ventas/VisualizarVentaModal";
 
