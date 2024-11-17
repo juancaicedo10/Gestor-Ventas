@@ -29,11 +29,14 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
     const fetchFiltros = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get("https://backendgestorventas.azurewebsites.net/api/filtros", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
+        const response = await axios.get(
+          "https://backendgestorventas.azurewebsites.net/api/filtros",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
         await setFiltros(response.data);
         setIsLoading(false);
       } catch (error) {
@@ -57,7 +60,13 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
     onClose();
   };
 
-  const backgroundColor = ["bg-yellow-700", "bg-green-500", "bg-yellow-500", "bg-red-500", "bg-purple-500"]
+  const backgroundColor = [
+    "bg-yellow-700",
+    "bg-green-500",
+    "bg-yellow-500",
+    "bg-red-500",
+    "bg-purple-500",
+  ];
 
   return (
     <div
@@ -82,18 +91,25 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
       <section>
         <div className="w-full flex items-center flex-col">
           <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between ">
-            {isLoading && <Spinner isLoading={isLoading}/>}
-            {filtros.map((filtro) => (
-              <button
-                key={filtro.Id}
-                className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${backgroundColor[filtro.Id - 1]}`}
-                onClick={() => handleButtonClick(filtro.Id)}
-              >
+            {isLoading ? (
+              <section className="min-h-[100vh] flex justify-center items-center">
+                <Spinner isLoading={isLoading} />
+              </section>
+            ) : (
+              filtros.map((filtro) => (
+                <button
+                  key={filtro.Id}
+                  className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+                    backgroundColor[filtro.Id - 1]
+                  }`}
+                  onClick={() => handleButtonClick(filtro.Id)}
+                >
                   <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
                     {filtro.Nombre}
                   </h6>
-              </button>
-            ))}
+                </button>
+              ))
+            )}
           </section>
         </div>
       </section>

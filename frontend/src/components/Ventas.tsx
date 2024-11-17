@@ -12,6 +12,7 @@ import TuneIcon from "@mui/icons-material/Tune";
 import VentasFilter from "./VentasFilter";
 import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
 import VisualizarVentaModal from "../utils/Ventas/VisualizarVentaModal";
+import FilterPdfModal from "../utils/PdfFilterModal/FilterPdfModal";
 
 function Ventas() {
   interface Venta {
@@ -48,6 +49,8 @@ function Ventas() {
 
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
+  const [isPdfFilterOpen, setIsPdfFilterOpen] = useState(false);
+
   const [inputValue, setInputValue] = useState<string>("");
 
   const { id } = useParams<{ id: string }>();
@@ -63,35 +66,6 @@ function Ventas() {
   };
 
   const Id = decodeToken()?.user.Id;
-
-  const downloadPdf = () => {
-    let url =
-      decodeToken()?.user.role === "Administrador"
-        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
-        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
-    axios({
-      url: url,
-      method: "GET",
-      responseType: "blob", // Importante para manejar archivos binarios como PDF
-    })
-      .then((res) => {
-        // Crear una URL a partir de los datos del archivo
-        const url = window.URL.createObjectURL(new Blob([res.data]));
-        // Crear un enlace <a> temporal
-        const link = document.createElement("a");
-        link.href = url;
-        // Asignar un nombre al archivo descargado
-        link.setAttribute("download", "reporte-ventas.pdf");
-        // Añadir el enlace al documento y hacer clic para descargar
-        document.body.appendChild(link);
-        link.click();
-        // Limpiar el enlace después de la descarga
-        document.body.removeChild(link);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
 
   const [filtro, setFiltro] = useState<number>(0);
 
@@ -302,7 +276,7 @@ function Ventas() {
           </div>
           <div className="flex-1 flex justify-end space-x-4">
             <button className="text-blue-900">
-              <PictureAsPdfIcon fontSize="large" onClick={downloadPdf} />
+              <PictureAsPdfIcon fontSize="large" onClick={() => setIsPdfFilterOpen(true)} />
             </button>
             <button className="text-blue-900">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
@@ -382,6 +356,10 @@ function Ventas() {
                   isOpen={isDetailsOpen}
                   onClose={() => setIsDetailsOpen(false)}
                   ventaSelected={ventaSelected}
+                />
+                <FilterPdfModal
+                  isOpen={isPdfFilterOpen}
+                  onClose={() => setIsPdfFilterOpen(false)}
                 />
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
