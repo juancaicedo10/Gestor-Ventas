@@ -25,8 +25,8 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
             },
             params: {
-                isPdf: true,
-                },
+              isPdf: true,
+            },
           }
         );
         await setFiltros(response.data);
@@ -107,13 +107,13 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               &#8203;
             </span>
             <section className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
-              <div className="w-full flex items-center flex-col">
-              <header className="flex w-full items-center justify-between">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <header className="flex w-full items-center justify-between">
                   <h3
                     className="text-3xl leading-6 font-bold text-blue-900"
                     id="modal-title"
                   >
-                    Seleccione un Tipo de Filtro:
+                    Tipo de PDF
                   </h3>
                   <button
                     type="button"
@@ -123,23 +123,28 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
                     &times;
                   </button>
                 </header>
-                <section className="w-3/4 py-1 min-h-[40vh] flex flex-col items-center justify-between ">
-                  {isLoading ? <section className="w-full min-h-[40vh] flex justify-center items-center">
-                    <Spinner isLoading={isLoading} />
-                    </section> : 
-                  (filtros.map((filtro) => (
-                    <button
-                      key={filtro.Id}
-                      className={`w-full py-2 text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
-                        backgroundColor[filtro.Id - 1]
-                      }`}
-                      onClick={() => handleButtonClick(filtro.Id)}
-                    >
-                      <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
-                        {filtro.Nombre}
-                      </h6>
-                    </button>
-                  )))}
+                <section className="w-full py-1 min-h-[40vh] flex flex-col items-center justify-between ">
+                  {isLoading ? (
+                    <section className="w-full min-h-[40vh] flex justify-center items-center">
+                      <Spinner isLoading={isLoading} />
+                    </section>
+                  ) : (
+                    <div className="flex flex-col justify-between items-center w-3/4 min-h-[35vh]">
+                      {filtros.map((filtro) => (
+                        <button
+                          key={filtro.Id}
+                          className={`w-full text-white font-bold text-xl md:text-2xl lg:text-3xl rounded-md transition-transform transform hover:scale-105 active:scale-95 active:shadow-inner ${
+                            backgroundColor[filtro.Id - 1]
+                          }`}
+                          onClick={() => handleButtonClick(filtro.Id)}
+                        >
+                          <h6 className="text-xl md:text-2xl lg:text-3xl py-2">
+                            {filtro.Nombre}
+                          </h6>
+                        </button>
+                      ))}
+                    </div>
+                  )}
                 </section>
               </div>
             </section>

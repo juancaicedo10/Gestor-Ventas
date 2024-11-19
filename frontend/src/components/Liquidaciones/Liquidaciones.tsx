@@ -43,6 +43,7 @@ interface Liquidacion {
   Hora: string;
   BaseCapital: number;
   Cartera: number;
+  CarteraRestante: number;
   Detalle: string;
 }
 
@@ -441,6 +442,18 @@ export default function Liquidaciones() {
                             <li className="flex items-center my-1">
                               <CurrencyExchangeIcon className="text-blue-800" />
                               <span className="mx-4">
+                                <h3 className="font-bold">Cartera Restante:</h3>
+                                <p>
+                                  {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(liquidacion.CarteraRestante)}
+                                </p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <span className="mx-4">
                                 <h3 className="font-bold">Movimientos:</h3>
                                 <p>
                                   <button
@@ -455,21 +468,23 @@ export default function Liquidaciones() {
                                 </p>
                               </span>
                             </li>
+                            <li className="flex items-center my-1">
+                              {liquidacion.Detalle != "" && (
+                                <div className="text-lg flex items-center my-1">
+                                  <LibraryBooksIcon className="text-blue-800" />
+                                  <span className="mx-4">
+                                    <h3 className="font-bold">Detalle:</h3>
+                                    <p>
+                                      <span className="font-light text-black">
+                                        {liquidacion.Detalle}
+                                      </span>
+                                    </p>
+                                  </span>
+                                </div>
+                              )}
+                            </li>
                           </div>
                         </ul>
-                        {liquidacion.Detalle != "" && (
-                          <div className="text-lg flex items-center my-1">
-                            <LibraryBooksIcon className="text-blue-800" />
-                            <span className="mx-4">
-                              <h3 className="font-bold">Detalle:</h3>
-                              <p>
-                                <span className="font-light text-black">
-                                  {liquidacion.Detalle}
-                                </span>
-                              </p>
-                            </span>
-                          </div>
-                        )}
                       </div>
                     </li>
                   );
