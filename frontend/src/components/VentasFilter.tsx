@@ -14,9 +14,10 @@ interface Props {
   isOpen: boolean;
   onClose: () => void;
   onChange: (value: number) => void;
+  vendedorId: number | undefined;
 }
 
-const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
+const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId }) => {
   const [filtros, setFiltros] = useState<Filtro[]>([]);
   const [selectedOption, setSelectedOption] = useState<number | undefined>(
     undefined
@@ -34,6 +35,9 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange }) => {
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+            params: {
+              vendedorId: vendedorId,
             },
           }
         );

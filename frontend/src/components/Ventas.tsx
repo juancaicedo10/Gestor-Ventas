@@ -276,7 +276,10 @@ function Ventas() {
           </div>
           <div className="flex-1 flex justify-end space-x-4">
             <button className="text-blue-900">
-              <PictureAsPdfIcon fontSize="large" onClick={() => setIsPdfFilterOpen(true)} />
+              <PictureAsPdfIcon
+                fontSize="large"
+                onClick={() => setIsPdfFilterOpen(true)}
+              />
             </button>
             <button className="text-blue-900">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
@@ -351,6 +354,7 @@ function Ventas() {
                     setIsFilterOpen(false);
                   }}
                   onChange={handleFilterChange}
+                  vendedorId={decodeToken()?.user.role !== "Administrador" ? Id : undefined}
                 />
                 <VisualizarVentaModal
                   isOpen={isDetailsOpen}
