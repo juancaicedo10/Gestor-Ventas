@@ -27,6 +27,13 @@ function clientesAprobar() {
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
+    Notification.requestPermission();
+
+    if (Notification.permission === "granted") {
+      new Notification("Clientes por aprobar", {
+        body: "Tienes clientes por aprobar",
+      });
+    }
     setIsLoading(true);
     axios
       .get(
