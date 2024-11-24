@@ -9,7 +9,6 @@ import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
 import { formatDate } from "../utils/Helpers/FormatDate";
 import decodeToken from "../utils/tokenDecored";
-import { set } from "lodash";
 
 interface GastoAprobar {
   Id: number;
