@@ -27,13 +27,6 @@ function clientesAprobar() {
   const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
-    Notification.requestPermission();
-
-    if (Notification.permission === "granted") {
-      new Notification("Clientes por aprobar", {
-        body: "Tienes clientes por aprobar",
-      });
-    }
     setIsLoading(true);
     axios
       .get(
@@ -83,6 +76,17 @@ function clientesAprobar() {
     }
   };
 
+
+  const handleRequestPermission = () => {
+    Notification.requestPermission();
+
+    if (Notification.permission === "granted") {
+      new Notification("Clientes por aprobar", {
+        body: "Tienes clientes por aprobar",
+      });
+    }
+  }
+
   return (
     <section className="w-full">
       <Sidebar />
@@ -101,6 +105,7 @@ function clientesAprobar() {
               <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-blue-900">
                 En este momento no hay ningun cliente por aprobar
               </h1>
+              <button onClick={handleRequestPermission}>request perimission</button>
             </div>
           ) : (
             <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full place-items-center md:place-items-start md:ml-4">
