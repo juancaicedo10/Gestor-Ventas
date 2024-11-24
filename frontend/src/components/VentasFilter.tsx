@@ -15,9 +15,10 @@ interface Props {
   onClose: () => void;
   onChange: (value: number) => void;
   vendedorId: number | undefined;
+  administradorId: number | undefined;
 }
 
-const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId }) => {
+const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, administradorId }) => {
   const [filtros, setFiltros] = useState<Filtro[]>([]);
   const [selectedOption, setSelectedOption] = useState<number | undefined>(
     undefined
@@ -38,6 +39,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId }
             },
             params: {
               vendedorId: vendedorId,
+              administradorId: administradorId
             },
           }
         );

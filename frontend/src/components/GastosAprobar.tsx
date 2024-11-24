@@ -9,6 +9,7 @@ import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
 import { formatDate } from "../utils/Helpers/FormatDate";
 import decodeToken from "../utils/tokenDecored";
+import { set } from "lodash";
 
 interface GastoAprobar {
   Id: number;
@@ -23,6 +24,7 @@ interface GastoAprobar {
 function GastosAprobar() {
   const [sellsToApprove, setSellsToApprove] = useState<GastoAprobar[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [disabled, setIsDisabled] = useState<boolean>(false);
 
   const getgastosAprobar = async () => {
     setIsLoading(true);
@@ -41,6 +43,7 @@ function GastosAprobar() {
   };
 
   const handleAprobar = async (gastoId: number) => {
+    setIsDisabled(true);
     setIsLoading(true);
     try {
       await axios.put(
@@ -53,13 +56,14 @@ function GastosAprobar() {
         }
       );
       console.log("gasto aprobado correctamente");
-      getgastosAprobar();
+      setSellsToApprove(sellsToApprove.filter((gasto) => gasto.Id !== gastoId));
       toast.success("gasto aprobado correctamente");
     } catch (err) {
       console.error(err);
       toast.error("Error al aprobar el gasto");
     } finally {
       setIsLoading(false);
+      setIsDisabled(false);
     }
   };
 
@@ -77,7 +81,7 @@ function GastosAprobar() {
       );
       console.log("gasto rechazado correctamente");
       toast.success("gasto rechazado correctamente");
-      getgastosAprobar(); // Refresh the list after rejecting
+      setSellsToApprove(sellsToApprove.filter((gasto) => gasto.Id !== gastoId));
     } catch (err) {
       console.error(err);
       toast.error("Error al rechazar el gasto");
@@ -126,6 +130,7 @@ function GastosAprobar() {
                         <button
                           className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
                           onClick={() => handleAprobar(gasto.Id)}
+                          disabled={disabled}
                         >
                           Aprobar
                         </button>

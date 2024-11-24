@@ -24,14 +24,21 @@ function clientesAprobar() {
   );
   const [refresh, setRefresh] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
   useEffect(() => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${decodeToken()?.user?.Id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      .get(
+        `https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${
+          decodeToken()?.user?.Id
+        }`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      )
       .then((res) => {
         setClientsToApprove(res.data);
         setIsLoading(false);
@@ -43,6 +50,7 @@ function clientesAprobar() {
   }, [refresh]);
 
   const HandleApprove = async (id: number, approval: { aprobado: boolean }) => {
+    setDisabled(true);
     try {
       await axios.put(
         `https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${id}`,
@@ -54,14 +62,19 @@ function clientesAprobar() {
         }
       );
       setRefresh(!refresh);
-      toast.success(approval.aprobado ? "Cliente aprobado" : "Cliente rechazado");
+      toast.success(
+        approval.aprobado ? "Cliente aprobado" : "Cliente rechazado"
+      );
+      setClientsToApprove((prevClients) =>
+        prevClients.filter((client) => client.Id !== id)
+      );
+      setDisabled(false);
     } catch (error) {
       console.error("Error al aprobar cliente", error);
+      toast.error("Error al aprobar cliente");
+      setDisabled(false);
     }
   };
-
-
-  
 
   return (
     <section className="w-full">
@@ -85,61 +98,71 @@ function clientesAprobar() {
           ) : (
             <ul className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full place-items-center md:place-items-start md:ml-4">
               {clientsToApprove.map((client) => (
-                  <li className="flex flex-col w-full">
-                    <div className="w-full">
-                      <button
-                        className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
-                        onClick={() =>
-                          HandleApprove(client.Id, { aprobado: true })
-                        }
-                      >
-                        <div className="w-full flex justify-between">
+                <li className="flex flex-col w-full">
+                  <div className="w-full">
+                    <button
+                      className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
+                      disabled={disabled}
+                      onClick={() =>
+                        HandleApprove(client.Id, { aprobado: true })
+                      }
+                    >
+                      <div className="w-full flex justify-between">
                         <h5>Aprobar</h5>
                         <span>
                           <CheckIcon />
                         </span>
-                        </div>
-                      </button>
-                      <button
-                        className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
-                        onClick={() => HandleApprove(client.Id, { aprobado: false })}
-                      >
-                        <div className="w-full flex justify-between">
+                      </div>
+                    </button>
+                    <button
+                      className="bg-red-50 text-red-500 px-2 py-1 rounded-md w-1/2 border-2 border-red-500 font-bold text-xl hover:bg-red-200"
+                      disabled={disabled}
+                      onClick={() =>
+                        HandleApprove(client.Id, { aprobado: false })
+                      }
+                    >
+                      <div className="w-full flex justify-between">
                         <h5>Rechazar</h5>
                         <span>
                           <CloseIcon />
                         </span>
-                        </div>
-                      </button>
-                    </div>
-                    <div className="bg-blue-900 rounded-md p-2 md:p-4">
-                      <p className="text-lg font-bold text-white">
-                        <h6 className="font-normal text-center">{client.NombreCompleto}</h6>
-                      </p>
-                      <p className="text-lg text-white">
-                        <h6 className="font-normal text-center">
-                          CC.{client.NumeroDocumento}
-                        </h6>
-                      </p>
-                    </div>
-                    <div className="bg-white rounded-md border shadow-sm p-2">
-                      <p className="text-lg text-blue-900 flex items-center"></p>
-                      <p className="text-lg text-blue-900 flex items-center">
-                        <CalendarMonthIcon />
-                        <span className="m-1">
-                          <h6 className="font-semibold">Correo:</h6>
-                          <span className="text-black font-normal">{client.Correo}</span>
+                      </div>
+                    </button>
+                  </div>
+                  <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                    <p className="text-lg font-bold text-white">
+                      <h6 className="font-normal text-center">
+                        {client.NombreCompleto}
+                      </h6>
+                    </p>
+                    <p className="text-lg text-white">
+                      <h6 className="font-normal text-center">
+                        CC.{client.NumeroDocumento}
+                      </h6>
+                    </p>
+                  </div>
+                  <div className="bg-white rounded-md border shadow-sm p-2">
+                    <p className="text-lg text-blue-900 flex items-center"></p>
+                    <p className="text-lg text-blue-900 flex items-center">
+                      <CalendarMonthIcon />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Correo:</h6>
+                        <span className="text-black font-normal">
+                          {client.Correo}
                         </span>
-                      </p>
-                      <p className="text-lg text-blue-900 flex items-center">
-                        <AccountBalanceIcon />
-                        <span className="m-1">
-                          <h6 className="font-semibold">Telefono:</h6>
-                          <span className="text-black font-normal">+57 {client.Telefono}</span>
+                      </span>
+                    </p>
+                    <p className="text-lg text-blue-900 flex items-center">
+                      <AccountBalanceIcon />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Telefono:</h6>
+                        <span className="text-black font-normal">
+                          +57 {client.Telefono}
                         </span>
-                      </p>
-                    </div>
-                  </li>
+                      </span>
+                    </p>
+                  </div>
+                </li>
               ))}
             </ul>
           )}

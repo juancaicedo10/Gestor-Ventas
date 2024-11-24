@@ -355,6 +355,7 @@ function Ventas() {
                   }}
                   onChange={handleFilterChange}
                   vendedorId={decodeToken()?.user.role !== "Administrador" ? Id : undefined}
+                  administradorId={decodeToken()?.user.role === "Administrador" ? Id : undefined}
                 />
                 <VisualizarVentaModal
                   isOpen={isDetailsOpen}

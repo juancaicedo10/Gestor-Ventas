@@ -33,6 +33,7 @@ interface VentaAprobar {
 function VentasAprobar() {
   const [sellsToApprove, setSellsToApprove] = useState<VentaAprobar[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [disabled, setIsDisabled] = useState<boolean>(false);
 
   const getVentasAprobar = async () => {
     setIsLoading(true);
@@ -56,6 +57,7 @@ function VentasAprobar() {
   };
 
   const handleAprobar = async (ventaId: number) => {
+    setIsDisabled(true);
     setIsLoading(true);
     try {
       await axios.put(
@@ -68,13 +70,15 @@ function VentasAprobar() {
         }
       );
       console.log("Venta aprobada correctamente");
-      getVentasAprobar();
+      setIsDisabled(false);
+      setSellsToApprove(sellsToApprove.filter((venta) => venta.Id !== ventaId));
       toast.success("Venta aprobada correctamente");
     } catch (err) {
       console.error(err);
       toast.error("Error al aprobar la venta");
     } finally {
       setIsLoading(false);
+      setIsDisabled(false);
     }
   };
 
@@ -92,7 +96,7 @@ function VentasAprobar() {
       );
       console.log("Venta rechazada correctamente");
       toast.success("Venta rechazada correctamente");
-      getVentasAprobar(); // Refresh the list after rejecting
+      setSellsToApprove(sellsToApprove.filter((venta) => venta.Id !== ventaId));
     } catch (err) {
       console.error(err);
       toast.error("Error al rechazar la venta");
@@ -104,8 +108,6 @@ function VentasAprobar() {
   useEffect(() => {
     getVentasAprobar();
   }, []);
-
-  console.log(sellsToApprove);
 
   return (
     <div>
@@ -140,6 +142,7 @@ function VentasAprobar() {
                     <div className="w-full">
                       <button
                         className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
+                        disabled={disabled}
                         onClick={() => handleAprobar(venta.Id)}
                       >
                         Aprobar
