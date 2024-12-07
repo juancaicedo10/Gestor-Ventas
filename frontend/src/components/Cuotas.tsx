@@ -194,7 +194,7 @@ function Cuotas() {
                         <AddCircleIcon fontSize="inherit" />
                       </button>
                       <button
-                        className={`bg-blue-800 text-white text-[7px] md:text-xs rounded-sm p-1 ${
+                        className={`${cuota.Pagada ? 'bg-green-500' : 'bg-blue-800'} text-white text-[7px] md:text-xs rounded-sm p-1 ${
                           cuota.abonos.length < 1 && "hidden"
                         }`}
                         onClick={() => {
