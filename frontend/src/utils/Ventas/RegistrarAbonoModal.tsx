@@ -27,8 +27,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   cuotaId,
   abonoId,
 }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [url, setUrl] = useState("");
   const [valorAbono, setValorAbono] = useState<string>("");
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
@@ -55,7 +53,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       setDetallesAbono(res.data.DetallesAbono);
       setSaldoInteres(res.data.SaldoInteres);
       setSaldoMora(res.data.SaldoMora);
-      setUrl(`https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${abonoId}`);
     })
   }
 
@@ -114,7 +111,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   };
 
   const getCuotaById = async () => {
-    setIsLoading(true);
     try {
       await axios
         .get(
@@ -125,11 +121,9 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
           setFechaPago(
             new Date(response.data.FechaPago).toISOString().split("T")[0]
           );
-          setIsLoading(false);
         });
     } catch (error) {
       console.error("Error obteniendo cuota:", error);
-      setIsLoading(false);
     }
   };
 
