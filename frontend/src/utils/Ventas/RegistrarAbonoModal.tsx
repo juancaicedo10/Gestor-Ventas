@@ -8,6 +8,7 @@ interface ModalProps {
   getCuotas: () => void;
   getDataCuotas: () => void;
   cuotaId: number;
+  abonoId?: number;
 }
 
 interface Cuota {
@@ -24,9 +25,10 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   getCuotas,
   getDataCuotas,
   cuotaId,
+  abonoId,
 }) => {
   const [isLoading, setIsLoading] = useState(true);
-
+  const [url, setUrl] = useState("");
   const [valorAbono, setValorAbono] = useState<string>("");
   const [fechaPago, setFechaPago] = useState<string>("");
   const [detallesAbono, setDetallesAbono] = useState<string>("");
@@ -39,11 +41,23 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
-
-  console.log("cuotaId", isLoading);
-
-
   const [date, setDate] = useState("");
+
+  if (abonoId) {
+    axios.get(`https://backendgestorventas.azurewebsites.net/api/cuotas/abono/${abonoId}`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+    .then((res) => {
+      setValorAbono(res.data.ValorAbono);
+      setFechaPago(res.data.FechaAbono);
+      setDetallesAbono(res.data.DetallesAbono);
+      setSaldoInteres(res.data.SaldoInteres);
+      setSaldoMora(res.data.SaldoMora);
+      setUrl(`https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${abonoId}`);
+    })
+  }
 
   const registrarAbono = async (e: any) => {
     e.preventDefault();

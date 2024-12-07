@@ -178,6 +178,18 @@ function VentasAprobar() {
                         </span>
                       </p>
                       <p className="text-lg text-blue-900 flex items-center">
+                        <AttachMoneyIcon />
+                        <span className="m-1">
+                          <h6 className="font-semibold">Valor Seguro:</h6>
+                          <span>
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(venta.ValorSeguro)}
+                          </span>
+                        </span>
+                      </p>
+                      <p className="text-lg text-blue-900 flex items-center">
                         <CalendarMonthIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Fecha de Creacion:</h6>
