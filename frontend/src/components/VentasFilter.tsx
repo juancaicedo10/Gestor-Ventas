@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
 import axios from "axios";
 import Spinner from "../utils/Spinner";
+import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
 
 interface Filtro {
   Id: number;
@@ -26,7 +27,13 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, 
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
+  const { VendedorSelectedContext } = useVendedorContext();
+
   useEffect(() => {
+    if (VendedorSelectedContext) {
+      vendedorId = VendedorSelectedContext;
+    }
+
     // Llama a la API para obtener los filtros de ventas
     const fetchFiltros = async () => {
       setIsLoading(true);

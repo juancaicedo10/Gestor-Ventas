@@ -152,7 +152,19 @@ function Ventas() {
     setIsLoading(true);
     try {
       let res;
-      if (decodeToken()?.user.role === "Administrador") {
+      if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
+        res = await axios.get(
+          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 16,
+              TipoFiltro: filtro,
+              VendedorId: VendedorSelectedContext,
+            },
+          }
+        );
+      } else if (decodeToken()?.user.role === "Administrador" && !VendedorSelectedContext) {
         res = await axios.get(
           `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
           {
