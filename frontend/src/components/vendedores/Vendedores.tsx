@@ -92,6 +92,14 @@ function Vendedores() {
     getVendedores();
   }, []);
 
+  const handleVendedorClick = (vendedorId: number) => {
+    if (VendedorSelectedContext === vendedorId) {
+      setVendedorSelectedContext(0); // Deseleccionar si ya está seleccionado
+    } else {
+      setVendedorSelectedContext(vendedorId); // Seleccionar si no está seleccionado
+    }
+  };
+
   return (
     <section className="w-full overflow-y-hidden">
       <Sidebar />
@@ -184,7 +192,8 @@ function Vendedores() {
                   return (
                     <li
                       className={`w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100 ${
-                        VendedorSelectedContext === vendedor.Id && "border-2 border-blue-600"
+                        VendedorSelectedContext === vendedor.Id &&
+                        "border-2 border-blue-600"
                       }`}
                       key={vendedor.Id}
                     >
@@ -213,13 +222,13 @@ function Vendedores() {
                                   id="options-menu"
                                   aria-haspopup="true"
                                   aria-expanded="true"
-                                  onClick={() =>
+                                  onClick={() => {
                                     setOpenDropdownId(
                                       openDropdownId !== vendedor.Id
                                         ? vendedor.Id
                                         : null
-                                    )
-                                  }
+                                    );
+                                  }}
                                 >
                                   <EditNoteIcon fontSize="medium" />
                                 </button>
@@ -254,13 +263,11 @@ function Vendedores() {
                                       <button
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
                                         onClick={() => {
-                                          setVendedorSelectedContext(
-                                            vendedor.Id
-                                          );
+                                          handleVendedorClick(vendedor.Id);
                                           setOpenDropdownId(null);
                                         }}
                                       >
-                                        Seleccionar
+                                       {vendedor.Id == VendedorSelectedContext ? "Deseleccionar" : "Seleccionar"}
                                       </button>
                                       <Link
                                         to={`/ventas/vendedor/${vendedor.Id}`}

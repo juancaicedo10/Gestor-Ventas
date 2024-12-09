@@ -8,7 +8,7 @@ interface ModalProps {
   getCuotas: () => void;
   getDataCuotas: () => void;
   cuotaId: number;
-  abonoId?: number;
+  abonoSelected?: any;
 }
 
 interface Cuota {
@@ -25,7 +25,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   getCuotas,
   getDataCuotas,
   cuotaId,
-  abonoId,
+  abonoSelected,
 }) => {
   const [valorAbono, setValorAbono] = useState<string>("");
   const [fechaPago, setFechaPago] = useState<string>("");
@@ -40,21 +40,6 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   const [isValorAbonoValid, setIsValorAbonoValid] = useState(true);
   const [isDetallesAbonoValid, setIsDetallesAbonoValid] = useState(true);
   const [date, setDate] = useState("");
-
-  if (abonoId) {
-    axios.get(`https://backendgestorventas.azurewebsites.net/api/cuotas/abono/${abonoId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-    .then((res) => {
-      setValorAbono(res.data.ValorAbono);
-      setFechaPago(res.data.FechaAbono);
-      setDetallesAbono(res.data.DetallesAbono);
-      setSaldoInteres(res.data.SaldoInteres);
-      setSaldoMora(res.data.SaldoMora);
-    })
-  }
 
   const registrarAbono = async (e: any) => {
     e.preventDefault();
@@ -88,7 +73,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
           FechaAbono: fechaPago,
           SaldoMora: Number(saldoMora) ?? 0,
           DetallesAbono: detallesAbono,
-          SaldoInteres: Number(saldoInteres) ?? 0
+          SaldoInteres: Number(saldoInteres) ?? 0,
         },
         {
           headers: {
@@ -139,6 +124,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
   }, [cuotaId]);
 
   useEffect(() => {
+    console.log("abonoSelected", abonoSelected);
     if (!isOpen) {
       setValorAbono("");
       setFechaPago("");
@@ -147,6 +133,14 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       setSaldoMora("");
       setIsValorAbonoValid(true);
       setIsDetallesAbonoValid(true);
+
+      if (abonoSelected) {
+        setValorAbono(abonoSelected.ValorAbono);
+        setFechaPago(abonoSelected.FechaAbono);
+        setDetallesAbono(abonoSelected.DetallesAbono);
+        setSaldoInteres(abonoSelected.SaldoInteres);
+        setSaldoMora(abonoSelected.SaldoMora);
+      }
     }
   }, [isOpen]);
 
@@ -222,9 +216,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
                   )}
                 </div>
                 <div>
-                  <label htmlFor="interes">
-                    Abono Interes:{" "}
-                  </label>
+                  <label htmlFor="interes">Abono Interes: </label>
                   <input
                     type="text"
                     className={`p-2 rounded-md border w-full`}

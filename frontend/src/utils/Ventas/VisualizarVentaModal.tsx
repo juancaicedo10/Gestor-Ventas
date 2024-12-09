@@ -35,6 +35,7 @@ interface Venta {
   ColorTexto: string;
   FechaServer: string;
   TelefonoCliente: string;
+  Archivada: boolean;
 }
 
 const VisualizarVentaModal: React.FC<ModalProps> = ({
@@ -224,7 +225,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                   Ir a detalles de cuotas:
                 </h6>
                 <Link
-                  to={`/cuotas/${ventaSelected?.Id}/${ventaSelected?.NumeroVenta}`}
+                  to={`/cuotas/${ventaSelected?.Id}/${ventaSelected?.NumeroVenta}/${ventaSelected?.Archivada}`}
                   className="text-blue-900 font-semibold border-b-2 border-blue-900"
                   target="_blank"
                   rel="noopener noreferrer"

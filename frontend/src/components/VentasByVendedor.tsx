@@ -28,18 +28,17 @@ function VentasByVendedor() {
     ValorAbonado: number;
     FechaServer: string;
     TelefonoCliente: string;
+    Archivada: boolean;
   }
 
   const { id } = useParams<{ id: string }>();
 
-  console.log(id);
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [vendedor, setVendedor] = useState<any>({});
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
 
-  console.log(id);
 
   useEffect(() => {
     setIsLoading(true);
@@ -272,7 +271,7 @@ function VentasByVendedor() {
                             Ir a detalles de cuotas:
                           </h6>
                           <Link
-                            to={`/cuotas/${venta.Id}/${venta.NumeroVenta}`}
+                            to={`/cuotas/${venta.Id}/${venta.NumeroVenta}/${venta.Archivada}`}
                             className="text-blue-900 font-semibold border-b-2 border-blue-900"
                           >
                             Cuotas Detalles

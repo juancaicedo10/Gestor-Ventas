@@ -14,6 +14,7 @@ import decodeToken from "../utils/tokenDecored";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import InteresManualModal from "../utils/Ventas/InteresManualModal";
 import { FormatearFecha } from "../utils/FormatearFecha";
+import ConfirmationModal from "../utils/confirmation/ConfirmationModal";
 
 interface Cuota {
   Id: number;
@@ -53,11 +54,20 @@ interface DatosVenta {
 }
 
 function Cuotas() {
+  const textConfirmation =
+    "Estas Seguro que deseas archivar esta venta?, una vez archivada no podras realizar cambios";
+  const url = `http://localhost:4300/api/ventas/archivar/${useParams()?.id}`;
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [abonoSelected, setAbonoSelected] = useState<Abono | null>(null);
   const Id = useParams()?.id;
   const NumeroVenta = useParams()?.numeroVenta;
+  const VentaArchivada = useParams()?.archivada;
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isArchivada, setIsArchivada] = useState<boolean>(
+    VentaArchivada === "true"
+  );
+  const [isModalDeleteOpen, setIsModalDeleteOpen] = useState<boolean>(false);
   const [isModalInteresManualOpen, setIsModalInteresManualOpen] =
     useState<boolean>(false);
   const [cuotaId, setCuotaId] = useState<number>(0);
@@ -110,22 +120,47 @@ function Cuotas() {
     </div>
   ) : (
     <div>
-      <header className="shadow-md bg-white flex items-center text-blue-900">
-        <Link to="/ventas" className="w-1/4 absolute">
+      <header className="shadow-md bg-white flex items-center text-blue-900 justify-between relative">
+        <Link to="/ventas" className="absolute left-0 ml-4">
           <ReplyIcon fontSize="large" />
         </Link>
-        <h1 className="font-semibold text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center w-full">
-          Cuotas para la venta: <br />
-          <span className="font-bold text-blue-700">{NumeroVenta}</span> <br />
-          <span className="font-semibold text-blue-700 text-sm md:text-2xl">
-            Cliente:{" "}
-          </span>
-          <span className="font-semibold text-black text-sm md:text-2xl">
-            {cuotas[0]?.NombreCliente}
-          </span>
-        </h1>
+        <div className="flex-grow text-center">
+          <h1 className="font-semibold text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
+            Cuotas para la venta: <br />
+            <span className="font-bold text-blue-700">{NumeroVenta}</span>{" "}
+            <br />
+            <span className="font-semibold text-blue-700 text-sm md:text-2xl">
+              Cliente:{" "}
+            </span>
+            <span className="font-semibold text-black text-sm md:text-2xl">
+              {cuotas[0]?.NombreCliente}
+            </span>{" "}
+            <br />
+            <span>
+              {isArchivada && (
+                <span className="text-red-500 text-2xl"> Archivada</span>
+              )}
+            </span>
+          </h1>
+        </div>
+        {!isArchivada && (
+          <button
+            className="bg-red-600 text-white mx-2 p-2 rounded-md shadow-sm absolute right-0 mr-4"
+            onClick={() => setIsModalDeleteOpen(true)}
+          >
+            Archivar Venta
+          </button>
+        )}
       </header>
       <section className="w-full px-2">
+        <ConfirmationModal
+          isOpen={isModalDeleteOpen}
+          onClose={() => setIsModalDeleteOpen(!isModalDeleteOpen)}
+          text={textConfirmation}
+          getData={getCuotas}
+          archivada={() => setIsArchivada(true)}
+          url={url}
+        />
         <RegistrarAbonoModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(!isModalOpen)}
@@ -164,7 +199,7 @@ function Cuotas() {
               <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                 Interes
               </th>
-              {decodeToken().user.role === "Administrador" && (
+             {decodeToken().user.role === "prueba1" && !isArchivada && (
                 <>
                   <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                     Acciones
@@ -183,7 +218,9 @@ function Cuotas() {
                       {cuota.NumeroCuota}
                       <button
                         className={`text-xl ${
-                          cuota.Pagada ? "hidden" : "text-blue-900"
+                          cuota.Pagada || isArchivada
+                            ? "hidden"
+                            : "text-blue-900"
                         }`}
                         onClick={() => {
                           setIsModalOpen(true);
@@ -194,7 +231,9 @@ function Cuotas() {
                         <AddCircleIcon fontSize="inherit" />
                       </button>
                       <button
-                        className={`${cuota.Pagada ? 'bg-green-500' : 'bg-blue-800'} text-white text-[7px] md:text-xs rounded-sm p-1 ${
+                        className={`${
+                          cuota.Pagada ? "bg-green-500" : "bg-blue-800"
+                        } text-white text-[7px] md:text-xs rounded-sm p-1 ${
                           cuota.abonos.length < 1 && "hidden"
                         }`}
                         onClick={() => {
@@ -237,21 +276,22 @@ function Cuotas() {
                         currency: "COP",
                       }).format(cuota.SaldoInteresManual)}
                     </td>
-                    {decodeToken().user.role === "Administrador" && (
-                      <>
-                        <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
-                          <button
-                            className="text-[7px]"
-                            onClick={() => {
-                              setIsModalInteresManualOpen(true);
-                              setCuotaId(cuota.Id);
-                            }}
-                          >
-                            {!cuota.Pagada && <ModeEditIcon />}
-                          </button>
-                        </td>
-                      </>
-                    )}
+                    {decodeToken().user.role === "Administrador" &&
+                      !isArchivada && (
+                        <>
+                          <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
+                            <button
+                              className="text-[7px]"
+                              onClick={() => {
+                                setIsModalInteresManualOpen(true);
+                                setCuotaId(cuota.Id);
+                              }}
+                            >
+                              {!cuota.Pagada && <ModeEditIcon />}
+                            </button>
+                          </td>
+                        </>
+                      )}
                   </tr>
                   <tr className="w-full">
                     {openAbonos.includes(cuota.Id) && (
@@ -272,6 +312,9 @@ function Cuotas() {
                                   </th>
                                   <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
                                     Abono Mora
+                                  </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    Acciones
                                   </th>
                                 </tr>
                               </thead>
@@ -301,6 +344,17 @@ function Cuotas() {
                                         style: "currency",
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      <button
+                                        className="text-[7px] text-red-500"
+                                        onClick={() => {
+                                          setAbonoSelected(abono);
+                                          setIsModalOpen(true);
+                                        }}
+                                      >
+                                        <AddCircleIcon />
+                                      </button>
                                     </td>
                                   </tr>
                                 ))}
