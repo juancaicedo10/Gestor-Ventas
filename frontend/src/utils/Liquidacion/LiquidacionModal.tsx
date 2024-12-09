@@ -238,6 +238,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       Detalle: detalles,
       Cartera: cartera,
       CarteraRestante: carteraRestante,
+      ClientesActivos: clientesActivus
     };
 
     axios
@@ -256,7 +257,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
         onClose();
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response);
         onClose();
       });
   };

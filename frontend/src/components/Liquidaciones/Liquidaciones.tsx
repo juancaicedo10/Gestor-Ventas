@@ -469,21 +469,28 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              {liquidacion.Detalle != "" && (
-                                <div className="text-lg flex items-center my-1">
-                                  <LibraryBooksIcon className="text-blue-800" />
-                                  <span className="mx-4">
-                                    <h3 className="font-bold">Detalle:</h3>
-                                    <p>
-                                      <span className="font-light text-black">
-                                        {liquidacion.Detalle}
-                                      </span>
-                                    </p>
-                                  </span>
-                                </div>
-                              )}
+                              <PersonIcon className="text-blue-800" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Clientes Activos:</h3>
+                                <p>{liquidacion.Movimientos}</p>
+                              </span>
                             </li>
                           </div>
+                          <li className="flex items-center w-full my-1">
+                            {liquidacion.Detalle != "" && (
+                              <div className="text-lg flex items-center my-1">
+                                <LibraryBooksIcon className="text-blue-800" />
+                                <span className="mx-4">
+                                  <h3 className="font-bold">Detalle:</h3>
+                                  <p>
+                                    <span className="font-light text-black">
+                                      {liquidacion.Detalle}
+                                    </span>
+                                  </p>
+                                </span>
+                              </div>
+                            )}
+                          </li>
                         </ul>
                       </div>
                     </li>
