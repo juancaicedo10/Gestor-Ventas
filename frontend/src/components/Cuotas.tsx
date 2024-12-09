@@ -200,7 +200,7 @@ function Cuotas() {
               <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                 Interes
               </th>
-             {decodeToken().user.role === "prueba1" && !isArchivada && (
+             {decodeToken().user.role === "Administrador" && !isArchivada && (
                 <>
                   <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                     Acciones
