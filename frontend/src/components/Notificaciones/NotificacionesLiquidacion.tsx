@@ -27,6 +27,7 @@ interface Notificacion {
   VentaId: number;
   NombreGasto: string;
   Detalle: string;
+  Archivada: boolean;
 }
 
 const NotificacionesLiquidacion: React.FC<Props> = ({
@@ -134,7 +135,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                   </span>{" "}
                   para la venta{" "}
                   <Link
-                    to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}`}
+                    to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
                     target="_blank"
                     rel="noopener noreferrer"
                   >

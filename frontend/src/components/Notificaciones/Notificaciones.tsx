@@ -26,6 +26,7 @@ interface Notificacion {
   NombreGasto: string;
   VentaId: number;
   Detalle: string;
+  Archivada: boolean;
 }
 
 interface Vendedor {
@@ -276,7 +277,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                     </span>{" "}
                     para la venta{" "}
                     <Link
-                      to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}`}
+                      to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
                       className="font-semibold text-blue-600 border-b-2 border-blue-600"
                       target="_blank"
                       rel="noopener noreferrer"
