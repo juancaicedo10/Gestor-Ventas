@@ -45,6 +45,7 @@ interface Liquidacion {
   Cartera: number;
   CarteraRestante: number;
   Detalle: string;
+  ClientesActivos: number;
 }
 
 export default function Liquidaciones() {
@@ -472,7 +473,7 @@ export default function Liquidaciones() {
                               <PersonIcon className="text-blue-800" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Clientes Activos:</h3>
-                                <p>{liquidacion.Movimientos}</p>
+                                <p>{liquidacion.ClientesActivos}</p>
                               </span>
                             </li>
                           </div>
