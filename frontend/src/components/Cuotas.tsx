@@ -56,11 +56,13 @@ interface DatosVenta {
 function Cuotas() {
   const textConfirmation =
     "Estas Seguro que deseas archivar esta venta?, una vez archivada no podras realizar cambios";
-  const url = `https://backendgestorventas.azurewebsites.net/api/ventas/archivar/${useParams()?.id}`;
+  const url = `https://backendgestorventas.azurewebsites.net/api/ventas/archivar/${
+    useParams()?.id
+  }`;
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [abonoSelected, setAbonoSelected] = useState<Abono | null>(null);
-  console.log(abonoSelected)
+  console.log(abonoSelected);
   const Id = useParams()?.id;
   const NumeroVenta = useParams()?.numeroVenta;
   const VentaArchivada = useParams()?.archivada;
@@ -200,7 +202,7 @@ function Cuotas() {
               <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                 Interes
               </th>
-             {decodeToken().user.role === "Administrador" && !isArchivada && (
+              {decodeToken().user.role === "Administrador" && !isArchivada && (
                 <>
                   <th className="border-r border-black text-center text-[7px] md:text-sm lg:text-lg">
                     Acciones
@@ -314,9 +316,6 @@ function Cuotas() {
                                   <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
                                     Abono Mora
                                   </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
-                                    Acciones
-                                  </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -345,17 +344,6 @@ function Cuotas() {
                                         style: "currency",
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
-                                    </td>
-                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
-                                      <button
-                                        className="text-[7px] text-red-500"
-                                        onClick={() => {
-                                          setAbonoSelected(abono);
-                                          setIsModalOpen(true);
-                                        }}
-                                      >
-                                        <AddCircleIcon />
-                                      </button>
                                     </td>
                                   </tr>
                                 ))}
