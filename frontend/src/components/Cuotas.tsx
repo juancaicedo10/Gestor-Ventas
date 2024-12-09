@@ -61,8 +61,6 @@ function Cuotas() {
   }`;
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [abonoSelected, setAbonoSelected] = useState<Abono | null>(null);
-  console.log(abonoSelected);
   const Id = useParams()?.id;
   const NumeroVenta = useParams()?.numeroVenta;
   const VentaArchivada = useParams()?.archivada;
