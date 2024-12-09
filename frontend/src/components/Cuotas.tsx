@@ -56,10 +56,11 @@ interface DatosVenta {
 function Cuotas() {
   const textConfirmation =
     "Estas Seguro que deseas archivar esta venta?, una vez archivada no podras realizar cambios";
-  const url = `http://localhost:4300/api/ventas/archivar/${useParams()?.id}`;
+  const url = `https://backendgestorventas.azurewebsites.net/api/ventas/archivar/${useParams()?.id}`;
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [abonoSelected, setAbonoSelected] = useState<Abono | null>(null);
+  console.log(abonoSelected)
   const Id = useParams()?.id;
   const NumeroVenta = useParams()?.numeroVenta;
   const VentaArchivada = useParams()?.archivada;
