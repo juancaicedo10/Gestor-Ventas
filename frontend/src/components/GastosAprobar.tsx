@@ -115,7 +115,7 @@ function GastosAprobar() {
                     className="w-3/4 md:w-1/4"
                   />
                   <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-blue-900 py-4 text-center w-full md:w-1/2">
-                    En este momento no hay ninguna gasto por aprobar
+                    En este momento no hay ningun gasto por aprobar
                   </h1>
                 </div>
               </div>
