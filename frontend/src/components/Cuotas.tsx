@@ -121,7 +121,7 @@ function Cuotas() {
     </div>
   ) : (
     <div>
-      <header className="shadow-md bg-white flex items-center text-blue-900 justify-between relative">
+      <header className="shadow-md bg-white flex flex-col md:flex-row items items-center text-blue-900 justify-between relative">
         <Link to="/ventas" className="absolute left-0 ml-4">
           <ReplyIcon fontSize="large" />
         </Link>
@@ -146,7 +146,7 @@ function Cuotas() {
         </div>
         {!isArchivada && (
           <button
-            className="bg-red-600 text-white mx-2 p-2 rounded-md shadow-sm absolute right-0 mr-4"
+            className="bg-red-600 text-white mx-2 p-2 rounded-md shadow-sm md:absolute md:right-0 mr-4"
             onClick={() => setIsModalDeleteOpen(true)}
           >
             Archivar Venta
