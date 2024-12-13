@@ -282,7 +282,7 @@ function VentasByCliente() {
                               Ir a detalles de cuotas:
                             </h6>
                             <Link
-                              to={`/cuotas/${venta.Id}/${venta.NumeroVenta}`}
+                              to={`/cuotas/${venta.Id}/${venta.NumeroVenta}/${venta.Archivada}`}
                               className="text-blue-900 font-semibold border-b-2 border-blue-900"
                             >
                               Cuotas Detalles
