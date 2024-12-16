@@ -144,7 +144,7 @@ function Cuotas() {
             </span>
           </h1>
         </div>
-        {!isArchivada && (
+        {!isArchivada && decodeToken()?.user.role === "Administrador" && (
           <button
             className="bg-red-600 text-white mx-2 p-2 rounded-md shadow-sm md:absolute md:right-0 mr-4"
             onClick={() => setIsModalDeleteOpen(true)}
