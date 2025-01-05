@@ -225,7 +225,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
                       role="status"
                     ></div>
                   ) : (
-                    `Registar ${selectedTipo || ""}`
+                    `Registrar ${selectedTipo || ""}`
                   )}{" "}
                   {/* Agregado un fallback para evitar [object Object] */}
                 </button>

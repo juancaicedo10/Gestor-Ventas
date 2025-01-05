@@ -15,6 +15,7 @@ import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import InteresManualModal from "../utils/Ventas/InteresManualModal";
 import { FormatearFecha } from "../utils/FormatearFecha";
 import ConfirmationModal from "../utils/confirmation/ConfirmationModal";
+import ModificarAbonoModal from "../utils/Ventas/ModificarAbonoModal";
 
 interface Cuota {
   Id: number;
@@ -74,6 +75,11 @@ function Cuotas() {
   const [cuotaId, setCuotaId] = useState<number>(0);
   const [DatosVenta, setDatosVenta] = useState<DatosVenta>();
   const [openAbonos, setOpenAbonos] = useState<number[]>([]);
+
+  //modals edit functions
+
+  const [isOpenEdit, setIsOpenEdit] = useState<boolean>(false);
+  const [abonoSelected, setAbonoSelected] = useState<Abono>();
 
   const toggleAbonoDetails = (cuotaId: number) => {
     if (openAbonos.includes(cuotaId)) {
@@ -168,6 +174,14 @@ function Cuotas() {
           getCuotas={getCuotas}
           getDataCuotas={getDatosVenta}
           cuotaId={cuotaId}
+        />
+        <ModificarAbonoModal
+          isOpen={isOpenEdit}
+          onClose={() => setIsOpenEdit(!isOpenEdit)}
+          getCuotas={getCuotas}
+          getDataCuotas={getDatosVenta}
+          cuotaId={cuotaId}
+          abonoSelected={abonoSelected}
         />
         <InteresManualModal
           isOpen={isModalInteresManualOpen}
@@ -314,6 +328,9 @@ function Cuotas() {
                                   <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
                                     Abono Mora
                                   </th>
+                                    <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                      Acciones
+                                    </th>
                                 </tr>
                               </thead>
                               <tbody>
@@ -342,6 +359,17 @@ function Cuotas() {
                                         style: "currency",
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
+                                    </td>
+                                    <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      <button
+                                        onClick={() => {
+                                          setIsOpenEdit(true);
+                                          setAbonoSelected(abono);
+                                          setCuotaId(abono.CuotaId);
+                                        }}
+                                      >
+                                        <ModeEditIcon />
+                                      </button>
                                     </td>
                                   </tr>
                                 ))}
