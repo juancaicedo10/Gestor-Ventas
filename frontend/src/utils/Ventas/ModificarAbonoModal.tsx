@@ -67,7 +67,7 @@ const ModificarAbonoModal: React.FC<ModalProps> = ({
     await axios
       .put(
         `
-        http://localhost:4300/api/cuotas/cuota/abonar/${abonoSelected.Id}`,
+        https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/abonar/${abonoSelected.Id}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
