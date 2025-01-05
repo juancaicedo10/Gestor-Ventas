@@ -362,19 +362,20 @@ function Cuotas() {
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
                                     </td>
-                                    {decodeToken()?.user.Id === 14 && (
-                                      <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-blue-800">
-                                        <button
-                                          onClick={() => {
-                                            setIsOpenEdit(true);
-                                            setAbonoSelected(abono);
-                                            setCuotaId(abono.CuotaId);
-                                          }}
-                                        >
-                                          <ModeEditIcon />
-                                        </button>
-                                      </td>
-                                    )}
+                                    {decodeToken()?.user.role === "Administrador" &&
+                                     decodeToken()?.user.Id === 14 && (
+                                        <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-blue-800">
+                                          <button
+                                            onClick={() => {
+                                              setIsOpenEdit(true);
+                                              setAbonoSelected(abono);
+                                              setCuotaId(abono.CuotaId);
+                                            }}
+                                          >
+                                            <ModeEditIcon />
+                                          </button>
+                                        </td>
+                                      )}
                                   </tr>
                                 ))}
                               </tbody>
