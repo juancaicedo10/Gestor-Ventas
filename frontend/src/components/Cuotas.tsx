@@ -39,6 +39,7 @@ interface Abono {
   MoraAbono: number;
   ValorRestante: number;
   SaldoInteresManual: number;
+  liquidado: boolean;
   SaldoMoraManual: number;
 }
 
@@ -363,7 +364,7 @@ function Cuotas() {
                                       }).format(abono?.MoraAbono || 0)}
                                     </td>
                                     {decodeToken()?.user.role === "Administrador" &&
-                                     decodeToken()?.user.Id === 14 && (
+                                     decodeToken()?.user.Id === 14 && abono.liquidado && (
                                         <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-blue-800">
                                           <button
                                             onClick={() => {
