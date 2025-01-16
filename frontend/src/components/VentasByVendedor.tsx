@@ -28,6 +28,8 @@ function VentasByVendedor() {
     ValorAbonado: number;
     FechaServer: string;
     TelefonoCliente: string;
+    ValorSeguro: number;
+    TasaInteres: number;
     Archivada: boolean;
   }
 
@@ -246,6 +248,16 @@ function VentasByVendedor() {
                                 </span>
                                 {venta.NumeroCuotas}
                               </div>
+                              <div>
+                                  <span className="font-semibold flex flex-col text-blue-900">
+                                    valor Seguro:
+                                  </span>
+                                  {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(venta.ValorSeguro ?? 0)}
+                                  $
+                                </div>
                             </li>
                             <li>
                               <div className="text-start flex flex-col">
@@ -263,6 +275,12 @@ function VentasByVendedor() {
                                 </span>
                                 {venta.CuotasPagadas}
                               </div>
+                              <div>
+                                  <span className="font-semibold flex flex-col text-blue-900">
+                                    % Interes:
+                                  </span>
+                                  {venta.TasaInteres}%
+                                </div>
                             </li>
                           </ul>
                         </div>

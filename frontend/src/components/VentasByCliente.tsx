@@ -19,7 +19,9 @@ function VentasByCliente() {
     NumeroCuotas: number;
     NumeroVenta: string;
     SaldoMoraTotal: number;
+    TasaInteres: number;
     DetallesVenta: string;
+    ValorSeguro: number;
     ValorVenta: number;
     Nombrecliente: string;
     NombreCliente: string;
@@ -127,11 +129,13 @@ function VentasByCliente() {
                               <span className="font-medium">Cliente:</span>{" "}
                               {venta.NombreCliente}
                             </p>
-                            {venta.Archivada && <span
-                              className={`rounded-md p-1 text-sm bg-red-600 mt-2 text-white`}
-                            >
-                              Archivada
-                            </span>}
+                            {venta.Archivada && (
+                              <span
+                                className={`rounded-md p-1 text-sm bg-red-600 mt-2 text-white`}
+                              >
+                                Archivada
+                              </span>
+                            )}
                           </header>
                           <p className="rounded-md border-2 p-2 mt-2 text-sm bg-white min-h-[100px]">
                             <span className="font-bold text-xl text-blue-600">
@@ -256,6 +260,16 @@ function VentasByCliente() {
                                   </span>
                                   {venta.NumeroCuotas}
                                 </div>
+                                <div>
+                                  <span className="font-semibold flex flex-col text-blue-900">
+                                    valor Seguro:
+                                  </span>
+                                  {new Intl.NumberFormat("es-CO", {
+                                    style: "currency",
+                                    currency: "COP",
+                                  }).format(venta.ValorSeguro ?? 0)}
+                                  $
+                                </div>
                               </li>
                               <li>
                                 <div className="text-start flex flex-col">
@@ -273,6 +287,12 @@ function VentasByCliente() {
                                     Pagadas:
                                   </span>
                                   {venta.CuotasPagadas}
+                                </div>
+                                <div>
+                                  <span className="font-semibold flex flex-col text-blue-900">
+                                    % Interes:
+                                  </span>
+                                  {venta.TasaInteres}%
                                 </div>
                               </li>
                             </ul>
