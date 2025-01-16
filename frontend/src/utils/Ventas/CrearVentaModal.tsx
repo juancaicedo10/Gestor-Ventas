@@ -123,14 +123,17 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     const VendedorId = selectedSeller;
     try {
       await axios
-        .get(`${"https://backendgestorventas.azurewebsites.net/api/clientes"}`, {
-          headers: {
-            Beaerer: `${localStorage.getItem("token")}`,
-          },
-          params: {
-            VendedorId: VendedorId,
-          },
-        })
+        .get(
+          `${"https://backendgestorventas.azurewebsites.net/api/clientes"}`,
+          {
+            headers: {
+              Beaerer: `${localStorage.getItem("token")}`,
+            },
+            params: {
+              VendedorId: VendedorId,
+            },
+          }
+        )
         .then((response) => {
           setClients(response.data);
           console.log(response.data);
@@ -201,7 +204,8 @@ const CrearVentaModal: React.FC<ModalProps> = ({
 
     if (!isValid) {
       setIsDisabled(false);
-      return};
+      return;
+    }
 
     const venta = {
       ClienteId: selectedClient,
@@ -313,8 +317,6 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setSelectedClient(Number(clientId));
       setIsSelectedClientValid(true);
       setIsDisabled(false);
-
-      console.log("oe", clientId, selectedClient, isSelectedClientValid);
     }
   };
 
@@ -474,12 +476,16 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   <section>
                     <label htmlFor="">% Tasa interes:</label>
                     <input
-                      type="number"
+            
                       className={`p-2 rounded-md border w-full ${
                         !isTasaInteresValid ? "border-red-500" : ""
                       }`}
                       onChange={(e) => {
-                        setTasaInteres(Number(e.target.value));
+                        let value = (e.target.value = e.target.value.replace(
+                          /[^.0-9]/g,
+                          ""
+                        ));
+                        setTasaInteres(Number(value));
                         setIsTasaInteresValid(true);
                         setIsDisabled(false);
                       }}

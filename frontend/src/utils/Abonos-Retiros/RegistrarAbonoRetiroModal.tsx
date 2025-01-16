@@ -242,6 +242,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                       onChange={(e) => handleSelectSeller(e?.value)}
                       isSearchable={true}
                       placeholder="Seleccione un vendedor"
+                      maxMenuHeight={170}
                       className="w-full"
                     />
                     {!isSellerValid && (
@@ -253,13 +254,17 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
                   <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                     <label htmlFor="numero cuotas">Monto:</label>
                     <input
-                      type="number"
+              
                       className={`p-2 rounded-md border w-full text-sm ${
                         !isMontoValid ? "border-red-500" : ""
                       }`}
                       onChange={(e) => {
+                        let value = (e.target.value = e.target.value.replace(
+                          /[^.0-9]/g,
+                          ""
+                        ));
                         setIsMontoValid(true);
-                        setMonto(Number(e.target.value));
+                        setMonto(Number(value));
                       }}
                     />
                     {!isMontoValid && (
