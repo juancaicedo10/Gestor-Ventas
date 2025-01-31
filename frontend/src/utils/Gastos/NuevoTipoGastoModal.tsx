@@ -152,13 +152,16 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
                     <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                       <label htmlFor="numero cuotas">Monto Maximo:</label>
                       <input
-                        type="number"
                         className={`p-2 rounded-md border w-full text-sm ${
                           !isMontoMaximoValid ? "border-red-500" : ""
                         }`}
                         onChange={(e) => {
+                          let value = (e.target.value = e.target.value.replace(
+                            /[^.0-9]/g,
+                            ""
+                          ));
                           setIsMontoMaximoValid(true);
-                          setMontoMaximo(Number(e.target.value));
+                          setMontoMaximo(Number(value));
                         }}
                       />
                       {!isMontoMaximoValid && (
