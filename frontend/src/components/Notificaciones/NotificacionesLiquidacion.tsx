@@ -44,7 +44,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
   ) => {
     try {
       const response = await axios.post(
-        "https://backendgestorventas.azurewebsites.net/api/notificaciones/liquidacion",
+        `${import.meta.env.VITE_API_URL}/api/notificaciones/liquidacion`,
         {
           Consecutivo: ConsecutivoNoti,
           VendedorId: VendedorIdNoti,

@@ -45,7 +45,7 @@ function VentasByCliente() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/cliente/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/ventas/cliente/${id}`,
         {
           params: {
             page: currentPage + 1,
@@ -66,7 +66,7 @@ function VentasByCliente() {
 
     // Fetch cliente info
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/clientes/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/clientes/${id}`)
       .then((res) => setcliente(res.data))
       .catch((err) => console.log(err));
   }, [id, currentPage]);

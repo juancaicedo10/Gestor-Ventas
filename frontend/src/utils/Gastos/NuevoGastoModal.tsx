@@ -52,10 +52,10 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchSellers = async () => {
     const Url =
       decodeToken()?.user?.role === "Administrador"
-        ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        ? `${import.meta.env.VITE_API_URL}/api/vendedores/${
             decodeToken()?.user?.Id
           }/all`
-        : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        : `${import.meta.env.VITE_API_URL}/api/vendedores/${
             decodeToken()?.user?.Id
           }`;
     try {
@@ -75,7 +75,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
   const fetchTiposGastos = async () => {
     try {
       const response = await axios.get(
-        "https://backendgestorventas.azurewebsites.net/api/gastos/tipos"
+        `${import.meta.env.VITE_API_URL}/api/gastos/tipos`
       );
       setTiposGastos(response.data);
     } catch (error) {
@@ -116,7 +116,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
     try {
       await axios.post(
-        "https://backendgestorventas.azurewebsites.net/api/gastos",
+        `${import.meta.env.VITE_API_URL}/api/gastos`,
         gasto,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },

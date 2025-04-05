@@ -69,10 +69,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     let url =
       selectedTipo === "Multa"
-        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
+        ? `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/mora/${cuotaId}`
         : selectedTipo === "Interes"
-        ? `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`
-        : `https://backendgestorventas.azurewebsites.net/api/cuotas/cuota/reagenda/${cuotaId}`;
+        ? `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/interes/${cuotaId}`
+        : `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/reagenda/${cuotaId}`;
 
     axios
       .post(url, AbonoRetiro, {

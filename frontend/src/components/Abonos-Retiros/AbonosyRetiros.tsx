@@ -36,13 +36,13 @@ function AbonosyRetiros() {
     setIsLoading(true);
     Promise.all([
       await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/abonos/${VendedorId}`
+        `${import.meta.env.VITE_API_URL}/api/abonos/${VendedorId}`
       ),
       await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/retiros/${VendedorId}`
+        `${import.meta.env.VITE_API_URL}/api/retiros/${VendedorId}`
       ),
       await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/abonos/bases/${VendedorId}`
+        `${import.meta.env.VITE_API_URL}/api/abonos/bases/${VendedorId}`
       ),
     ])
       .then(([abonosRes, retirosRes, res]) => {
@@ -65,7 +65,7 @@ function AbonosyRetiros() {
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
         {

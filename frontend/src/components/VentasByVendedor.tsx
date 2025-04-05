@@ -45,7 +45,7 @@ function VentasByVendedor() {
   useEffect(() => {
     setIsLoading(true);
     axios.get(
-      `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${id}/historial`,
+      `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${id}/historial`,
       {
         params: {
           page: currentPage + 1,
@@ -65,7 +65,7 @@ function VentasByVendedor() {
 
     // Fetch vendedor info
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/vendedores/${id}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/vendedores/${id}`)
       .then((res) => setVendedor(res.data))
       .catch((err) => console.log(err));
   }, [id, currentPage]);

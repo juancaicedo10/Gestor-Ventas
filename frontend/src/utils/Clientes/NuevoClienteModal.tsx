@@ -94,7 +94,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     try {
       axios
         .post(
-          "https://backendgestorventas.azurewebsites.net/api/clientes",
+          `${import.meta.env.VITE_API_URL}/api/clientes`,
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,

@@ -13,7 +13,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getClients}) => {
     try {
       axios
         .delete(
-          `https://backendgestorventas.azurewebsites.net/api/clientes/${Id}`,
+          `${import.meta.env.VITE_API_URL}/api/clientes/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

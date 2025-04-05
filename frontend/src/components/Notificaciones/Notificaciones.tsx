@@ -71,7 +71,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const getVendedores = async () => {
     try {
       const response = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${decodeToken()?.user?.Id}/all`
       );
       setVendedores(response.data);
     } catch (error) {
@@ -82,7 +82,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const getNotificacionesFiltered = async () => {
     try {
       const response = await axios.post(
-        'https://backendgestorventas.azurewebsites.net/api/notificaciones/filtro',
+        '${import.meta.env.VITE_API_URL}/api/notificaciones/filtro',
         {
           VendedorId: selectedSeller,
           FechaInicio: selectedFechaInicio,

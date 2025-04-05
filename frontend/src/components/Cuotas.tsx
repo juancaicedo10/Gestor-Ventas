@@ -58,9 +58,13 @@ interface DatosVenta {
 function Cuotas() {
   const textConfirmation =
     "Estas Seguro que deseas archivar esta venta?, una vez archivada no podras realizar cambios";
-  const url = `https://backendgestorventas.azurewebsites.net/api/ventas/archivar/${
+
+  const envUrl = process.env.API_URL ?? "default_port";
+  
+  const url = `${envUrl}/ventas/archivar/${
     useParams()?.id
   }`;
+
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const Id = useParams()?.id;
@@ -93,7 +97,7 @@ function Cuotas() {
   const getCuotas = () => {
     setIsLoading(true);
     axios
-      .get(`https://backendgestorventas.azurewebsites.net/api/cuotas/${Id}`)
+      .get(`${import.meta.env.VITE_API_URL}/api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -107,7 +111,7 @@ function Cuotas() {
   const getDatosVenta = async () => {
     await axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/cuotas/datos/${Id}`
+        `${import.meta.env.VITE_API_URL}/api/cuotas/datos/${Id}`
       )
       .then((res) => {
         setDatosVenta(res.data);

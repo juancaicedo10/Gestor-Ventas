@@ -28,7 +28,7 @@ function GastosAprobar() {
   const getgastosAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`https://backendgestorventas.azurewebsites.net/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -46,7 +46,7 @@ function GastosAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
+        `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -70,7 +70,7 @@ function GastosAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
+        `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: false },
         {
           headers: {

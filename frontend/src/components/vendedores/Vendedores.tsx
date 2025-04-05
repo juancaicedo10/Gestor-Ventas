@@ -60,7 +60,7 @@ function Vendedores() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`
       )

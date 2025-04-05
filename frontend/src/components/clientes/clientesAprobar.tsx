@@ -30,7 +30,7 @@ function clientesAprobar() {
     setIsLoading(true);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${
+        `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${
           decodeToken()?.user?.Id
         }`,
         {
@@ -53,7 +53,7 @@ function clientesAprobar() {
     setDisabled(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/clientes/aprobar/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${id}`,
         approval,
         {
           headers: {

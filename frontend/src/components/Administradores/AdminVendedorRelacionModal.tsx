@@ -31,7 +31,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
     setAdminSelected(seleccionado);
     axios
       .get(
-        `https://backendgestorventas.azurewebsites.net/api/administradores/relacion/${seleccionado}`
+        `${import.meta.env.VITE_API_URL}/api/administradores/relacion/${seleccionado}`
       )
       .then((res) => {
         setVendedores(res.data);
@@ -54,7 +54,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
   const getAdministradores = async () => {
     try {
       const res = await axios.get(
-        "https://backendgestorventas.azurewebsites.net/api/administradores"
+        `${import.meta.env.VITE_API_URL}/api/administradores`
       );
       setAdministradores(res.data);
     } catch (error) {
@@ -69,7 +69,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        "https://backendgestorventas.azurewebsites.net/api/administradores/relacion",
+        `${import.meta.env.VITE_API_URL}/api/administradores/relacion`,
         {
           AdministradorId: adminSelected,
           Vendedores: vendedoresSeleccionados,

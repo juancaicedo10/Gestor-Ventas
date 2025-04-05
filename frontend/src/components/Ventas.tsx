@@ -5,7 +5,7 @@ import SellIcon from "@mui/icons-material/Sell";
 import { useParams } from "react-router-dom";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Spinner from "../utils/Spinner";
-import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
+
 import decodeToken from "../utils/tokenDecored";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
@@ -13,6 +13,7 @@ import VentasFilter from "./VentasFilter";
 import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
 import VisualizarVentaModal from "../utils/Ventas/VisualizarVentaModal";
 import FilterPdfModal from "../utils/PdfFilterModal/FilterPdfModal";
+import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 
 function Ventas() {
   interface Venta {
@@ -77,12 +78,12 @@ function Ventas() {
       // si la solicitud viene con un id, se obtiene la venta por id
       if (id) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
+          `${import.meta.env.VITE_API_URL}/api/ventas/${id}`
         );
         // si el rol del usuario es vendedor, se obtienen las ventas del vendedor
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${Id}`,
           {
             params: {
               page: currentPage + 1,
@@ -95,7 +96,7 @@ function Ventas() {
         VendedorSelectedContext
       ) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${VendedorSelectedContext}`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
@@ -105,7 +106,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/${Id}/all`,
           {
             params: {
               page: currentPage + 1,
@@ -155,7 +156,7 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -167,7 +168,7 @@ function Ventas() {
         );
       } else if (decodeToken()?.user.role === "Administrador" && !VendedorSelectedContext) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -179,7 +180,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -206,7 +207,7 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -218,7 +219,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
