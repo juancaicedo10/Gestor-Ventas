@@ -82,7 +82,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const getNotificacionesFiltered = async () => {
     try {
       const response = await axios.post(
-        '${import.meta.env.VITE_API_URL}/api/notificaciones/filtro',
+        `${import.meta.env.VITE_API_URL}/api/notificaciones/filtro`,
         {
           VendedorId: selectedSeller,
           FechaInicio: selectedFechaInicio,
