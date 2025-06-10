@@ -1,9 +1,10 @@
-import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-
+import httpClient from "../httpService/httpService";
+import * as UAParserLib from "ua-parser-js";
+const UAParser = UAParserLib.default || UAParserLib; // Importing the UAParser library
 function Login() {
   const navigate = useNavigate();
   const [error, setError] = useState<any>("");
@@ -15,13 +16,22 @@ function Login() {
     e.preventDefault();
     setIsLoading(true);
     const form = new FormData(e.target);
+
+    const userAgent = UAParserLib.UAParser(navigator.userAgent);
+
+    const deviceInfo = {
+      device: userAgent.device,
+      browser: userAgent.browser,
+      os: userAgent.os,
+    };
     const data = {
       correo: form.get("correo"),
       contraseña: form.get("contraseña"),
+      ...deviceInfo,
     };
 
     try {
-      const response = await axios.post(
+      const response = await httpClient.post(
         `${import.meta.env.VITE_API_URL}/login`,
         data
       );
@@ -30,10 +40,34 @@ function Login() {
       console.log(response.data);
       navigate("/clientes");
     } catch (error) {
-      setError("Correo o contraseña incorrectos");
-      console.error("Error en el login", error);
-    } finally {
+      console.log(error, 'error login')
+      if (
+        (error as any).response &&
+        (error as any).response !== null &&
+        (error as any).response.status === 500
+      ) {
+        setError("Correo o contraseña incorrectos");
+        console.error("Error en el login", error);
+      } else if (  (error as any).response &&
+        (error as any).response !== null &&
+        (error as any).response.status === 405) {
+        setError("Este dispositivo no está autorizado por favor contacte con el administrador");
+        } else {
+        setError("Ocurrió un error en el servidor, por favor intente más tarde");
+        }
+      } finally {
       setIsLoading(false);
+
+      const userAgent = UAParserLib.UAParser(navigator.userAgent);
+
+      const deviceInfo = {
+        device: userAgent.device,
+        browser: userAgent.browser,
+        os: userAgent.os,
+      };
+
+      console.log("Device Info:", deviceInfo);
+      // Aquí puedes enviar deviceInfo a tu backend si es necesario
     }
   };
 

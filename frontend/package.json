@@ -24,7 +24,8 @@
     "react-paginate": "^8.2.0",
     "react-router-dom": "^6.23.1",
     "react-select": "^5.8.0",
-    "react-toastify": "^10.0.5"
+    "react-toastify": "^10.0.5",
+    "ua-parser-js": "^2.0.3"
   },
   "devDependencies": {
     "@types/lodash": "^4.17.10",
