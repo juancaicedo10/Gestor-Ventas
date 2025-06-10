@@ -82,7 +82,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.post(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/base/cartera?id=${id}`,
+        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/base/cartera?id=${id}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -108,7 +108,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${sellerId}/${efectivo}`,
+        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/${sellerId}/${efectivo}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -193,7 +193,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const getVendedores = async () => {
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+        `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
         {
@@ -243,7 +243,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
     axios
       .post(
-        `https://backendgestorventas.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
+        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/${selectedSeller}`,
         liquidacion,
         {
           headers: {

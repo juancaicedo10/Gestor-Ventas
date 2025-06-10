@@ -112,7 +112,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
     formData.append("OficinaId", "1");
 
     axios
-      .post(`https://backendgestorventas.azurewebsites.net/api/vendedores`, formData, {
+      .post(`https://backendgestorventas1.azurewebsites.net/api/vendedores`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,

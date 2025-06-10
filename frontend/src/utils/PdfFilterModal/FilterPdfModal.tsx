@@ -19,7 +19,7 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       setIsLoading(true);
       try {
         const response = await axios.get(
-          "https://backendgestorventas.azurewebsites.net/api/filtros",
+          "https://backendgestorventas1.azurewebsites.net/api/filtros",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,8 +51,8 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     const Id = decodeToken()?.user.Id;
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "https://backendgestorventas.azurewebsites.net/api/ventas/pdf/all"
-        : `https://backendgestorventas.azurewebsites.net/api/ventas/pdf/${Id}`;
+        ? "https://backendgestorventas1.azurewebsites.net/api/ventas/pdf/all"
+        : `https://backendgestorventas1.azurewebsites.net/api/ventas/pdf/${Id}`;
     axios({
       url: url,
       params: {

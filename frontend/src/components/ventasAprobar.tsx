@@ -39,7 +39,7 @@ function VentasAprobar() {
     setIsLoading(true);
     try {
       const res = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/aprobar/${
+        `https://backendgestorventas1.azurewebsites.net/api/ventas/aprobar/${
           decodeToken()?.user?.Id
         }`,
         {
@@ -61,7 +61,7 @@ function VentasAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -86,7 +86,7 @@ function VentasAprobar() {
     setIsLoading(true);
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
         { aprobado: false },
         {
           headers: {

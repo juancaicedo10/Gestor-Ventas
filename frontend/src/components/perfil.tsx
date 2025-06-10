@@ -32,7 +32,7 @@ function Perfil() {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `https://backendgestorventas.azurewebsites.net/api/${string}`,
+        `https://backendgestorventas1.azurewebsites.net/api/${string}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -112,7 +112,7 @@ function Perfil() {
     e.preventDefault();
     try {
       await axios.put(
-        `https://backendgestorventas.azurewebsites.net/api/${string}`,
+        `https://backendgestorventas1.azurewebsites.net/api/${string}`,
         {
           NombreCompleto: nombre,
           NumeroDocumento: cedula,

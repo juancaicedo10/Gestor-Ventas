@@ -103,7 +103,7 @@ const NuevoAdministradorModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/administradores", admin, {
+      .post("https://backendgestorventas1.azurewebsites.net/api/administradores", admin, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

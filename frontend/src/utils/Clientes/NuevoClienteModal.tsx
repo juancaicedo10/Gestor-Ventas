@@ -94,7 +94,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     try {
       axios
         .post(
-          "https://backendgestorventas.azurewebsites.net/api/clientes",
+          "https://backendgestorventas1.azurewebsites.net/api/clientes",
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,

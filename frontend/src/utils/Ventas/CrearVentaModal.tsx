@@ -95,10 +95,10 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     try {
       let Url =
         decodeToken()?.user?.role !== "Administrador"
-          ? `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          ? `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
               decodeToken()?.user?.Id
             }`
-          : `https://backendgestorventas.azurewebsites.net/api/vendedores/${
+          : `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
               decodeToken()?.user?.Id
             }/all`;
       await axios
@@ -124,7 +124,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     try {
       await axios
         .get(
-          `${"https://backendgestorventas.azurewebsites.net/api/clientes"}`,
+          `${"https://backendgestorventas1.azurewebsites.net/api/clientes"}`,
           {
             headers: {
               Beaerer: `${localStorage.getItem("token")}`,
@@ -220,7 +220,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     };
 
     axios
-      .post("https://backendgestorventas.azurewebsites.net/api/ventas", venta, {
+      .post("https://backendgestorventas1.azurewebsites.net/api/ventas", venta, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

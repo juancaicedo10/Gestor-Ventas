@@ -77,12 +77,12 @@ function Ventas() {
       // si la solicitud viene con un id, se obtiene la venta por id
       if (id) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${id}`
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/${id}`
         );
         // si el rol del usuario es vendedor, se obtienen las ventas del vendedor
       } else if (decodeToken()?.user.role !== "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${Id}`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/vendedor/${Id}`,
           {
             params: {
               page: currentPage + 1,
@@ -95,7 +95,7 @@ function Ventas() {
         VendedorSelectedContext
       ) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/vendedor/${VendedorSelectedContext}`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
@@ -105,7 +105,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/${Id}/all`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/${Id}/all`,
           {
             params: {
               page: currentPage + 1,
@@ -155,7 +155,7 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -167,7 +167,7 @@ function Ventas() {
         );
       } else if (decodeToken()?.user.role === "Administrador" && !VendedorSelectedContext) {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -179,7 +179,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -206,7 +206,7 @@ function Ventas() {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,
@@ -218,7 +218,7 @@ function Ventas() {
         );
       } else {
         res = await axios.get(
-          `https://backendgestorventas.azurewebsites.net/api/ventas/filter`,
+          `https://backendgestorventas1.azurewebsites.net/api/ventas/filter`,
           {
             params: {
               page: currentPage + 1,

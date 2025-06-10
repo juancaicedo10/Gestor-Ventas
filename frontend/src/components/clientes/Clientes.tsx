@@ -70,7 +70,7 @@ function Clientes() {
     if (decodeToken()?.user.role !== "Administrador") {
       axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorId}`,
+          `https://backendgestorventas1.azurewebsites.net/api/clientes/vendedor/${VendedorId}`,
           {
             params: {
               page: currentPage + 1,
@@ -91,7 +91,7 @@ function Clientes() {
     } else if (VendedorSelectedContext && VendedorSelectedContext !== 0 && decodeToken()?.user.role === "Administrador") {
       axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/clientes/vendedor/${VendedorSelectedContext}`,
+          `https://backendgestorventas1.azurewebsites.net/api/clientes/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
@@ -112,7 +112,7 @@ function Clientes() {
     } else {
       axios
         .get(
-          `https://backendgestorventas.azurewebsites.net/api/clientes/${
+          `https://backendgestorventas1.azurewebsites.net/api/clientes/${
             decodeToken()?.user?.Id
           }/all`,
           {

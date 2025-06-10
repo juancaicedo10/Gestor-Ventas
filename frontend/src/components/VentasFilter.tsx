@@ -39,7 +39,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, 
       setIsLoading(true);
       try {
         const response = await axios.get(
-          "https://backendgestorventas.azurewebsites.net/api/filtros",
+          "https://backendgestorventas1.azurewebsites.net/api/filtros",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
