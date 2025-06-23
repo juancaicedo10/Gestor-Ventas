@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Link, useParams } from "react-router-dom";
-import Sidebar from "./Sidebar";
 import SellIcon from "@mui/icons-material/Sell";
-import Spinner from "../utils/Spinner";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import { FormatearFecha } from "../utils/FormatearFecha";
 import PhoneIcon from "@mui/icons-material/Phone";
+import HttpClient from "../../Services/httpService";
+import Spinner from "../../utils/Spinner";
+import Sidebar from "../Sidebar";
+import { formatDate } from "../../utils/Helpers/FormatDate";
+import { FormatearFecha } from "../../utils/FormatearFecha";
 
 function VentasByCliente() {
   interface Venta {
@@ -43,8 +44,7 @@ function VentasByCliente() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/ventas/cliente/${id}`,
         {
           params: {
@@ -65,8 +65,7 @@ function VentasByCliente() {
       });
 
     // Fetch cliente info
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/clientes/${id}`)
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/clientes/${id}`)
       .then((res) => setcliente(res.data))
       .catch((err) => console.log(err));
   }, [id, currentPage]);

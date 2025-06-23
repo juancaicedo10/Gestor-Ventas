@@ -1,8 +1,9 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import decodeToken from "../tokenDecored";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface Seller {
   Id: number;
@@ -59,7 +60,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
             decodeToken()?.user?.Id
           }`;
     try {
-      const response = await axios.get(`${Url}`, {
+      const response = await HttpClient.get(`${Url}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       if (Array.isArray(response.data)) {
@@ -74,7 +75,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
 
   const fetchTiposGastos = async () => {
     try {
-      const response = await axios.get(
+      const response = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/gastos/tipos`
       );
       setTiposGastos(response.data);
@@ -115,7 +116,7 @@ const NuevoGastoModal: React.FC<ModalProps> = ({
     };
 
     try {
-      await axios.post(
+      await HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/gastos`,
         gasto,
         {

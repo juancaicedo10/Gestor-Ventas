@@ -1,4 +1,5 @@
-import axios from "axios";
+
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,8 +12,7 @@ const ModalDeleteTipoGasto: React.FC<ModalProps> = ({ isOpen, onClose, Id, getTi
 
   const handleDelete = () => {
     try {
-      axios
-        .delete(
+      HttpClient.delete(
           `${import.meta.env.VITE_API_URL}/api/gastos/tipo/${Id}`,
           {
             headers: {

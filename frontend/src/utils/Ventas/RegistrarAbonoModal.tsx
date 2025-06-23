@@ -1,6 +1,7 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -64,8 +65,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
       return;
     }
 
-    await axios
-      .post(
+    await HttpClient.post(
         `
         ${import.meta.env.VITE_API_URL}/api/cuotas/cuota/abonar/${cuotaId}`,
         {
@@ -97,8 +97,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
 
   const getCuotaById = async () => {
     try {
-      await axios
-        .get(
+      await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/${cuotaId}`
         )
         .then((response) => {

@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import decodeToken from "../utils/tokenDecored";
 import Sidebar from "./Sidebar";
-import axios from "axios";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Spinner from "../utils/Spinner";
+import HttpClient from "../Services/httpService";
 
 function Perfil() {
   const [nombre, setNombre] = useState("");
@@ -31,7 +32,7 @@ function Perfil() {
   const getData = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
+      const response = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/${string}`,
         {
           headers: {
@@ -111,7 +112,7 @@ function Perfil() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/${string}`,
         {
           NombreCompleto: nombre,

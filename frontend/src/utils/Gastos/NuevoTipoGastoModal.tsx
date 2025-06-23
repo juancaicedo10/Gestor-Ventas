@@ -1,6 +1,7 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -57,8 +58,7 @@ const NuevoTipoGastoModal: React.FC<ModalProps> = ({
       MontoMaximo: montoMaximo,
     };
 
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/gastos/tipo`, TipoGasto, {
+    HttpClient.post(`${import.meta.env.VITE_API_URL}/api/gastos/tipo`, TipoGasto, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

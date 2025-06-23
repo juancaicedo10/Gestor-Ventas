@@ -2,24 +2,47 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./components/Login";
 import "./App.css";
 import Clientes from "./components/clientes/Clientes";
-import Ventas from "./components/Ventas";
+import Ventas from "./components/Ventas/Ventas";
 import Vendedores from "./components/vendedores/Vendedores";
 import { PrivateRoute } from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
-import VentasByVendedor from "./components/VentasByVendedor";
-import Cuotas from "../src/components/Cuotas";
-import VentasAprobar from "./components/ventasAprobar";
-import Gastos from "./components/Gastos";
+import Cuotas from "./components/Ventas/Cuotas";
 import Retiros from "./components/Abonos-Retiros/AbonosyRetiros";
 import Liquidaciones from "./components/Liquidaciones/Liquidaciones";
 import { ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css';
-import GastosAprobar from "./components/GastosAprobar";
+import "react-toastify/dist/ReactToastify.css";
 import Administradores from "./components/Administradores/Administradores";
-import VentasByCliente from "./components/VentasByCliente";
+import VentasByCliente from "./components/Ventas/VentasByCliente";
+import VentasByVendedor from "./components/Ventas/VentasByVendedor";
+import VentasAprobar from "./components/Ventas/ventasAprobar";
+import GastosAprobar from "./components/Gastos/GastosAprobar";
+import Gastos from "./components/Gastos/Gastos";
+import { useEffect } from "react";
+import {
+  startInactivityMonitoring,
+  stopInactivityMonitoring,
+} from "./Services/InactivityService";
+import { SessionService } from "./Services/SessionService";
 
 function App() {
+  useEffect(() => {
+    SessionService.init(); // para el canal de comunicación
+
+    const sub = SessionService.token$.subscribe((token) => {
+      if (token) {
+        startInactivityMonitoring();
+      } else {
+        stopInactivityMonitoring();
+      }
+    });
+
+    return () => {
+      sub.unsubscribe();
+      stopInactivityMonitoring(); // limpieza
+    };
+  }, []);
+
   return (
     <>
       <Routes>
@@ -83,7 +106,7 @@ function App() {
             </PrivateRoute>
           }
         />
-         <Route
+        <Route
           path="/gastos/aprobar"
           element={
             <PrivateRoute>
@@ -126,9 +149,7 @@ function App() {
           }
         />
       </Routes>
-      <ToastContainer
-        autoClose={1000}
-      />
+      <ToastContainer autoClose={1000} />
     </>
   );
 }

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
-import axios from "axios";
+
 import decodeToken from "../tokenDecored"; // Importa CSSProperties desde React
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface Seller {
   Id: number;
@@ -101,8 +102,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
           : `${import.meta.env.VITE_API_URL}/api/vendedores/${
               decodeToken()?.user?.Id
             }/all`;
-      await axios
-        .get(`${Url}`, {
+      await HttpClient.get(`${Url}`, {
           headers: {
             Beaerer: `${localStorage.getItem("token")}`,
           },
@@ -122,8 +122,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const getClients = async () => {
     const VendedorId = selectedSeller;
     try {
-      await axios
-        .get(
+      await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/clientes`,
           {
             headers: {
@@ -219,8 +218,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       DetallesVenta: detallesVenta,
     };
 
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/ventas`, venta, {
+    HttpClient.post(`${import.meta.env.VITE_API_URL}/api/ventas`, venta, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

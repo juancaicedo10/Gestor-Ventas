@@ -1,7 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Spinner from "../Spinner";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -29,8 +30,7 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
 
   const getTipoGastoById = () => {
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/gastos/tipos/${GastoId}`,
         {
           headers: {
@@ -80,8 +80,7 @@ const ModificarTipoGastoModal: React.FC<ModalProps> = ({
       MontoMaximo: montoMaximo,
     };
 
-    axios
-      .put(
+    HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/gastos/tipo/${GastoId}`,
         TipoGasto,
         {

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import Spinner from "../Spinner";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -38,8 +39,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const getClient = async () => {
     try {
       setIsLoading(true);
-      await axios
-        .get(
+      await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/clientes/${Id}`,
           {
             headers: {
@@ -144,8 +144,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     }
 
     try {
-      axios
-        .put(
+      HttpClient.put(
           `${import.meta.env.VITE_API_URL}/api/clientes/${Id}`,
           {
             NombreCompleto: nombre,

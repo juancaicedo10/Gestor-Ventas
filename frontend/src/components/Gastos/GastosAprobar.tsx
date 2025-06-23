@@ -1,14 +1,16 @@
-import Sidebar from "./Sidebar";
+
 import { useEffect, useState } from "react";
-import SellImage from "../images/Sells.png";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
+import SellsImage from "../../images/Sells.png";
+
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import decodeToken from "../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import Spinner from "../../utils/Spinner";
+import { formatDate } from "../../utils/Helpers/FormatDate";
 
 interface GastoAprobar {
   Id: number;
@@ -28,7 +30,7 @@ function GastosAprobar() {
   const getgastosAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
+      const res = await HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -45,7 +47,7 @@ function GastosAprobar() {
     setIsDisabled(true);
     setIsLoading(true);
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: true },
         {
@@ -69,7 +71,7 @@ function GastosAprobar() {
   const handleRechazar = async (gastoId: number) => {
     setIsLoading(true);
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: false },
         {
@@ -110,7 +112,7 @@ function GastosAprobar() {
               <div className="flex w-full h-[80vh] items-center justify-center">
                 <div className="flex items-center flex-col justify-center w-full">
                   <img
-                    src={SellImage}
+                    src={SellsImage}
                     alt="gasto imagen"
                     className="w-3/4 md:w-1/4"
                   />

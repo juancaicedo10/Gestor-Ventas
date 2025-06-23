@@ -1,7 +1,8 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import decodeToken from "../tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -54,7 +55,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
@@ -110,8 +111,7 @@ const RegistrarAbonoRetiroModal: React.FC<ModalProps> = ({
       Descripcion: descripcion,
     };
 
-    axios
-      .post(
+    HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/${optionSelected}`,
         AbonoRetiro,
         {

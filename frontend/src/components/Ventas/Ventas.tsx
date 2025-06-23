@@ -1,19 +1,20 @@
-import Sidebar from "./Sidebar";
+import Sidebar from "../Sidebar";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import SellIcon from "@mui/icons-material/Sell";
 import { useParams } from "react-router-dom";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Spinner from "../utils/Spinner";
+import Spinner from "../../utils/Spinner";
 
-import decodeToken from "../utils/tokenDecored";
+import decodeToken from "../../utils/tokenDecored";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import VisualizarVentaModal from "../../utils/Ventas/VisualizarVentaModal";
+import FilterPdfModal from "../../utils/PdfFilterModal/FilterPdfModal";
+import CrearVentaModal from "../../utils/Ventas/CrearVentaModal";
+import HttpClient from "../../Services/httpService";
 import VentasFilter from "./VentasFilter";
-import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
-import VisualizarVentaModal from "../utils/Ventas/VisualizarVentaModal";
-import FilterPdfModal from "../utils/PdfFilterModal/FilterPdfModal";
-import CrearVentaModal from "../utils/Ventas/CrearVentaModal";
 
 function Ventas() {
   interface Venta {
@@ -77,12 +78,12 @@ function Ventas() {
       let res;
       // si la solicitud viene con un id, se obtiene la venta por id
       if (id) {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/${id}`
         );
         // si el rol del usuario es vendedor, se obtienen las ventas del vendedor
       } else if (decodeToken()?.user.role !== "Administrador") {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${Id}`,
           {
             params: {
@@ -95,8 +96,10 @@ function Ventas() {
         decodeToken()?.user.role === "Administrador" &&
         VendedorSelectedContext
       ) {
-        res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${VendedorSelectedContext}`,
+        res = await HttpClient.get(
+          `${
+            import.meta.env.VITE_API_URL
+          }/api/ventas/vendedor/${VendedorSelectedContext}`,
           {
             params: {
               page: currentPage + 1,
@@ -105,7 +108,7 @@ function Ventas() {
           }
         );
       } else {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/${Id}/all`,
           {
             params: {
@@ -154,8 +157,11 @@ function Ventas() {
     setIsLoading(true);
     try {
       let res;
-      if (decodeToken()?.user.role === "Administrador" && VendedorSelectedContext) {
-        res = await axios.get(
+      if (
+        decodeToken()?.user.role === "Administrador" &&
+        VendedorSelectedContext
+      ) {
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
@@ -166,8 +172,11 @@ function Ventas() {
             },
           }
         );
-      } else if (decodeToken()?.user.role === "Administrador" && !VendedorSelectedContext) {
-        res = await axios.get(
+      } else if (
+        decodeToken()?.user.role === "Administrador" &&
+        !VendedorSelectedContext
+      ) {
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
@@ -179,7 +188,7 @@ function Ventas() {
           }
         );
       } else {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
@@ -206,7 +215,7 @@ function Ventas() {
     try {
       let res;
       if (decodeToken()?.user.role === "Administrador") {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
@@ -218,7 +227,7 @@ function Ventas() {
           }
         );
       } else {
-        res = await axios.get(
+        res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
             params: {
@@ -368,8 +377,16 @@ function Ventas() {
                     setIsFilterOpen(false);
                   }}
                   onChange={handleFilterChange}
-                  vendedorId={decodeToken()?.user.role !== "Administrador" ? Id : undefined}
-                  administradorId={decodeToken()?.user.role === "Administrador" ? Id : undefined}
+                  vendedorId={
+                    decodeToken()?.user.role !== "Administrador"
+                      ? Id
+                      : undefined
+                  }
+                  administradorId={
+                    decodeToken()?.user.role === "Administrador"
+                      ? Id
+                      : undefined
+                  }
                 />
                 <VisualizarVentaModal
                   isOpen={isDetailsOpen}
@@ -380,6 +397,7 @@ function Ventas() {
                   isOpen={isPdfFilterOpen}
                   onClose={() => setIsPdfFilterOpen(false)}
                 />
+             
               </section>
               <ul className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 w-full">
                 {ventas &&
@@ -411,6 +429,7 @@ function Ventas() {
                           >
                             {venta.Estado}
                           </span>
+                       
                         </header>
                       </div>
                     </li>

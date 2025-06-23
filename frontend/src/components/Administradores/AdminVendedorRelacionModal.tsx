@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import decodeToken from "../../utils/tokenDecored";
 import Select from "react-select";
 import Spinner from "../../utils/Spinner";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -29,8 +30,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
   const handleSelectSeller = (seleccionado: number) => {
     setIsLoading(true);
     setAdminSelected(seleccionado);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/administradores/relacion/${seleccionado}`
       )
       .then((res) => {
@@ -53,7 +53,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
 
   const getAdministradores = async () => {
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/administradores`
       );
       setAdministradores(res.data);
@@ -67,8 +67,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
 
     console.log("vendedoresSeleccionados", vendedoresSeleccionados);
 
-    axios
-      .post(
+    HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/administradores/relacion`,
         {
           AdministradorId: adminSelected,

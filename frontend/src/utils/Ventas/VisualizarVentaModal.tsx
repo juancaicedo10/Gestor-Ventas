@@ -6,6 +6,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import PersonIcon from "@mui/icons-material/Person";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
+import ActualizarFechaInicioVenta from "./ActualizarFechaInicioVenta";
+import { useEffect, useState } from "react";
+import decodeToken from "../tokenDecored";
 
 interface ModalProps {
   isOpen: boolean;
@@ -36,6 +39,7 @@ interface Venta {
   FechaServer: string;
   TelefonoCliente: string;
   Archivada: boolean;
+  FotoCliente: string;
 }
 
 const VisualizarVentaModal: React.FC<ModalProps> = ({
@@ -43,6 +47,21 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
   onClose,
   ventaSelected,
 }) => {
+  const [isUpdateFechaPagoOpen, setIsUpdateFechaPagoOpen] =
+    useState<boolean>(false);
+
+  const [fechaInicio, setNewFechaInicio] = useState<string>(
+    ventaSelected?.FechaInicio || ""
+  );
+
+  const isAdmin = decodeToken()?.user?.role === "Administrador";
+
+  useEffect(() => {
+    if (ventaSelected && ventaSelected.FechaInicio) {
+      setNewFechaInicio(ventaSelected.FechaInicio);
+    }
+  }, [ventaSelected, isOpen]);
+
   return (
     <div>
       {isOpen && (
@@ -83,84 +102,117 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 </span>{" "}
                 {ventaSelected?.DetallesVenta}
               </p>
+
+              <ActualizarFechaInicioVenta
+                isOpen={isUpdateFechaPagoOpen}
+                onClose={() => setIsUpdateFechaPagoOpen(false)}
+                ventaSelected={ventaSelected}
+                onFechaUpdate={(e) => setNewFechaInicio(e)}
+              ></ActualizarFechaInicioVenta>
+
               <ul className="flex flex-col rounded-md border-2 p-2 text-sm my-2 bg-white">
                 <h4 className="text-xl font-bold pb-2 text-blue-600">
                   Detalles:
                 </h4>
-                <li className="p-1">
-                  <SellIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Numero Venta:
-                  </span>{" "}
-                  {ventaSelected?.NumeroVenta}
-                </li>
-                <li className="p-1">
-                  <PersonIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Vendedor:
-                  </span>{" "}
-                  {ventaSelected?.NombreVendedor}
-                </li>
-                <li className="p-1">
-                  <PersonIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Cliente:
-                  </span>{" "}
-                  {ventaSelected?.NombreCliente}
-                </li>
-                <li className="p-1 w-full flex">
-                  <PhoneIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Contacto:
-                  </span>{" "}
-                  <p className="border-blue-600 text-blue-600 ml-1 border-b">
-                    <a
-                      href={`https://wa.me/${ventaSelected?.TelefonoCliente}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {ventaSelected?.TelefonoCliente}
-                    </a>
-                  </p>
-                </li>
-                <li className="p-1">
-                  <AccessAlarmIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Periodicidad
-                  </span>
-                  : {ventaSelected?.PeriodicidadNombre}
-                </li>
-                <li className="p-1">
-                  <DateRangeIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Fecha Creacion:
-                  </span>{" "}
-                  {ventaSelected?.FechaServer
-                    ? `${formatDate(
-                        ventaSelected.FechaServer
-                      )} ${FormatearFecha(ventaSelected.FechaServer)}`
-                    : ""}
-                </li>
-                <li className="p-1">
-                  <DateRangeIcon fontSize="small" className="text-blue-900" />
-                  <span className="font-semibold text-blue-900">
-                    Fecha Inicio:
-                  </span>{" "}
-                  {ventaSelected?.FechaInicio
-                    ? formatDate(ventaSelected.FechaInicio)
-                    : ""}
-                </li>
-                <li className="p-1 text-blue-900 flex items-center">
-                  <DateRangeIcon fontSize="small" />
-                  <span className="font-semibold text-blue-900">
-                    Fecha Fin:
-                  </span>{" "}
-                  <p className="text-black">
-                    {ventaSelected?.FechaFin
-                      ? formatDate(ventaSelected.FechaFin)
-                      : ""}
-                  </p>
-                </li>
+                <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <li className="p-1">
+                      <SellIcon fontSize="small" className="text-blue-900" />
+                      <span className="font-semibold text-blue-900">
+                        Numero Venta:
+                      </span>{" "}
+                      {ventaSelected?.NumeroVenta}
+                    </li>
+                    <li className="p-1">
+                      <PersonIcon fontSize="small" className="text-blue-900" />
+                      <span className="font-semibold text-blue-900">
+                        Vendedor:
+                      </span>{" "}
+                      {ventaSelected?.NombreVendedor}
+                    </li>
+                    <li className="p-1">
+                      <PersonIcon fontSize="small" className="text-blue-900" />
+                      <span className="font-semibold text-blue-900">
+                        Cliente:
+                      </span>{" "}
+                      {ventaSelected?.NombreCliente}
+                    </li>
+                    <li className="p-1 w-full flex">
+                      <PhoneIcon fontSize="small" className="text-blue-900" />
+                      <span className="font-semibold text-blue-900">
+                        Contacto:
+                      </span>{" "}
+                      <p className="border-blue-600 text-blue-600 ml-1 border-b">
+                        <a
+                          href={`https://wa.me/${ventaSelected?.TelefonoCliente}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {ventaSelected?.TelefonoCliente}
+                        </a>
+                      </p>
+                    </li>
+                    <li className="p-1">
+                      <AccessAlarmIcon
+                        fontSize="small"
+                        className="text-blue-900"
+                      />
+                      <span className="font-semibold text-blue-900">
+                        Periodicidad
+                      </span>
+                      : {ventaSelected?.PeriodicidadNombre}
+                    </li>
+                    <li className="p-1">
+                      <DateRangeIcon
+                        fontSize="small"
+                        className="text-blue-900"
+                      />
+                      <span className="font-semibold text-blue-900">
+                        Fecha Creacion:
+                      </span>{" "}
+                      {ventaSelected?.FechaServer
+                        ? `${formatDate(
+                            ventaSelected.FechaServer
+                          )} ${FormatearFecha(ventaSelected.FechaServer)}`
+                        : ""}
+                    </li>
+                    <li className="p-1">
+                      <DateRangeIcon
+                        fontSize="small"
+                        className="text-blue-900"
+                      />
+                      <span className="font-semibold text-blue-900">
+                        Fecha Inicio:
+                      </span>{" "}
+                      {/* si es administrador se puede abrir el modal de modificar fecha */}
+                      {isAdmin ? (
+                        <span
+                          onClick={() => setIsUpdateFechaPagoOpen(true)}
+                          className="cursor-pointer text-blue-600 hover:underline"
+                        >
+                          {fechaInicio ? formatDate(fechaInicio) : ""}
+                        </span>
+                      ) : (
+                        <span>
+                          {fechaInicio ? formatDate(fechaInicio) : ""}
+                        </span>
+                      )}
+                    </li>
+                    <li className="p-1 text-blue-900 flex items-center">
+                      <DateRangeIcon fontSize="small" />
+                      <span className="font-semibold text-blue-900">
+                        Fecha Fin:
+                      </span>{" "}
+                      <p className="text-black">
+                        {ventaSelected?.FechaFin
+                          ? formatDate(ventaSelected.FechaFin)
+                          : ""}
+                      </p>
+                    </li>
+                  </div>
+
+                  <div className="w-full h-full flex justify-center items-center"><img src={ventaSelected?.FotoCliente} alt="foto cliente" className="w-36 h-36 rounded-full"/></div>
+                </section>
               </ul>
               <div className="rounded-md border-2 p-2 w-full py-2 bg-white">
                 <h4 className="font-bold text-xl text-blue-600">

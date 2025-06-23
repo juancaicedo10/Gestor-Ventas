@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { toast } from "react-toastify";
 import decodeToken from "../../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -102,8 +103,7 @@ const NuevoAdministradorModal: React.FC<ModalProps> = ({
       OficinaId: "1",
     };
 
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/administradores`, admin, {
+    HttpClient.post(`${import.meta.env.VITE_API_URL}/api/administradores`, admin, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

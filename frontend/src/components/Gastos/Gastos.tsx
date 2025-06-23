@@ -1,24 +1,25 @@
-import Sidebar from "./Sidebar";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SellIcon from "@mui/icons-material/Sell";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import NuevoTipoGastoModal from "../utils/Gastos/NuevoTipoGastoModal";
-import NuevoGastoModal from "../utils/Gastos/NuevoGastoModal";
-import decodeToken from "../utils/tokenDecored";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import Select from "react-select";
-import Spinner from "../utils/Spinner";
-import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
-import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
-import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
-import { formatDate } from "../utils/Helpers/FormatDate.tsx";
-import { useVendedorContext } from "../utils/Context/VendedorSelectedContext.tsx";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import NuevoTipoGastoModal from "../../utils/Gastos/NuevoTipoGastoModal";
+import ModalDeleteTipoGasto from "../../utils/Gastos/ModalEliminarTipoGasto";
+import ModificarTipoGastoModal from "../../utils/Gastos/ModificarTipoGastoModal";
+import NuevoGastoModal from "../../utils/Gastos/NuevoGastoModal";
+import ModificarGastoModal from "../../utils/Gastos/ModificarGastoModal";
+import ModalDeleteGasto from "../../utils/Gastos/ModalEliminarGasto.tsx";
+import Spinner from "../../utils/Spinner.tsx";
+import { formatDate } from "../../utils/Helpers/FormatDate.tsx";
 
 interface Gasto {
   GastoId: number;
@@ -110,8 +111,7 @@ function Gastos() {
 
   const getTiposGastos = async () => {
     setIsLoading(true);
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/gastos/tipos`)
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/tipos`)
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -124,12 +124,11 @@ function Gastos() {
 
   const getGastos = async () => {
     setIsLoading(true);
-    axios
-      .get(
-        `${import.meta.env.VITE_API_URL}/api/gastos/${
-          decodeToken()?.user?.Id
-        }/all`
-      )
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/gastos/${
+        decodeToken()?.user?.Id
+      }/all`
+    )
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -150,8 +149,7 @@ function Gastos() {
         : `${import.meta.env.VITE_API_URL}/api/vendedores/${
             decodeToken()?.user?.Id
           }/all`;
-    await axios
-      .get(`${Url}`)
+    await HttpClient.get(`${Url}`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setVendedores(response.data);
@@ -168,10 +166,9 @@ function Gastos() {
 
   const getGastosByVendedor = async () => {
     setIsLoading(true);
-    axios
-      .get(
-        `${import.meta.env.VITE_API_URL}/api/gastos/vendedor/${selectedSeller}`
-      )
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/gastos/vendedor/${selectedSeller}`
+    )
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);

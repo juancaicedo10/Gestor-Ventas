@@ -1,5 +1,6 @@
-import axios from "axios";
+
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -14,8 +15,7 @@ const ConfirmationModal: React.FC<ModalProps> = ({ isOpen, onClose, url, getData
 
   const handleDelete = () => {
     try {
-      axios
-        .delete(
+      HttpClient.delete(
           `${url}`,
           {
             headers: {

@@ -1,7 +1,7 @@
 import Sidebar from "../Sidebar";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
-import axios from "axios";
+
 import { useState, useEffect } from "react";
 import Spinner from "../../utils/Spinner";
 import ClientsImage from "../../images/clients.png";
@@ -9,6 +9,7 @@ import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { toast } from "react-toastify";
 import decodeToken from "../../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -28,8 +29,7 @@ function clientesAprobar() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${
           decodeToken()?.user?.Id
         }`,
@@ -52,7 +52,7 @@ function clientesAprobar() {
   const HandleApprove = async (id: number, approval: { aprobado: boolean }) => {
     setDisabled(true);
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${id}`,
         approval,
         {

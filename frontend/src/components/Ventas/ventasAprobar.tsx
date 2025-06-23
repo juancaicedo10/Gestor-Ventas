@@ -1,17 +1,19 @@
-import Sidebar from "./Sidebar";
+
 import { useEffect, useState } from "react";
-import SellImage from "../images/Sells.png";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
+import SellImage from "../../images/Sells.png";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ModeIcon from "@mui/icons-material/Mode";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
-import decodeToken from "../utils/tokenDecored";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import { FormatearFecha } from "../utils/FormatearFecha";
+import HttpClient from "../../Services/httpService";
+import { formatDate } from "../../utils/Helpers/FormatDate";
+import { FormatearFecha } from "../../utils/FormatearFecha";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import Spinner from "../../utils/Spinner";
+
 
 interface VentaAprobar {
   Id: number;
@@ -38,7 +40,7 @@ function VentasAprobar() {
   const getVentasAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/ventas/aprobar/${
           decodeToken()?.user?.Id
         }`,
@@ -60,7 +62,7 @@ function VentasAprobar() {
     setIsDisabled(true);
     setIsLoading(true);
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/ventas/${ventaId}/aprobar`,
         { aprobado: true },
         {
@@ -85,7 +87,7 @@ function VentasAprobar() {
   const handleRechazar = async (ventaId: number) => {
     setIsLoading(true);
     try {
-      await axios.put(
+      await HttpClient.put(
         `${import.meta.env.VITE_API_URL}/api/ventas/${ventaId}/aprobar`,
         { aprobado: false },
         {
@@ -248,3 +250,4 @@ function VentasAprobar() {
 }
 
 export default VentasAprobar;
+

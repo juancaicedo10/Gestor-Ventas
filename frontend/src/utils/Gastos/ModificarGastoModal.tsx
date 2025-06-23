@@ -1,7 +1,8 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import decodeToken from "../tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface Seller {
   Id: number;
@@ -47,7 +48,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getSellers = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/vendedores/${decodeToken()?.user?.Id}/all`, {
+      const response = await HttpClient.get(`${import.meta.env.VITE_API_URL}/api/vendedores/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -60,7 +61,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getTiposGastos = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/gastos/tipos`);
+      const response = await HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/tipos`);
       setTiposGastos(response.data);
     } catch (error) {
       console.error("Error obteniendo tipos de gastos:", error);
@@ -69,7 +70,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
 
   const getGastoById = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/gastos/${Id}`, {
+      const response = await HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/${Id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -126,8 +127,7 @@ const ModificarGastoModal: React.FC<ModalProps> = ({
       Descripcion: descripcion,
     };
 
-    axios
-      .put(`${import.meta.env.VITE_API_URL}/api/gastos/${Id}`, Gasto, {
+    HttpClient.put(`${import.meta.env.VITE_API_URL}/api/gastos/${Id}`, Gasto, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import decodeToken from "../tokenDecored";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -92,8 +93,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     console.log('detalle: ', detalle)
 
     try {
-      axios
-        .post(
+      HttpClient.post(
           `${import.meta.env.VITE_API_URL}/api/clientes`,
           {
             NombreCompleto: nombre,

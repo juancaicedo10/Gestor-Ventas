@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
+
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/Helpers/FormatDate";
+import HttpClient from "../../Services/httpService";
 
 interface Props {
   isOpen: boolean;
@@ -43,7 +44,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
     VendedorIdNoti: number
   ) => {
     try {
-      const response = await axios.post(
+      const response = await HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/notificaciones/liquidacion`,
         {
           Consecutivo: ConsecutivoNoti,

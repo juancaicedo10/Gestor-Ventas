@@ -1,9 +1,10 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import Spinner from "../Spinner";
 import NotificacionesToLiquidar from "../../components/Notificaciones/NotificacionesToLiquidar";
 import decodeToken from "../tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -81,7 +82,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const getBaseCartera = async (id: number | null) => {
     try {
       setIsLoading(true);
-      const res = await axios.post(
+      const res = await HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/liquidaciones/base/cartera?id=${id}`,
         {
           headers: {
@@ -107,7 +108,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
     e.preventDefault();
     try {
       setIsLoading(true);
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/liquidaciones/${sellerId}/${efectivo}`,
         {
           headers: {
@@ -192,7 +193,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
@@ -241,8 +242,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       ClientesActivos: clientesActivus
     };
 
-    axios
-      .post(
+    HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/liquidaciones/${selectedSeller}`,
         liquidacion,
         {

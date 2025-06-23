@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Sidebar from "../Sidebar";
 import decodeToken from "../../utils/tokenDecored";
 import PinDropIcon from "@mui/icons-material/PinDrop";
@@ -13,6 +13,7 @@ import ModificarAdministradorModal from "./ModalEditAdmin";
 import RelacionAdministradorVendedorModal from "./AdminVendedorRelacionModal";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import AdminDeleteModal from "./ModarDeleteAdmin";
+import HttpClient from "../../Services/httpService";
 
 function Administradores() {
   // Definiciones de estado e interfaces
@@ -56,8 +57,7 @@ function Administradores() {
   // Función para obtener la lista de Administradores
   const getAdministradores = () => {
     setIsLoading(true);
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/administradores`)
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/administradores`)
       .then((res) => {
         setAdministradores(res.data);
         setIsLoading(false);

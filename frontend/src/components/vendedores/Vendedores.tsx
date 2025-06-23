@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Sidebar from "../Sidebar";
 import decodeToken from "../../utils/tokenDecored";
 import PinDropIcon from "@mui/icons-material/PinDrop";
@@ -15,6 +15,7 @@ import StorefrontIcon from "@mui/icons-material/Storefront";
 import Spinner from "../../utils/Spinner";
 import { Link } from "react-router-dom";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
 
 function Vendedores() {
   // Definiciones de estado e interfaces
@@ -58,8 +59,7 @@ function Vendedores() {
   // Función para obtener la lista de vendedores
   const getVendedores = () => {
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`

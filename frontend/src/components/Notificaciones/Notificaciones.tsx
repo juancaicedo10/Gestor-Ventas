@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
+
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import { formatDate } from "../../utils/Helpers/FormatDate";
 import decodeToken from "../../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface Props {
   isOpen: boolean;
@@ -70,7 +71,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const getVendedores = async () => {
     try {
-      const response = await axios.get(
+      const response = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${decodeToken()?.user?.Id}/all`
       );
       setVendedores(response.data);
@@ -81,7 +82,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const getNotificacionesFiltered = async () => {
     try {
-      const response = await axios.post(
+      const response = await HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/notificaciones/filtro`,
         {
           VendedorId: selectedSeller,

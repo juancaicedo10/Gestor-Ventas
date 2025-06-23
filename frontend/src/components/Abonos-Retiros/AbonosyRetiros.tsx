@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
@@ -10,6 +10,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import AttachMoney from "@mui/icons-material/AttachMoney";
 import decodeToken from "../../utils/tokenDecored";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
 
 interface Retiro {
   NombreVendedor: string;
@@ -35,13 +36,13 @@ function AbonosyRetiros() {
   const getAbonosyRetiros = async (VendedorId: number) => {
     setIsLoading(true);
     Promise.all([
-      await axios.get(
+      await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/abonos/${VendedorId}`
       ),
-      await axios.get(
+      await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/retiros/${VendedorId}`
       ),
-      await axios.get(
+      await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/abonos/bases/${VendedorId}`
       ),
     ])
@@ -64,7 +65,7 @@ function AbonosyRetiros() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Link, useParams } from "react-router-dom";
-import Sidebar from "./Sidebar";
+
 import SellIcon from "@mui/icons-material/Sell";
-import Spinner from "../utils/Spinner";
 import AccessAlarmIcon from "@mui/icons-material/AccessAlarm";
 import DateRangeIcon from "@mui/icons-material/DateRange";
 import PersonIcon from "@mui/icons-material/Person";
-import { formatDate } from "../utils/Helpers/FormatDate";
 import PhoneIcon from "@mui/icons-material/Phone";
-import { FormatearFecha } from "../utils/FormatearFecha";
+import Sidebar from "../Sidebar";
+import Spinner from "../../utils/Spinner";
+import HttpClient from "../../Services/httpService";
+import { formatDate } from "../../utils/Helpers/FormatDate";
+import { FormatearFecha } from "../../utils/FormatearFecha";
 
 function VentasByVendedor() {
   interface Venta {
@@ -44,7 +46,7 @@ function VentasByVendedor() {
 
   useEffect(() => {
     setIsLoading(true);
-    axios.get(
+    HttpClient.get(
       `${import.meta.env.VITE_API_URL}/api/ventas/vendedor/${id}/historial`,
       {
         params: {
@@ -64,8 +66,7 @@ function VentasByVendedor() {
       });
 
     // Fetch vendedor info
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/vendedores/${id}`)
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/vendedores/${id}`)
       .then((res) => setVendedor(res.data))
       .catch((err) => console.log(err));
   }, [id, currentPage]);

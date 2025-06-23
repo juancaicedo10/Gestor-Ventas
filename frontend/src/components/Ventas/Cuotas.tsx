@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import { Link, useParams } from "react-router-dom";
 import SellIcon from "@mui/icons-material/Sell";
 import NumbersIcon from "@mui/icons-material/Numbers";
@@ -7,15 +7,16 @@ import DateRangeIcon from "@mui/icons-material/DateRange";
 import PriceCheckIcon from "@mui/icons-material/PriceCheck";
 import ReplyIcon from "@mui/icons-material/Reply";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import Spinner from "../utils/Spinner";
-import RegistrarAbonoModal from "../utils/Ventas/RegistrarAbonoModal";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import decodeToken from "../utils/tokenDecored";
+import Spinner from "../../utils/Spinner";
+import RegistrarAbonoModal from "../../utils/Ventas/RegistrarAbonoModal";
+import { formatDate } from "../../utils/Helpers/FormatDate";
+import decodeToken from "../../utils/tokenDecored";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
-import InteresManualModal from "../utils/Ventas/InteresManualModal";
-import { FormatearFecha } from "../utils/FormatearFecha";
-import ConfirmationModal from "../utils/confirmation/ConfirmationModal";
-import ModificarAbonoModal from "../utils/Ventas/ModificarAbonoModal";
+import InteresManualModal from "../../utils/Ventas/InteresManualModal";
+import { FormatearFecha } from "../../utils/FormatearFecha";
+import ConfirmationModal from "../Shared/ConfirmationModal";
+import ModificarAbonoModal from "../../utils/Ventas/ModificarAbonoModal";
+import HttpClient from "../../Services/httpService";
 
 interface Cuota {
   Id: number;
@@ -59,11 +60,7 @@ function Cuotas() {
   const textConfirmation =
     "Estas Seguro que deseas archivar esta venta?, una vez archivada no podras realizar cambios";
 
-  const envUrl = process.env.API_URL ?? "default_port";
-  
-  const url = `${envUrl}/ventas/archivar/${
-    useParams()?.id
-  }`;
+  const url = `${import.meta.env}/ventas/archivar/${useParams()?.id}`;
 
   const [cuotas, setCuotas] = useState<Cuota[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -96,8 +93,7 @@ function Cuotas() {
 
   const getCuotas = () => {
     setIsLoading(true);
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/api/cuotas/${Id}`)
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/cuotas/${Id}`)
       .then((res) => {
         setCuotas(res.data);
         setIsLoading(false);
@@ -109,10 +105,9 @@ function Cuotas() {
   };
 
   const getDatosVenta = async () => {
-    await axios
-      .get(
-        `${import.meta.env.VITE_API_URL}/api/cuotas/datos/${Id}`
-      )
+    await HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/cuotas/datos/${Id}`
+    )
       .then((res) => {
         setDatosVenta(res.data);
       })
@@ -367,8 +362,10 @@ function Cuotas() {
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
                                     </td>
-                                    {decodeToken()?.user.role === "Administrador" &&
-                                     decodeToken()?.user.Id === 14 && !abono.liquidado && (
+                                    {decodeToken()?.user.role ===
+                                      "Administrador" &&
+                                      decodeToken()?.user.Id === 14 &&
+                                      !abono.liquidado && (
                                         <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-blue-800">
                                           <button
                                             onClick={() => {

@@ -1,8 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Spinner from "../Spinner";
 import decodeToken from "../tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,7 +19,7 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     const fetchFiltros = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
+        const response = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/filtros`,
           {
             headers: {
@@ -53,7 +54,7 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       decodeToken()?.user.role === "Administrador"
         ? `${import.meta.env.VITE_API_URL}/api/ventas/pdf/all`
         : `${import.meta.env.VITE_API_URL}/api/ventas/pdf/${Id}`;
-    axios({
+    HttpClient({
       url: url,
       params: {
         filtroId: filtroId,

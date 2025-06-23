@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
@@ -22,6 +22,7 @@ import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidaci
 import PersonIcon from "@mui/icons-material/Person";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
 
 interface Liquidacion {
   Id: number;
@@ -82,8 +83,7 @@ export default function Liquidaciones() {
   // Función para obtener la lista de vendedores
   const getLiquidaciones = () => {
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/liquidaciones/all/todas/todas/${
           decodeToken()?.user?.Id
         }`,
@@ -108,8 +108,7 @@ export default function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setSelectedSeller(VendedorId);
     setIsLoading(true);
-    axios
-      .get(
+    HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/liquidaciones/${VendedorId}`,
         {
           params: {
@@ -134,7 +133,7 @@ export default function Liquidaciones() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(
+      const res = await HttpClient.get(
         `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,

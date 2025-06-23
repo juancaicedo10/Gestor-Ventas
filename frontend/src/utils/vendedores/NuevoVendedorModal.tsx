@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import decodeToken from "../tokenDecored";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -111,8 +112,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
     }
     formData.append("OficinaId", "1");
 
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/api/vendedores`, formData, {
+    HttpClient.post(`${import.meta.env.VITE_API_URL}/api/vendedores`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,

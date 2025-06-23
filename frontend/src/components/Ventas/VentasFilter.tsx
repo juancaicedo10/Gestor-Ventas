@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
-import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
+import Spinner from "../../utils/Spinner";
 
 interface Filtro {
   Id: number;
@@ -38,7 +38,7 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, 
     const fetchFiltros = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
+        const response = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/filtros`,
           {
             headers: {

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import _ from "lodash";
 import Sidebar from "../Sidebar";
 import decodeToken from "../../utils/tokenDecored";
@@ -17,6 +17,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Link } from "react-router-dom";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
 
 function Clientes() {
   interface Client {
@@ -68,8 +69,7 @@ function Clientes() {
   const getClients = () => {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
-      axios
-        .get(
+      HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/clientes/vendedor/${VendedorId}`,
           {
             params: {
@@ -89,8 +89,7 @@ function Clientes() {
           setIsLoading(false);
         });
     } else if (VendedorSelectedContext && VendedorSelectedContext !== 0 && decodeToken()?.user.role === "Administrador") {
-      axios
-        .get(
+      HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/clientes/vendedor/${VendedorSelectedContext}`,
           {
             params: {
@@ -110,8 +109,7 @@ function Clientes() {
           setIsLoading(false);
         });
     } else {
-      axios
-        .get(
+      HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/clientes/${
             decodeToken()?.user?.Id
           }/all`,
