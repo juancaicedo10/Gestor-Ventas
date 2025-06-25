@@ -255,7 +255,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                       <Link
                         to={`/ventas/${notificacion.VentaId}`}
                         className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                        target="_blank"
+             
                         rel="noopener noreferrer"
                       >
                         ver
@@ -280,7 +280,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                     <Link
                       to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
                       className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                      target="_blank"
+         
                       rel="noopener noreferrer"
                     >
                       {notificacion.NumeroVenta}

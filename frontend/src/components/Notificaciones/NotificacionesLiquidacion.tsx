@@ -113,7 +113,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                     <Link
                       to={`/ventas/${notificacion.VentaId}`}
                       className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                      target="_blank"
+                  
                       rel="noopener noreferrer"
                     >
                       ver
@@ -137,7 +137,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                   para la venta{" "}
                   <Link
                     to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
-                    target="_blank"
+               
                     rel="noopener noreferrer"
                   >
                     <span className="text-blue-600 font-sembibold border-b-2 border-blue-600 font-semibold">

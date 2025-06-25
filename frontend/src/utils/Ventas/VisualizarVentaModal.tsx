@@ -279,7 +279,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 <Link
                   to={`/cuotas/${ventaSelected?.Id}/${ventaSelected?.NumeroVenta}/${ventaSelected?.Archivada}`}
                   className="text-blue-900 font-semibold border-b-2 border-blue-900"
-                  target="_blank"
+            
                   rel="noopener noreferrer"
                 >
                   Cuotas Detalles

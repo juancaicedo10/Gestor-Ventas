@@ -272,7 +272,7 @@ function Vendedores() {
                                       <Link
                                         to={`/ventas/vendedor/${vendedor.Id}`}
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-center"
-                                        target="_blank"
+                                    
                                         rel="noopener noreferrer"
                                         onClick={() => setOpenDropdownId(null)}
                                       >
