@@ -61,20 +61,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
   };
 
   const verifyReagendaIsValid = (e: any) => {
-    const selectedDate = new Date(e.target.value);
-    const today = new Date();
-
-    today.setHours(0, 0, 0, 0); // Asegurarse de comparar solo la fecha sin la hora
-
-    if (
-      selectedTipo === "Reagenda" ||
-      (selectedTipo === "Reagenda Todas" && selectedDate < today)
-    ) {
-      toast.warn("La fecha de reajuste no puede ser anterior a hoy.");
-      setFechaPago(today);
-    } else {
-      setFechaPago(selectedDate);
-    }
+   setFechaPago(new Date(e.target.value));
   };
 
   const Tipos = [
