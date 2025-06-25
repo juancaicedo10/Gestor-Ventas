@@ -40,6 +40,7 @@ function Ventas() {
     FechaServer: string;
     TelefonoCliente: string;
     Archivada: boolean;
+    FotoCliente: string;
   }
 
   const { VendedorSelectedContext } = useVendedorContext();

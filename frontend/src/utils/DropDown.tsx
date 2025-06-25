@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import axios from 'axios';
 import ModificarClienteModal from './Clientes/ModificarClienteModal';
 import HttpClient from '../Services/httpService';
 
