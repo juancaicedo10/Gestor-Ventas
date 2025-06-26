@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Select from "react-select";
 import HttpClient from "../../Services/httpService";
-import { toast } from "react-toastify";
 
 interface ModalProps {
   isOpen: boolean;
