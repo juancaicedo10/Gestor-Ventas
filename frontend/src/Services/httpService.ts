@@ -8,7 +8,7 @@ const refreshToken = localStorage.getItem("refreshToken");
 
 const HttpClient = axios.create({
   baseURL: "", // Cambia esto a tu API real
-  timeout: 10000,
+  timeout: 30000,
   headers: {
     "Content-Type": "application/json",
     Accept: "application/json",
@@ -17,32 +17,51 @@ const HttpClient = axios.create({
   },
 });
 
-// Interceptor de respuesta
+
+// Retry logic
+const MAX_RETRIES = 3;
+
 HttpClient.interceptors.response.use(
   (response) => {
-    console.log(response.headers);
     return response;
   },
-  (error) => {
-    if (error.response) {
-      console.log("Interceptado:", error.response.status, error.response.data);
+  async (error) => {
+    const originalRequest = error.config;
 
-      if (error.response.status === 401) {
-        console.log("No autorizado, redirigiendo a login");
-        localStorage.removeItem("token");
-        
-        window.location.href = "/";
-        
-        toast.error("Sesión expirada, por favor inicia sesión nuevamente.");
-        // Aquí podrías mostrar un mensaje de error o redirigir al usuario a la página de inicio de sesión
-      }
-    } else if (error.request) {
-      console.log("Error sin respuesta del servidor");
-    } else {
-      console.log("Error al configurar la petición:", error.message);
+    // Retry on timeout
+    if (
+      error.code === "ECONNABORTED" &&
+      error.message.includes("timeout") &&
+      !originalRequest._retryCount
+    ) {
+      originalRequest._retryCount = 1;
     }
 
-    return Promise.reject(error); // ¡Importante!
+    if (
+      error.code === "ECONNABORTED" &&
+      error.message.includes("timeout") &&
+      originalRequest._retryCount < MAX_RETRIES
+    ) {
+      originalRequest._retryCount += 1;
+      console.warn(`Reintentando por timeout... intento #${originalRequest._retryCount}`);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // espera 1 segundo
+      return HttpClient(originalRequest);
+    }
+
+    if (error.response) {
+      if (error.response.status === 401) {
+        localStorage.removeItem("token");
+        toast.error("Sesión expirada, por favor inicia sesión nuevamente.");
+        window.location.href = "/";
+      }
+    } else if (error.request) {
+      console.warn("Error sin respuesta del servidor");
+      toast.warn("Servidor no responde. Intentando reconectar...");
+    } else {
+      console.error("Error al configurar la petición:", error.message);
+    }
+
+    return Promise.reject(error);
   }
 );
 

@@ -1,6 +1,6 @@
-
+// Importaciones
 import Select from "react-select";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
 import decodeToken from "../../utils/tokenDecored";
@@ -49,86 +49,64 @@ interface Liquidacion {
   ClientesActivos: number;
 }
 
+interface VendedorOption {
+  value: number;
+  label: string;
+}
+
 export default function Liquidaciones() {
   const [liquidaciones, setLiquidaciones] = useState<Liquidacion[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-
-  const [vendedores, setVendedores] = useState([]);
-  const [selectedSeller, setSelectedSeller] = useState<number | undefined>(0);
-
+  const [vendedores, setVendedores] = useState<any[]>([]);
+  const [selectedSeller, setSelectedSeller] = useState<number>(0);
   const { VendedorSelectedContext } = useVendedorContext();
-
   const [isMovimientosOpen, setIsMovimientosOpen] = useState(false);
-
   const [consecutivo, setConsecutivo] = useState("");
   const [vendedorId, setVendedorId] = useState(0);
-
   const [isLoading, setIsLoading] = useState(false);
-
-  //pagination
-
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(0);
+  const [visibleRange, setVisibleRange] = useState<[number, number]>([0, 5]);
 
-  const handlePageClick = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handlePageClick = (page: number) => setCurrentPage(page);
+  const toggleModal = () => setIsModalOpen(!isModalOpen);
 
-  // Funciones para manejar los modales
-  const toggleModal = () => {
-    setIsModalOpen(!isModalOpen);
-  };
-  // Función para obtener la lista de vendedores
   const getLiquidaciones = () => {
     setIsLoading(true);
     HttpClient.get(
-        `${import.meta.env.VITE_API_URL}/api/liquidaciones/all/todas/todas/${
-          decodeToken()?.user?.Id
-        }`,
-        {
-          params: {
-            page: currentPage + 1,
-            limit: 8,
-          },
-        }
-      )
+      `${import.meta.env.VITE_API_URL}/api/liquidaciones/all/todas/todas/${
+        decodeToken()?.user?.Id
+      }`,
+      {
+        params: { page: currentPage + 1, limit: 8 },
+      }
+    )
       .then((res) => {
         setLiquidaciones(res.data.data);
         setPageCount(res.data.totalPages);
-        setIsLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   };
 
-  const getLiquidacioneaByVendedor = (VendedorId: number) => {
-    setSelectedSeller(VendedorId);
+  const getLiquidacionesByVendedor = (VendedorId: number) => {
     setIsLoading(true);
     HttpClient.get(
-        `${import.meta.env.VITE_API_URL}/api/liquidaciones/${VendedorId}`,
-        {
-          params: {
-            page:
-              currentPage >= 1 && selectedSeller === 0 ? 1 : currentPage + 1,
-            limit: 8,
-          },
-        }
-      )
+      `${import.meta.env.VITE_API_URL}/api/liquidaciones/${VendedorId}`,
+      {
+        params: { page: currentPage + 1, limit: 8 },
+      }
+    )
       .then((res) => {
         setLiquidaciones(
           Array.isArray(res.data.data) ? res.data.data : [res.data.data]
         );
         setPageCount(res.data.totalPages);
-        setIsLoading(false);
       })
-      .catch((err) => {
-        console.log(err);
-        setIsLoading(false);
-      });
+      .catch(console.error)
+      .finally(() => setIsLoading(false));
   };
 
   const getVendedores = async () => {
@@ -138,9 +116,7 @@ export default function Liquidaciones() {
           decodeToken()?.user?.Id
         }/all`,
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
       setVendedores(res.data);
@@ -149,60 +125,74 @@ export default function Liquidaciones() {
     }
   };
 
-  const vendedoresOptions = vendedores.map((vendedor: any) => ({
-    value: vendedor.Id,
-    label: vendedor.NombreCompleto,
-  }));
+  const vendedoresOptions: VendedorOption[] = useMemo(
+    () => vendedores.map((v) => ({ value: v.Id, label: v.NombreCompleto })),
+    [vendedores]
+  );
 
-  const handleVendedorChange = (selectedOption: any) => {
+  const handleVendedorChange = (selectedOption: VendedorOption | null) => {
+    if (!selectedOption) return;
     setCurrentPage(0);
     setSelectedSeller(selectedOption.value);
-    getLiquidacioneaByVendedor(Number(selectedOption.value));
   };
 
   useEffect(() => {
     getVendedores();
+  }, []);
+
+  useEffect(() => {
     if (VendedorSelectedContext) {
-      getLiquidacioneaByVendedor(VendedorSelectedContext);
-      return;
+      setSelectedSeller(VendedorSelectedContext);
     }
-    if (selectedSeller === 0) {
+  }, [VendedorSelectedContext]);
+
+  useEffect(() => {
+    if (selectedSeller && selectedSeller !== 0) {
+      getLiquidacionesByVendedor(selectedSeller);
+    } else {
       getLiquidaciones();
-    } else if (selectedSeller) {
-      getLiquidacioneaByVendedor(selectedSeller);
     }
-  }, [currentPage]);
+  }, [selectedSeller, currentPage]);
 
-  //pagintaion
-
-  const [visibleRange, setVisibleRange] = useState([0, 5]);
-
-  const handleNextRange = () => {
+  const handleNextRange = () =>
     setVisibleRange([visibleRange[0] + 5, visibleRange[1] + 5]);
-  };
-
-  const handlePrevRange = () => {
+  const handlePrevRange = () =>
     setVisibleRange([visibleRange[0] - 5, visibleRange[1] - 5]);
-  };
 
-  const visiblePages = Array.from(
-    { length: pageCount },
-    (_, index) => index
-  ).slice(visibleRange[0], visibleRange[1]);
+  const visiblePages = useMemo(
+    () =>
+      Array.from({ length: pageCount }, (_, i) => i).slice(
+        visibleRange[0],
+        visibleRange[1]
+      ),
+    [pageCount, visibleRange]
+  );
 
   return (
     <section className="fixed left-0 top-0 h-full w-full bg-[#F2F2FF] overflow-auto">
       <Sidebar />
-      <Notificaciones
-        isOpen={isNotificationsOpen}
-        onClose={() => setIsNotificationsOpen(false)}
-      />
-      <NotificacionesLiquidacion
-        isOpen={isMovimientosOpen}
-        onClose={() => setIsMovimientosOpen(false)}
-        Consecutivo={consecutivo}
-        VendedorId={vendedorId}
-      />
+      {isNotificationsOpen && (
+        <Notificaciones
+          isOpen={isNotificationsOpen}
+          onClose={() => setIsNotificationsOpen(false)}
+        />
+      )}
+      {isMovimientosOpen && (
+        <NotificacionesLiquidacion
+          isOpen={isMovimientosOpen}
+          onClose={() => setIsMovimientosOpen(false)}
+          Consecutivo={consecutivo}
+          VendedorId={vendedorId}
+        />
+      )}
+      {isModalOpen && (
+        <LiquidacionModal
+          isOpen={isModalOpen}
+          onClose={toggleModal}
+          getGastos={getLiquidaciones}
+        />
+      )}
+
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col items-center w-full border-b shadow-md bg-white mb-4">
           <div className="flex justify-between items-center w-full">
@@ -233,22 +223,18 @@ export default function Liquidaciones() {
             />
           </div>
         </header>
+
         <div
           className={`w-full flex items-center justify-center bg-[#F2F2FF]${
             isLoading ? "h-screen" : ""
-          } `}
+          }`}
         >
           {isLoading ? (
             <Spinner isLoading={isLoading} />
           ) : (
             <div className="w-full flex flex-col">
-              <LiquidacionModal
-                isOpen={isModalOpen}
-                onClose={toggleModal}
-                getGastos={getLiquidaciones}
-              />
-              <section className="w-full px-2 grid grid-cols-1 md:grid-cols-2 gap-4 ">
-                {liquidaciones?.map((liquidacion) => {
+              <section className="w-full px-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+                 {liquidaciones?.map((liquidacion) => {
                   const fecha = liquidacion.Fecha.split("T")[0];
 
                   // Formatear la fecha manualmente

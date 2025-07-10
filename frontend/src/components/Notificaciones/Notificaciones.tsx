@@ -127,21 +127,19 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     label: vendedor.NombreCompleto,
   }));
 
-  useEffect(() => {
-    getNotificacionesFiltered();
-    getVendedores();
-  }, [isOpen]);
 
-  useEffect(() => {
-    return () => {
-      setSelectedFechaFin(undefined);
-      setSelectedFechaInicio(undefined);
-      setSelectedGastos(undefined);
-      setSelectedAbonos(undefined);
-      setSelectedVentas(undefined);
-      setSelectedSeller(undefined);
-    };
-  }, [!isOpen]);
+
+ useEffect(() => {
+  if (!isOpen) {
+    setSelectedFechaFin(undefined);
+    setSelectedFechaInicio(undefined);
+    setSelectedGastos(undefined);
+    setSelectedAbonos(undefined);
+    setSelectedVentas(undefined);
+    setSelectedSeller(undefined);
+  }
+}, [isOpen]);
+
 
   useEffect(() => {
     getNotificacionesFiltered();
@@ -153,6 +151,35 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     selectedAbonos,
     selectedGastos,
   ]);
+
+
+  useEffect(() => {
+  if (isOpen) {
+    getVendedores();
+  }
+}, [isOpen]);
+
+useEffect(() => {
+  if (
+    isOpen &&
+    (selectedSeller ||
+      selectedFechaInicio ||
+      selectedFechaFin ||
+      selectedVentas ||
+      selectedAbonos ||
+      selectedGastos)
+  ) {
+    getNotificacionesFiltered();
+  }
+}, [
+  isOpen,
+  selectedSeller,
+  selectedFechaInicio,
+  selectedFechaFin,
+  selectedVentas,
+  selectedAbonos,
+  selectedGastos,
+]);
 
   return (
     <aside

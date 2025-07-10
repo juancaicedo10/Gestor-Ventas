@@ -83,7 +83,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
             <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full p-4">
               <header className="flex w-full items-center justify-between">
                 <h3
-                  className="text-3xl leading-6 font-bold text-blue-900"
+                  className="text-3xl leading-6 font-bold text-primary"
                   id="modal-title"
                 >
                   Visualizar Venta
@@ -97,7 +97,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 </button>
               </header>
               <p className="rounded-md border-2 p-2 mt-2 text-sm bg-white min-h-[100px]">
-                <span className="font-bold text-xl text-blue-600">
+                <span className="font-bold text-xl text-quaternary">
                   Descripcion: <br />
                 </span>{" "}
                 {ventaSelected?.DetallesVenta}
@@ -111,38 +111,38 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
               ></ActualizarFechaInicioVenta>
 
               <ul className="flex flex-col rounded-md border-2 p-2 text-sm my-2 bg-white">
-                <h4 className="text-xl font-bold pb-2 text-blue-600">
+                <h4 className="text-xl font-bold pb-2 text-quaternary">
                   Detalles:
                 </h4>
                 <section className="flex flex-col w-full">
                   <div>
                     <li className="p-1">
-                      <SellIcon fontSize="small" className="text-blue-900" />
-                      <span className="font-semibold text-blue-900">
+                      <SellIcon fontSize="small" className="text-primary" />
+                      <span className="font-semibold text-primary">
                         Numero Venta:
                       </span>{" "}
                       {ventaSelected?.NumeroVenta}
                     </li>
                     <li className="p-1">
-                      <PersonIcon fontSize="small" className="text-blue-900" />
-                      <span className="font-semibold text-blue-900">
+                      <PersonIcon fontSize="small" className="text-primary" />
+                      <span className="font-semibold text-primary">
                         Vendedor:
                       </span>{" "}
                       {ventaSelected?.NombreVendedor}
                     </li>
                     <li className="p-1">
-                      <PersonIcon fontSize="small" className="text-blue-900" />
-                      <span className="font-semibold text-blue-900">
+                      <PersonIcon fontSize="small" className="text-primary" />
+                      <span className="font-semibold text-primary">
                         Cliente:
                       </span>{" "}
                       {ventaSelected?.NombreCliente}
                     </li>
                     <li className="p-1 w-full flex">
-                      <PhoneIcon fontSize="small" className="text-blue-900" />
-                      <span className="font-semibold text-blue-900">
+                      <PhoneIcon fontSize="small" className="text-primary" />
+                      <span className="font-semibold text-primary">
                         Contacto:
                       </span>{" "}
-                      <p className="border-blue-600 text-blue-600 ml-1 border-b">
+                      <p className="border-quaternary text-quaternary ml-1 border-b">
                         <a
                           href={`https://wa.me/${ventaSelected?.TelefonoCliente}`}
                           target="_blank"
@@ -155,9 +155,9 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                     <li className="p-1">
                       <AccessAlarmIcon
                         fontSize="small"
-                        className="text-blue-900"
+                        className="text-primary"
                       />
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Periodicidad
                       </span>
                       : {ventaSelected?.PeriodicidadNombre}
@@ -165,9 +165,9 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                     <li className="p-1">
                       <DateRangeIcon
                         fontSize="small"
-                        className="text-blue-900"
+                        className="text-primary"
                       />
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Fecha Creacion:
                       </span>{" "}
                       {ventaSelected?.FechaServer
@@ -179,16 +179,16 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                     <li className="p-1">
                       <DateRangeIcon
                         fontSize="small"
-                        className="text-blue-900"
+                        className="text-primary"
                       />
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Fecha Inicio:
                       </span>{" "}
                       {/* si es administrador se puede abrir el modal de modificar fecha */}
                       {isAdmin ? (
                         <span
                           onClick={() => setIsUpdateFechaPagoOpen(true)}
-                          className="cursor-pointer text-blue-600 hover:underline"
+                          className="cursor-pointer text-quaternary hover:underline"
                         >
                           {fechaInicio ? formatDate(fechaInicio) : ""}
                         </span>
@@ -198,9 +198,9 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                         </span>
                       )}
                     </li>
-                    <li className="p-1 text-blue-900 flex items-center">
+                    <li className="p-1 text-primary flex items-center">
                       <DateRangeIcon fontSize="small" />
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Fecha Fin:
                       </span>{" "}
                       <p className="text-black">
@@ -215,13 +215,13 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 </section>
               </ul>
               <div className="rounded-md border-2 p-2 w-full py-2 bg-white">
-                <h4 className="font-bold text-xl text-blue-600">
+                <h4 className="font-bold text-xl text-quaternary">
                   Datos Financieros:
                 </h4>
                 <ul className="grid grid-cols-2 w-full py-2 ">
                   <li>
                     <div className="text-start flex flex-col">
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Valor Venta:
                       </span>
                       {new Intl.NumberFormat("es-CO", {
@@ -230,13 +230,13 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                       }).format(ventaSelected?.ValorVenta ?? 0)}
                     </div>
                     <div className="text-start">
-                      <span className="font-semibold flex flex-col text-blue-900">
+                      <span className="font-semibold flex flex-col text-primary">
                         N Cuotas:
                       </span>
                       {ventaSelected?.NumeroCuotas}
                     </div>
                     <div>
-                      <span className="font-semibold flex flex-col text-blue-900">
+                      <span className="font-semibold flex flex-col text-primary">
                         valor Seguro:
                       </span>
                       {new Intl.NumberFormat("es-CO", {
@@ -248,7 +248,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                   </li>
                   <li>
                     <div className="text-start flex flex-col">
-                      <span className="font-semibold text-blue-900">
+                      <span className="font-semibold text-primary">
                         Abonado:
                       </span>
                       {new Intl.NumberFormat("es-CO", {
@@ -258,13 +258,13 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                       $
                     </div>
                     <div className="text-start">
-                      <span className="font-semibold flex flex-col text-blue-900">
+                      <span className="font-semibold flex flex-col text-primary">
                         Pagadas:
                       </span>
                       {ventaSelected?.CuotasPagadas}
                     </div>
                     <div>
-                      <span className="font-semibold flex flex-col text-blue-900">
+                      <span className="font-semibold flex flex-col text-primary">
                         % Interes:
                       </span>
                       {ventaSelected?.TasaInteres}%
@@ -273,12 +273,12 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 </ul>
               </div>
               <div className="rounded-md border-2 my-2 p-2 bg-white">
-                <h6 className="font-bold text-xl text-blue-600">
+                <h6 className="font-bold text-xl text-quaternary">
                   Ir a detalles de cuotas:
                 </h6>
                 <Link
                   to={`/cuotas/${ventaSelected?.Id}/${ventaSelected?.NumeroVenta}/${ventaSelected?.Archivada}`}
-                  className="text-blue-900 font-semibold border-b-2 border-blue-900"
+                  className="text-primary font-semibold border-b-2 border-primary"
             
                   rel="noopener noreferrer"
                 >
