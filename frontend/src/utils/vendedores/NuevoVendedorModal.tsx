@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import decodeToken from "../tokenDecored";
 import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
+import FileInputWithPreview from "../Fotos/FileInputWithPreview";
+import { Constants } from "../Helpers/Constants";
 
 interface ModalProps {
   isOpen: boolean;
@@ -111,8 +114,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
     }
     formData.append("OficinaId", "1");
 
-    axios
-      .post(`https://backendgestorventas1.azurewebsites.net/api/vendedores`, formData, {
+    HttpClient.post(`${import.meta.env.VITE_API_URL}/api/vendedores`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -136,7 +138,7 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
         toast.success("Vendedor creado correctamente");
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         toast.error("Error creando el vendedor", err);
       });
     onClose();
@@ -298,17 +300,14 @@ const NuevoVendedorModal: React.FC<ModalProps> = ({
                 </p>
               )}
             </label>
-            <div className="flex flex-col text-base md:text-lg font-normal mt-2">
-              <label className="text-gray-700">Foto (opcional):</label>
-              <span className="border border-gray rounded-md flex items-center justify-center h-[100px]">
-                <input
-                  type="file"
-                  name="Foto"
-                  onChange={handleChange}
-                  placeholder="Selecciona foto"
-                />
-              </span>
-            </div>
+
+            <label className="block text-base md:text-lg font-normal mt-2">
+              <span className="text-gray-700">Foto (opcional):</span>
+              <FileInputWithPreview
+                file={Constants.DEFAULT_IMAGE}
+                onFileSelected={(e) => setFoto(e)}
+              ></FileInputWithPreview>
+            </label>
           </div>
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button

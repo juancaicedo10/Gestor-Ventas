@@ -1,8 +1,9 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import axios from "axios";
+
 import Spinner from "../Spinner";
 import decodeToken from "../tokenDecored";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,8 +19,8 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     const fetchFiltros = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          "https://backendgestorventas1.azurewebsites.net/api/filtros",
+        const response = await HttpClient.get(
+          `${import.meta.env.VITE_API_URL}/api/filtros`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -51,9 +52,9 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     const Id = decodeToken()?.user.Id;
     let url =
       decodeToken()?.user.role === "Administrador"
-        ? "https://backendgestorventas1.azurewebsites.net/api/ventas/pdf/all"
-        : `https://backendgestorventas1.azurewebsites.net/api/ventas/pdf/${Id}`;
-    axios({
+        ? `${import.meta.env.VITE_API_URL}/api/ventas/pdf/all`
+        : `${import.meta.env.VITE_API_URL}/api/ventas/pdf/${Id}`;
+    HttpClient({
       url: url,
       params: {
         filtroId: filtroId,
@@ -110,7 +111,7 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
                   <h3
-                    className="text-3xl leading-6 font-bold text-blue-900"
+                    className="text-3xl leading-6 font-bold text-primary"
                     id="modal-title"
                   >
                     Tipo de PDF

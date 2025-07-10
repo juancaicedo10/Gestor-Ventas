@@ -1,17 +1,19 @@
-import Sidebar from "./Sidebar";
+
 import { useEffect, useState } from "react";
-import SellImage from "../images/Sells.png";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
+import SellImage from "../../images/Sells.png";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import ModeIcon from "@mui/icons-material/Mode";
 import AccessAlarm from "@mui/icons-material/AccessAlarm";
 import { toast } from "react-toastify";
-import decodeToken from "../utils/tokenDecored";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import { FormatearFecha } from "../utils/FormatearFecha";
+import HttpClient from "../../Services/httpService";
+import { formatDate } from "../../utils/Helpers/FormatDate";
+import { FormatearFecha } from "../../utils/FormatearFecha";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import Spinner from "../../utils/Spinner";
+
 
 interface VentaAprobar {
   Id: number;
@@ -38,8 +40,8 @@ function VentasAprobar() {
   const getVentasAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(
-        `https://backendgestorventas1.azurewebsites.net/api/ventas/aprobar/${
+      const res = await HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/ventas/aprobar/${
           decodeToken()?.user?.Id
         }`,
         {
@@ -60,8 +62,8 @@ function VentasAprobar() {
     setIsDisabled(true);
     setIsLoading(true);
     try {
-      await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+      await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/ventas/${ventaId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -85,8 +87,8 @@ function VentasAprobar() {
   const handleRechazar = async (ventaId: number) => {
     setIsLoading(true);
     try {
-      await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/ventas/${ventaId}/aprobar`,
+      await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/ventas/${ventaId}/aprobar`,
         { aprobado: false },
         {
           headers: {
@@ -113,7 +115,7 @@ function VentasAprobar() {
     <div>
       <Sidebar />
       <div className="ml-[63px]">
-        <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
+        <h1 className="mb-2 py-4 text-2xl text-primary md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
           Ventas por aprobar
         </h1>
         {isLoading ? (
@@ -130,7 +132,7 @@ function VentasAprobar() {
                     alt="venta imagen"
                     className="w-3/4 md:w-1/4"
                   />
-                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-blue-900 py-4 text-center w-full md:w-1/2">
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-primary py-4 text-center w-full md:w-1/2">
                     En este momento no hay ninguna venta por aprobar
                   </h1>
                 </div>
@@ -154,7 +156,7 @@ function VentasAprobar() {
                         Rechazar
                       </button>
                     </div>
-                    <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                    <div className="bg-primary rounded-md p-2 md:p-4">
                       <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                         <span className="font-semibold mr-2">Cliente:</span>{" "}
                         <h6 className="font-normal">{venta.NombreCliente}</h6>
@@ -165,7 +167,7 @@ function VentasAprobar() {
                       </p>
                     </div>
                     <div className="bg-white rounded-md border shadow-sm p-2">
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <AttachMoneyIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Valor de la venta:</h6>
@@ -177,7 +179,7 @@ function VentasAprobar() {
                           </span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <AttachMoneyIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Valor Seguro:</h6>
@@ -189,7 +191,7 @@ function VentasAprobar() {
                           </span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <CalendarMonthIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Fecha de Creacion:</h6>
@@ -200,35 +202,35 @@ function VentasAprobar() {
                           </span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <CalendarMonthIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Fecha de Inicio:</h6>
                           <span>{formatDate(venta.FechaInicioPago)}</span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <AccountBalanceIcon />
                         <span className="m-1">
                           <h6 className="font-semibold">Numero de cuotas:</h6>
                           <span>{venta.NumeroCuotas}</span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <AccessAlarm />
                         <span className="m-1">
                           <h6 className="font-semibold">Periodicidad:</h6>
                           <span>cada {venta.Periodicidad} dias</span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <ModeIcon />
                         <span className="m-1">
                           <h6 className="font-semibold flex">Tasa Interes:</h6>
                           <span>{venta.TasaInteres} %</span>
                         </span>
                       </p>
-                      <p className="text-lg text-blue-900 flex items-center">
+                      <p className="text-lg text-primary flex items-center">
                         <ModeIcon />
                         <span className="m-1">
                           <h6 className="font-semibold flex">Detalles:</h6>
@@ -248,3 +250,4 @@ function VentasAprobar() {
 }
 
 export default VentasAprobar;
+

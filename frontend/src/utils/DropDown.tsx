@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import axios from 'axios';
 import ModificarClienteModal from './Clientes/ModificarClienteModal';
+import HttpClient from '../Services/httpService';
 
 interface Props {
   Id: number;
@@ -15,7 +15,7 @@ const Dropdown = ( { Id, getClients, onEdit  } : Props ) => {
   const handleDelete = (e: any) => {
     e.preventDefault();
     try {
-      axios.delete(`https://backendgestorventas1.azurewebsites.net/api/clientes/${Id}`, {
+      HttpClient.delete(`${import.meta.env.VITE_API_URL}/api/clientes/${Id}`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

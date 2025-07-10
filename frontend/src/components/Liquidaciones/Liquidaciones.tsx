@@ -1,4 +1,4 @@
-import axios from "axios";
+
 import Select from "react-select";
 import { useEffect, useState } from "react";
 import Sidebar from "../Sidebar";
@@ -22,6 +22,7 @@ import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidaci
 import PersonIcon from "@mui/icons-material/Person";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
 
 interface Liquidacion {
   Id: number;
@@ -82,9 +83,8 @@ export default function Liquidaciones() {
   // Función para obtener la lista de vendedores
   const getLiquidaciones = () => {
     setIsLoading(true);
-    axios
-      .get(
-        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/all/todas/todas/${
+    HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/liquidaciones/all/todas/todas/${
           decodeToken()?.user?.Id
         }`,
         {
@@ -108,9 +108,8 @@ export default function Liquidaciones() {
   const getLiquidacioneaByVendedor = (VendedorId: number) => {
     setSelectedSeller(VendedorId);
     setIsLoading(true);
-    axios
-      .get(
-        `https://backendgestorventas1.azurewebsites.net/api/liquidaciones/${VendedorId}`,
+    HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/liquidaciones/${VendedorId}`,
         {
           params: {
             page:
@@ -134,8 +133,8 @@ export default function Liquidaciones() {
 
   const getVendedores = async () => {
     try {
-      const res = await axios.get(
-        `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
+      const res = await HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${
           decodeToken()?.user?.Id
         }/all`,
         {
@@ -207,17 +206,17 @@ export default function Liquidaciones() {
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col items-center w-full border-b shadow-md bg-white mb-4">
           <div className="flex justify-between items-center w-full">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 w-full">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-center p-2 w-full">
               Liquidaciones
             </h1>
             <div className="flex space-x-4">
               <button
-                className="text-blue-900"
+                className="text-primary"
                 onClick={() => setIsNotificationsOpen(true)}
               >
                 <NotificationsIcon fontSize="large" />
               </button>
-              <button className="text-blue-900" onClick={toggleModal}>
+              <button className="text-primary" onClick={toggleModal}>
                 <AddCircleIcon fontSize="large" />
               </button>
             </div>
@@ -261,7 +260,7 @@ export default function Liquidaciones() {
                       key={liquidacion.Id}
                     >
                       <div className="flex flex-col">
-                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
+                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-primary text-white">
                           <SellIcon fontSize="large" className="text-white" />
                           <span className="flex flex-col items-center">
                             <h1 className="font-normal text-xl">
@@ -307,7 +306,7 @@ export default function Liquidaciones() {
                         <ul className="text-lg font-light flex flex-col">
                           <div className="grid grid-cols-2">
                             <li className="flex items-center my-1">
-                              <AccountBalanceIcon className="text-blue-800" />
+                              <AccountBalanceIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Base Capital:</h3>
                                 <p>
@@ -319,7 +318,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <PaidIcon className="text-blue-800" />
+                              <PaidIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Gastos:</h3>
                                 <p>
@@ -333,7 +332,7 @@ export default function Liquidaciones() {
                           </div>
                           <div className="grid grid-cols-2">
                             <li className="flex items-center my-1">
-                              <SellIcon className="text-blue-800" />
+                              <SellIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Total Ventas:</h3>
                                 <p>
@@ -345,7 +344,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <RequestQuoteIcon className="text-blue-800" />
+                              <RequestQuoteIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Total Intereses:</h3>
                                 <p>
@@ -357,7 +356,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <PriceCheckIcon className="text-blue-800" />
+                              <PriceCheckIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Seguros:</h3>
                                 <p>
@@ -369,7 +368,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <MoneyOffIcon className="text-blue-800" />
+                              <MoneyOffIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Multas:</h3>
                                 <p>
@@ -381,7 +380,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <SavingsIcon className="text-blue-800" />
+                              <SavingsIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Abono capital:</h3>
                                 <p>
@@ -393,7 +392,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <LocalAtmIcon className="text-blue-800" />
+                              <LocalAtmIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Efectivo:</h3>
                                 <p>
@@ -405,7 +404,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <CurrencyExchangeIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Abonos:</h3>
                                 <p>
@@ -417,7 +416,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <CurrencyExchangeIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Cartera:</h3>
                                 <p>
@@ -429,7 +428,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <PersonIcon className="text-blue-800" />
+                              <PersonIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Base Vendedor:</h3>
                                 <p>
@@ -441,7 +440,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <CurrencyExchangeIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Cartera Restante:</h3>
                                 <p>
@@ -453,7 +452,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <CurrencyExchangeIcon className="text-blue-800" />
+                              <CurrencyExchangeIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Movimientos:</h3>
                                 <p>
@@ -470,7 +469,7 @@ export default function Liquidaciones() {
                               </span>
                             </li>
                             <li className="flex items-center my-1">
-                              <PersonIcon className="text-blue-800" />
+                              <PersonIcon className="text-secondary" />
                               <span className="mx-4">
                                 <h3 className="font-bold">Clientes Activos:</h3>
                                 <p>{liquidacion.ClientesActivos}</p>
@@ -480,7 +479,7 @@ export default function Liquidaciones() {
                           <li className="flex items-center w-full my-1">
                             {liquidacion.Detalle != "" && (
                               <div className="text-lg flex items-center my-1">
-                                <LibraryBooksIcon className="text-blue-800" />
+                                <LibraryBooksIcon className="text-secondary" />
                                 <span className="mx-4">
                                   <h3 className="font-bold">Detalle:</h3>
                                   <p>
@@ -501,7 +500,7 @@ export default function Liquidaciones() {
               <div className="flex justify-center mt-4 text-sm">
                 {visibleRange[0] > 0 && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded-md bg-white text-blue-700 font-normal"
+                    className="mx-1 px-3 py-1 border rounded-md bg-white text-tertiary font-normal"
                     onClick={handlePrevRange}
                   >
                     Anterior
@@ -512,8 +511,8 @@ export default function Liquidaciones() {
                     key={index}
                     className={`mx-1 px-3 py-1 border rounded-md font-normal ${
                       currentPage === index
-                        ? "bg-blue-700 text-white"
-                        : "bg-white text-blue-700"
+                        ? "bg-tertiary text-white"
+                        : "bg-white text-tertiary"
                     }`}
                     onClick={() => handlePageClick(index)}
                   >
@@ -522,7 +521,7 @@ export default function Liquidaciones() {
                 ))}
                 {visibleRange[1] < pageCount && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700 font-normal"
+                    className="mx-1 px-3 py-1 border rounded bg-white text-tertiary font-normal"
                     onClick={handleNextRange}
                   >
                     Siguiente

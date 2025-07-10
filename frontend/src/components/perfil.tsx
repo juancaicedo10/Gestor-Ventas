@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import decodeToken from "../utils/tokenDecored";
 import Sidebar from "./Sidebar";
-import axios from "axios";
+
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Spinner from "../utils/Spinner";
+import HttpClient from "../Services/httpService";
 
 function Perfil() {
   const [nombre, setNombre] = useState("");
@@ -31,8 +32,8 @@ function Perfil() {
   const getData = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `https://backendgestorventas1.azurewebsites.net/api/${string}`,
+      const response = await HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/${string}`,
         {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -111,8 +112,8 @@ function Perfil() {
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/${string}`,
+      await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/${string}`,
         {
           NombreCompleto: nombre,
           NumeroDocumento: cedula,
@@ -148,7 +149,7 @@ function Perfil() {
             className="flex flex-col w-full md:w-1/2 lg:w-1/3 rounded-md shadow-md border p-6 bg-white mx-2"
             onSubmit={handleUpdate}
           >
-            <h1 className="text-center font-bold text-4xl text-blue-800 pb-3">
+            <h1 className="text-center font-bold text-4xl text-secondary pb-3">
               Tu Perfil
             </h1>
             <label htmlFor="nombre" className="font-normal text-base">
@@ -233,10 +234,10 @@ function Perfil() {
             </div>
             <button
               type="submit"
-              className={`w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4 ${
+              className={`w-full py-3 bg-secondary hover:bg-primary text-white font-bold rounded-lg my-4 ${
                 isLoading
                   ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
-                  : "bg-blue-800 hover:bg-blue-900 text-white"
+                  : "bg-secondary hover:bg-primary text-white"
               }`}
               disabled={isLoading || decodeToken()?.user?.role !== "Administrador"}
             >

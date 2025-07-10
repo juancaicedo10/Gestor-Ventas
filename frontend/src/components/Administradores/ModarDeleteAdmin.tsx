@@ -1,4 +1,5 @@
-import axios from "axios";
+
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,9 +12,8 @@ const AdminDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getAdmini
 
   const handleDelete = () => {
     try {
-      axios
-        .delete(
-          `https://backendgestorventas1.azurewebsites.net/api/administradores/${Id}`,
+      HttpClient.delete(
+          `${import.meta.env.VITE_API_URL}/api/administradores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -60,7 +60,7 @@ const AdminDeleteModal: React.FC<ModalProps> = ({ isOpen, onClose, Id, getAdmini
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-quaternary text-base font-medium text-white hover:bg-tertiary focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={() => onClose()}
                 >
                   No

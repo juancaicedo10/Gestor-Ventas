@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
+
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/Helpers/FormatDate";
+import HttpClient from "../../Services/httpService";
 
 interface Props {
   isOpen: boolean;
@@ -43,8 +44,8 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
     VendedorIdNoti: number
   ) => {
     try {
-      const response = await axios.post(
-        "https://backendgestorventas1.azurewebsites.net/api/notificaciones/liquidacion",
+      const response = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/notificaciones/liquidacion`,
         {
           Consecutivo: ConsecutivoNoti,
           VendedorId: VendedorIdNoti,
@@ -70,14 +71,14 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
     >
       <header className="flex w-full bg-white shadow-md py-2">
         <button
-          className={`flex items-center justify-center p-2 text-3xl text-blue-800 font-extrabold`}
+          className={`flex items-center justify-center p-2 text-3xl text-secondary font-extrabold`}
           onClick={onClose}
         >
           <CloseIcon fontSize="large" className="relative left-0" />
         </button>
-        <h2 className="text-center text-2xl w-full font-bold overflow-hidden text-blue-800 my-auto">
+        <h2 className="text-center text-2xl w-full font-bold overflow-hidden text-secondary my-auto">
           Movimientos Liquidacion <br />{" "}
-          <span className="text-blue-600">{Consecutivo}</span>
+          <span className="text-quaternary">{Consecutivo}</span>
         </h2>
       </header>
       <ul className="text-xl md:text-2xl flex flex-col w-full p-2">
@@ -89,7 +90,7 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
             }`}
           >
             <header className="w-full flex justify-between items-center my-auto">
-              <h3 className="font-bold text-blue-800">
+              <h3 className="font-bold text-secondary">
                 {notificacion.TipoSeguimiento}
               </h3>
               <h3 className="text-base font-normal">
@@ -100,19 +101,19 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
               {notificacion.TipoId === 1 ? (
                 <>
                   se registró una venta por un valor de{" "}
-                  <span className="text-blue-600 font-semibold">
+                  <span className="text-quaternary font-semibold">
                     {notificacion.Valor}$
                   </span>{" "}
                   para el cliente{" "}
-                  <span className="text-blue-600 font-semibold">
+                  <span className="text-quaternary font-semibold">
                     {notificacion.NombreCliente}
                   </span>{" "}
                   con un valor seguro de {notificacion.ValorSeguro}$
                   <span className="ml-1">
                     <Link
                       to={`/ventas/${notificacion.VentaId}`}
-                      className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                      target="_blank"
+                      className="font-semibold text-quaternary border-b-2 border-quaternary"
+                  
                       rel="noopener noreferrer"
                     >
                       ver
@@ -122,29 +123,29 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
               ) : notificacion.TipoId === 2 ? (
                 <>
                   se registró un abono por un valor de{" "}
-                  <span className="font-semibold text-blue-700">
+                  <span className="font-semibold text-tertiary">
                     {notificacion.Valor}$
                   </span>
                   con un interes de{" "}
-                  <span className="text-blue-600 font-semibold">
+                  <span className="text-quaternary font-semibold">
                     {notificacion.ValorInteres}$
                   </span>
                   y una multa de{" "}
-                  <span className="text-blue-600 font-semibold">
+                  <span className="text-quaternary font-semibold">
                     {notificacion.ValorMulta}$
                   </span>{" "}
                   para la venta{" "}
                   <Link
                     to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
-                    target="_blank"
+               
                     rel="noopener noreferrer"
                   >
-                    <span className="text-blue-600 font-sembibold border-b-2 border-blue-600 font-semibold">
+                    <span className="text-quaternary font-sembibold border-b-2 border-quaternary font-semibold">
                       {notificacion.NumeroVenta}
                     </span>
                   </Link>
                   <br />
-                  <span className="font-semibold mr-1 text-blue-600">
+                  <span className="font-semibold mr-1 text-quaternary">
                     detalle:
                   </span>
                   {notificacion.Detalle}
@@ -153,11 +154,11 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                 notificacion.TipoId === 3 && (
                   <>
                     se registró un gasto por un valor de
-                    <span className="text-blue-600 font-semibold ml-1">
+                    <span className="text-quaternary font-semibold ml-1">
                       {notificacion.Valor}$
                     </span>{" "}
                     para{" "}
-                    <span className="text-blue-600 font-semibold">
+                    <span className="text-quaternary font-semibold">
                       {notificacion.NombreGasto}
                     </span>
                   </>

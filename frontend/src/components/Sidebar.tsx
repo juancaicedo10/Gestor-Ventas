@@ -29,7 +29,7 @@ export default function Sidebar() {
   console.log(decodeToken().user);
   return (
     <aside
-      className={`z-50 h-full overflow-y-auto flex fixed flex-col bg-blue-800 transition-all duration-500 ease-in-out ${
+      className={`z-50 h-full overflow-y-auto flex fixed flex-col bg-secondary transition-all duration-500 ease-in-out ${
         show ? "w-3/4 sm:w-1/2 md:w-1/3 lg:w-1/4" : "w-16"
       }`}
     >
@@ -66,7 +66,7 @@ export default function Sidebar() {
         {decodeToken()?.user.role === "Administrador" && (
           <Link
             to="/vendedores"
-            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             onClick={() => setShow(false)}
           >
             <SupervisedUserCircleIcon fontSize="inherit" />
@@ -78,7 +78,7 @@ export default function Sidebar() {
 
         <Link
           to="/clientes"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <PeopleIcon fontSize="inherit" />
@@ -89,7 +89,7 @@ export default function Sidebar() {
 
         <Link
           to="/ventas"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <SellIcon fontSize="inherit" />
@@ -99,7 +99,7 @@ export default function Sidebar() {
         </Link>
         <Link
           to="/gastos"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
         >
           <PaymentsIcon fontSize="inherit" />
           <p hidden={!show} className="font-normal text-xl">
@@ -111,7 +111,7 @@ export default function Sidebar() {
          {decodeToken()?.user.Id === 14 && (
           <Link
             to="/administradores"
-            className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+            className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             onClick={() => setShow(false)}
           >
             <SupervisedUserCircleIcon fontSize="inherit" />
@@ -122,7 +122,7 @@ export default function Sidebar() {
 )}
             <Link
               to="/abonos-retiros"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             >
               <AccountBalanceIcon fontSize="inherit" />
               <p hidden={!show} className="font-normal text-xl">
@@ -131,7 +131,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/clientes/aprobar"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <HowToRegIcon fontSize="inherit" />
@@ -141,7 +141,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/gastos/aprobar"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <SavingsIcon fontSize="inherit" />
@@ -151,7 +151,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/ventas/aprobar"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <FactCheckIcon fontSize="inherit" />
@@ -161,7 +161,7 @@ export default function Sidebar() {
             </Link>
             <Link
               to="/liquidaciones"
-              className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
               onClick={() => setShow(false)}
             >
               <ReceiptLongIcon fontSize="inherit" />
@@ -173,7 +173,7 @@ export default function Sidebar() {
         )}
         <Link
           to="/perfil"
-          className="flex text-white hover:text-white hover:bg-blue-600 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
           onClick={() => setShow(false)}
         >
           <AccountCircleIcon fontSize="inherit" />
@@ -184,7 +184,7 @@ export default function Sidebar() {
       </ul>
       <Link
         to="/"
-        className="flex mt-auto min-h-[50px] text-white hover:text-white bg-blue-500 rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+        className="flex mt-auto min-h-[50px] text-white hover:text-white bg-fifth rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
         onClick={() => handleLogout()}
       >
         <LogoutIcon fontSize="large" />

@@ -1,6 +1,6 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Select from "react-select";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,6 +26,43 @@ const InteresManualModal: React.FC<ModalProps> = ({
   const [isSendButtonLoading, setIsSendButtonLoading] =
     useState<boolean>(false);
 
+  const getEndpointUrl = () => {
+    const baseUrl = import.meta.env.VITE_API_URL;
+
+    switch (selectedTipo) {
+      case "Multa":
+        return `${baseUrl}/api/cuotas/cuota/mora/${cuotaId}`;
+      case "Interes":
+        return `${baseUrl}/api/cuotas/cuota/interes/${cuotaId}`;
+      case "Reagenda":
+        return `${baseUrl}/api/cuotas/cuota/reagenda/${cuotaId}`;
+      case "Reagenda Todas":
+        return `${baseUrl}/api/cuotas/cuota/reagenda/todas/${cuotaId}`;
+      default:
+        throw new Error("Tipo no válido");
+    }
+  };
+
+  // Extraer el título a una función
+  const getModalTitle = () => {
+    switch (selectedTipo) {
+      case "Multa":
+        return "Registrar Multa";
+      case "Interes":
+        return "Registrar Interés";
+      case "Reagenda":
+        return "Reagendar Fecha de Pago";
+      case "Reagenda Todas":
+        return "Reagendar Restantes";
+      default:
+        return "Seleccione una operación";
+    }
+  };
+
+  const verifyReagendaIsValid = (e: any) => {
+   setFechaPago(new Date(e.target.value));
+  };
+
   const Tipos = [
     {
       value: "Multa",
@@ -39,6 +76,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
       value: "Reagenda",
       label: "Reagendar",
     },
+    {
+      value: "Reagenda Todas",
+      label: "Reagendar Restantés",
+    },
   ];
 
   const handleSubmit = (e: any) => {
@@ -47,7 +88,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
 
     let isValid = true;
 
-    if (!monto && selectedTipo !== "Reagenda") {
+    if (
+      !monto &&
+      !(selectedTipo === "Reagenda" || selectedTipo === "Reagenda Todas")
+    ) {
       isValid = false;
       setIsMontoValid(false);
     }
@@ -67,21 +111,14 @@ const InteresManualModal: React.FC<ModalProps> = ({
       FechaPago: fechaPago,
     };
 
-    let url =
-      selectedTipo === "Multa"
-        ? `https://backendgestorventas1.azurewebsites.net/api/cuotas/cuota/mora/${cuotaId}`
-        : selectedTipo === "Interes"
-        ? `https://backendgestorventas1.azurewebsites.net/api/cuotas/cuota/interes/${cuotaId}`
-        : `https://backendgestorventas1.azurewebsites.net/api/cuotas/cuota/reagenda/${cuotaId}`;
+    let url: string = getEndpointUrl();
 
-    axios
-      .post(url, AbonoRetiro, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+    HttpClient.post(url, AbonoRetiro, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
       .then(() => {
-        console.log("Venta CREADA EXITOSAMENTE");
         setIsSendButtonLoading(false);
         onClose();
         getCuotas();
@@ -142,14 +179,10 @@ const InteresManualModal: React.FC<ModalProps> = ({
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
                   <h3
-                    className="text-3xl leading-6 font-bold text-blue-900"
+                    className="text-3xl leading-6 font-bold text-primary"
                     id="modal-title"
                   >
-                    {selectedTipo === "Multa"
-                      ? "Registrar Multa"
-                      : selectedTipo === "Interes"
-                      ? "Registrar Interes"
-                      : "Reagendar Fecha de Pago"}
+                    {getModalTitle()}
                   </h3>
                   <button
                     type="button"
@@ -168,6 +201,11 @@ const InteresManualModal: React.FC<ModalProps> = ({
                       isSearchable={true}
                       placeholder="Seleccione un tipo"
                       className="w-full"
+                      menuPlacement="auto"
+                      menuPortalTarget={document.body}
+                      styles={{
+                        menuPortal: (base) => ({ ...base, zIndex: 9999 }),
+                      }}
                     />
                     {!isTipoValid && (
                       <p className="text-red-500 text-xs">
@@ -175,7 +213,8 @@ const InteresManualModal: React.FC<ModalProps> = ({
                       </p>
                     )}
                   </div>
-                  {selectedTipo === "Reagenda" ? (
+                  {selectedTipo === "Reagenda" ||
+                  selectedTipo == "Reagenda Todas" ? (
                     <div className="block text-base md:text-lg font-normal mb-2 text-gray-700">
                       <label htmlFor="numero cuotas">Fecha de Reajuste:</label>
                       <input
@@ -184,7 +223,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
                           !fechaPago ? "border-red-500" : ""
                         }`}
                         onChange={(e) => {
-                          setFechaPago(new Date(e.target.value));
+                          verifyReagendaIsValid(e);
                         }}
                       />
                     </div>
@@ -216,7 +255,7 @@ const InteresManualModal: React.FC<ModalProps> = ({
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm min-w-14"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fifth sm:ml-3 sm:w-auto sm:text-sm min-w-14"
                   disabled={isSendButtonLoading}
                 >
                   {isSendButtonLoading ? (

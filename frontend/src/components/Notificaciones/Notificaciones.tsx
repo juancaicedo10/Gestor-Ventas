@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
+
 import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import Select from "react-select";
 import { formatDate } from "../../utils/Helpers/FormatDate";
 import decodeToken from "../../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
+import { saveAs } from "file-saver";
 
 interface Props {
   isOpen: boolean;
@@ -27,6 +29,7 @@ interface Notificacion {
   VentaId: number;
   Detalle: string;
   Archivada: boolean;
+  AbonoId: number;
 }
 
 interface Vendedor {
@@ -68,10 +71,29 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     setSelectedSeller(sellerId);
   };
 
+  const descargarDocumento = async (notificacion: Notificacion) => {
+    const { AbonoId } = notificacion;
+
+    try {
+      const response = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/recibo`,
+        { AbonoId: AbonoId },
+        { responseType: "blob" } // MUY IMPORTANTE
+      );
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      saveAs(blob, `recibo_${AbonoId}.pdf`);
+    } catch (error) {
+      console.error("Error al descargar recibo:", error);
+    }
+  };
+
   const getVendedores = async () => {
     try {
-      const response = await axios.get(
-        `https://backendgestorventas1.azurewebsites.net/api/vendedores/${decodeToken()?.user?.Id}/all`
+      const response = await HttpClient.get(
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${
+          decodeToken()?.user?.Id
+        }/all`
       );
       setVendedores(response.data);
     } catch (error) {
@@ -81,8 +103,8 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
 
   const getNotificacionesFiltered = async () => {
     try {
-      const response = await axios.post(
-        'https://backendgestorventas1.azurewebsites.net/api/notificaciones/filtro',
+      const response = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/notificaciones/filtro`,
         {
           VendedorId: selectedSeller,
           FechaInicio: selectedFechaInicio,
@@ -142,12 +164,12 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
       <header className="w-full bg-white py-2 shadow-md flex-col">
         <div className="w-full flex">
           <button
-            className={`flex items-center justify-center p-2 text-3xl text-blue-800 font-extrabold`}
+            className={`flex items-center justify-center p-2 text-3xl text-secondary font-extrabold`}
             onClick={onClose}
           >
             <CloseIcon fontSize="large" className="relative left-0" />
           </button>
-          <h2 className="font-bold text-blue-800 p-2 w-full text-center my-auto text-3xl">
+          <h2 className="font-bold text-secondary p-2 w-full text-center my-auto text-3xl">
             Movimientos
           </h2>
         </div>
@@ -228,7 +250,7 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
               }`}
             >
               <header className="w-full flex justify-between items-center my-auto">
-                <h3 className="font-bold text-blue-800">
+                <h3 className="font-bold text-secondary">
                   {notificacion.TipoSeguimiento}
                 </h3>
                 <h3 className="text-base font-normal">
@@ -239,22 +261,21 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                 {notificacion.TipoId === 1 ? (
                   <>
                     se registró una venta por un valor de{" "}
-                    <span className="text-blue-600 font-semibold">
+                    <span className="text-quaternary font-semibold">
                       {notificacion.Valor}$
                     </span>{" "}
                     para el cliente{" "}
-                    <span className="text-blue-600 font-semibold">
+                    <span className="text-quaternary font-semibold">
                       {notificacion.NombreCliente}
                     </span>{" "}
                     con un valor seguro de{" "}
-                    <span className="font-semibold text-blue-600">
+                    <span className="font-semibold text-quaternary">
                       {notificacion.ValorSeguro}$
                     </span>
                     <span className="ml-1">
                       <Link
                         to={`/ventas/${notificacion.VentaId}`}
-                        className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                        target="_blank"
+                        className="font-semibold text-quaternary border-b-2 border-quaternary"
                         rel="noopener noreferrer"
                       >
                         ver
@@ -264,46 +285,77 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                 ) : notificacion.TipoId === 2 ? (
                   <>
                     se registró un abono por un valor de{" "}
-                    <span className="font-semibold text-blue-600">
+                    <span className="font-semibold text-quaternary">
                       {notificacion.Valor}$
                     </span>{" "}
                     con un interes de{" "}
-                    <span className="font-semibold text-blue-600">
+                    <span className="font-semibold text-quaternary">
                       {notificacion.ValorInteres}$
                     </span>{" "}
-                     una multa de{" "}
-                    <span className="font-semibold text-blue-600">
+                    una multa de{" "}
+                    <span className="font-semibold text-quaternary">
                       {notificacion.ValorMulta}$
                     </span>{" "}
                     para la venta{" "}
                     <Link
                       to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
-                      className="font-semibold text-blue-600 border-b-2 border-blue-600"
-                      target="_blank"
+                      className="font-semibold text-quaternary border-b-2 border-quaternary"
                       rel="noopener noreferrer"
                     >
                       {notificacion.NumeroVenta}
                     </Link>
                     <br />
-                    <span className="font-semibold mr-1 text-blue-600">
-                    detalle:
-                      </span>
-                     {notificacion.Detalle}
-                      
+                    <span className="font-semibold mr-1 text-quaternary">
+                      detalle:
+                    </span>
+                    {notificacion.Detalle}
                   </>
                 ) : (
                   notificacion.TipoId === 3 && (
                     <>
                       se registró un gasto por un valor de{" "}
-                      <span className="font-semibold text-blue-600">
+                      <span className="font-semibold text-quaternary">
                         {notificacion.Valor}$
                       </span>{" "}
                       para{" "}
-                      <span className="font-semibold text-blue-600">
+                      <span className="font-semibold text-quaternary">
                         {notificacion.NombreGasto}
                       </span>
                     </>
                   )
+                )}
+
+                {[1, 2].includes(notificacion.TipoId) && (
+                  <>
+                    <p>
+                      <span className="font-semibold mr-1 text-quaternary">
+                        Cliente:
+                      </span>
+                      <span className="text-black">
+                        {notificacion.NombreCliente}
+                      </span>
+                    </p>
+                    <button
+                      onClick={() => descargarDocumento(notificacion)}
+                      className="flex items-center gap-1 text-sm font-medium text-secondary hover:text-tertiary transition justify-end w-full"
+                    >
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-4 w-4"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                        />
+                      </svg>
+                      Descargar
+                    </button>
+                  </>
                 )}
               </p>
               <footer className="w-full flex justify-between items-center text-base">

@@ -1,14 +1,16 @@
-import Sidebar from "./Sidebar";
+
 import { useEffect, useState } from "react";
-import SellImage from "../images/Sells.png";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
+import SellsImage from "../../images/Sells.png";
+
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import ModeIcon from '@mui/icons-material/Mode';
 import { toast } from "react-toastify";
-import { formatDate } from "../utils/Helpers/FormatDate";
-import decodeToken from "../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import Spinner from "../../utils/Spinner";
+import { formatDate } from "../../utils/Helpers/FormatDate";
 
 interface GastoAprobar {
   Id: number;
@@ -28,7 +30,7 @@ function GastosAprobar() {
   const getgastosAprobar = async () => {
     setIsLoading(true);
     try {
-      const res = await axios.get(`https://backendgestorventas1.azurewebsites.net/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
+      const res = await HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/aprobar/${decodeToken()?.user?.Id}/all`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
@@ -45,8 +47,8 @@ function GastosAprobar() {
     setIsDisabled(true);
     setIsLoading(true);
     try {
-      await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
+      await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: true },
         {
           headers: {
@@ -69,8 +71,8 @@ function GastosAprobar() {
   const handleRechazar = async (gastoId: number) => {
     setIsLoading(true);
     try {
-      await axios.put(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/${gastoId}/aprobar`,
+      await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/gastos/${gastoId}/aprobar`,
         { aprobado: false },
         {
           headers: {
@@ -97,7 +99,7 @@ function GastosAprobar() {
     <div>
       <Sidebar />
       <div className="ml-[63px]">
-        <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
+        <h1 className="mb-2 py-4 text-2xl text-primary md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
           Gastos por aprobar
         </h1>
         {isLoading ? (
@@ -110,11 +112,11 @@ function GastosAprobar() {
               <div className="flex w-full h-[80vh] items-center justify-center">
                 <div className="flex items-center flex-col justify-center w-full">
                   <img
-                    src={SellImage}
+                    src={SellsImage}
                     alt="gasto imagen"
                     className="w-3/4 md:w-1/4"
                   />
-                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-blue-900 py-4 text-center w-full md:w-1/2">
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-primary py-4 text-center w-full md:w-1/2">
                     En este momento no hay ningun gasto por aprobar
                   </h1>
                 </div>
@@ -140,7 +142,7 @@ function GastosAprobar() {
                           Rechazar
                         </button>
                       </div>
-                      <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                      <div className="bg-primary rounded-md p-2 md:p-4">
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                           <span className="font-semibold mr-2">Vendedor:</span>{" "}
                           <h6 className="font-normal">{gasto.NombreVendedor}</h6>
@@ -151,7 +153,7 @@ function GastosAprobar() {
                         </p>
                       </div>
                       <div className="bg-white rounded-md border shadow-sm p-2">
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <AttachMoneyIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
@@ -165,7 +167,7 @@ function GastosAprobar() {
                             </span>
                           </span>
                         </p>
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <CalendarMonthIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
@@ -176,7 +178,7 @@ function GastosAprobar() {
                             </span>
                           </span>
                         </p>
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <ModeIcon />
                           <span className="m-1">
                             <h6 className="font-semibold flex">Detalles:</h6>

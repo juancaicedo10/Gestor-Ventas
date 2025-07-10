@@ -1,24 +1,25 @@
-import Sidebar from "./Sidebar";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DescriptionIcon from "@mui/icons-material/Description";
 import SellIcon from "@mui/icons-material/Sell";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import NuevoTipoGastoModal from "../utils/Gastos/NuevoTipoGastoModal";
-import NuevoGastoModal from "../utils/Gastos/NuevoGastoModal";
-import decodeToken from "../utils/tokenDecored";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import Select from "react-select";
-import Spinner from "../utils/Spinner";
-import ModificarTipoGastoModal from "../utils/Gastos/ModificarTipoGastoModal";
-import ModificarGastoModal from "../utils/Gastos/ModificarGastoModal";
 import PaymentsIcon from "@mui/icons-material/Payments";
-import ModalDeleteTipoGasto from "../utils/Gastos/ModalEliminarTipoGasto";
-import ModalDeleteGasto from "../utils/Gastos/ModalEliminarGasto.tsx";
-import { formatDate } from "../utils/Helpers/FormatDate.tsx";
-import { useVendedorContext } from "../utils/Context/VendedorSelectedContext.tsx";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
+import decodeToken from "../../utils/tokenDecored";
+import Sidebar from "../Sidebar";
+import NuevoTipoGastoModal from "../../utils/Gastos/NuevoTipoGastoModal";
+import ModalDeleteTipoGasto from "../../utils/Gastos/ModalEliminarTipoGasto";
+import ModificarTipoGastoModal from "../../utils/Gastos/ModificarTipoGastoModal";
+import NuevoGastoModal from "../../utils/Gastos/NuevoGastoModal";
+import ModificarGastoModal from "../../utils/Gastos/ModificarGastoModal";
+import ModalDeleteGasto from "../../utils/Gastos/ModalEliminarGasto.tsx";
+import Spinner from "../../utils/Spinner.tsx";
+import { formatDate } from "../../utils/Helpers/FormatDate.tsx";
 
 interface Gasto {
   GastoId: number;
@@ -110,8 +111,7 @@ function Gastos() {
 
   const getTiposGastos = async () => {
     setIsLoading(true);
-    axios
-      .get("https://backendgestorventas1.azurewebsites.net/api/gastos/tipos")
+    HttpClient.get(`${import.meta.env.VITE_API_URL}/api/gastos/tipos`)
       .then((res) => {
         setGastos(res.data);
         setIsLoading(false);
@@ -124,12 +124,11 @@ function Gastos() {
 
   const getGastos = async () => {
     setIsLoading(true);
-    axios
-      .get(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/${
-          decodeToken()?.user?.Id
-        }/all`
-      )
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/gastos/${
+        decodeToken()?.user?.Id
+      }/all`
+    )
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -144,14 +143,13 @@ function Gastos() {
     setIsLoading(true);
     let Url =
       decodeToken()?.user.role !== "Administrador"
-        ? `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
+        ? `${import.meta.env.VITE_API_URL}/api/vendedores/${
             decodeToken()?.user?.Id
           }`
-        : `https://backendgestorventas1.azurewebsites.net/api/vendedores/${
+        : `${import.meta.env.VITE_API_URL}/api/vendedores/${
             decodeToken()?.user?.Id
           }/all`;
-    await axios
-      .get(`${Url}`)
+    await HttpClient.get(`${Url}`)
       .then((response) => {
         if (Array.isArray(response.data)) {
           setVendedores(response.data);
@@ -168,10 +166,9 @@ function Gastos() {
 
   const getGastosByVendedor = async () => {
     setIsLoading(true);
-    axios
-      .get(
-        `https://backendgestorventas1.azurewebsites.net/api/gastos/vendedor/${selectedSeller}`
-      )
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/gastos/vendedor/${selectedSeller}`
+    )
       .then((res) => {
         setGastosPorVendedor(res.data);
         setIsLoading(false);
@@ -217,7 +214,7 @@ function Gastos() {
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex justify-center w-full border-b shadow-md bg-white">
-          <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+          <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
             Gastos
           </h1>
         </header>
@@ -225,7 +222,7 @@ function Gastos() {
           <li
             className={`w-full md:w-1/4 lg:w-1/6 cursor-pointer select-none px-2 py-2 text-sm md:text-base text-center ${
               activeView === "tiposDeGastos"
-                ? "bg-blue-900 text-white"
+                ? "bg-primary text-white"
                 : "bg-white text-black"
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("tiposDeGastos")}
@@ -235,7 +232,7 @@ function Gastos() {
           <li
             className={`w-full md:w-1/4 lg:w-1/6 cursor-pointer select-none px-2 py-2 text-sm md:text-base text-center ${
               activeView === "gastosPorVendedor"
-                ? "bg-blue-900 text-white"
+                ? "bg-primary text-white"
                 : "bg-white text-black"
             } transition-colors duration-300 ease-in-out`}
             onClick={() => setActiveView("gastosPorVendedor")}
@@ -266,12 +263,12 @@ function Gastos() {
           {activeView === "tiposDeGastos" ? (
             <div className="px-4">
               <div className="w-full flex justify-between items-center">
-                <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
+                <h4 className="text-primary py-2 text-xl md:text-2xl lg:text-3xl">
                   Tipos de Gastos:
                 </h4>
                 {decodeToken()?.user.role === "Administrador" && (
                   <button
-                    className="mx-4 text-blue-900"
+                    className="mx-4 text-primary"
                     onClick={() => setIsOpenTipoGastoModal(true)}
                   >
                     <AddCircleIcon fontSize="large" />
@@ -289,7 +286,7 @@ function Gastos() {
                       className="bg-white border rounded-md p-1 break-words"
                       key={gasto.GastoId}
                     >
-                      <div className="w-full flex bg-blue-900 text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
+                      <div className="w-full flex bg-primary text-white py-4 text-xl rounded-lg p-2 font-medium justify-between">
                         <PaymentsIcon fontSize="large" />
                         <h4>{gasto.Nombre}</h4>
                         {decodeToken()?.user.role === "Administrador" && (
@@ -345,10 +342,10 @@ function Gastos() {
                           </div>
                         )}
                       </div>
-                      <div className="flex items-center text-blue-900 py-2 break-words">
+                      <div className="flex items-center text-primary py-2 break-words">
                         <DescriptionIcon />
                         <span className="px-2 w-[90%] text-wrap">
-                          <h6 className="font-semibold text-blue-900 text-lg">
+                          <h6 className="font-semibold text-primary text-lg">
                             Descripcion:
                           </h6>
                           <p className="font-normal text-black">
@@ -356,10 +353,10 @@ function Gastos() {
                           </p>
                         </span>
                       </div>
-                      <div className="flex items-center text-blue-900 py-2">
+                      <div className="flex items-center text-primary py-2">
                         <SellIcon />
                         <span className="px-2">
-                          <h6 className="font-semibold text-blue-900 text-lg">
+                          <h6 className="font-semibold text-primary text-lg">
                             Monto Maximo:{" "}
                           </h6>
                           <p className="text-black font-normal">
@@ -397,7 +394,7 @@ function Gastos() {
                     className="w-full"
                   />
                   <button
-                    className="border-md text-white bg-blue-900 text-base px-2"
+                    className="border-md text-white bg-primary text-base px-2"
                     onClick={() => {
                       getGastosByVendedor();
                       setSearched(true);
@@ -412,12 +409,12 @@ function Gastos() {
                 >
                   <AddCircleIcon
                     fontSize="large"
-                    className="text-blue-900 absolute md:right-5"
+                    className="text-primary absolute md:right-5"
                   />
                 </button>
               </div>
               <div>
-                <h4 className="text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl text-center md:text-start">
+                <h4 className="text-primary py-2 text-xl md:text-2xl lg:text-3xl text-center md:text-start">
                   Gastos por vendedor:
                 </h4>
                 <NuevoGastoModal
@@ -449,7 +446,7 @@ function Gastos() {
                         className="bg-white border rounded-md p-1 text-wrap break-words"
                         key={gasto.Id}
                       >
-                        <div className="flex flex-col items-center w-full text-white bg-blue-900 rounded-md p-4">
+                        <div className="flex flex-col items-center w-full text-white bg-primary rounded-md p-4">
                           <div className="w-full text-xl font-semibold flex justify-between">
                             <h6 className="text-center">
                               {gasto.NombreVendedor}
@@ -486,7 +483,7 @@ function Gastos() {
                           </span>
                         </div>
 
-                        <div className="flex items-center my-2 text-blue-800">
+                        <div className="flex items-center my-2 text-secondary">
                           <SellIcon />
                           <span className="mx-2">
                             <h6>Nombre Gasto:</h6>
@@ -495,7 +492,7 @@ function Gastos() {
                             </p>
                           </span>
                         </div>
-                        <div className="w-full flex items-center my-2 text-blue-800">
+                        <div className="w-full flex items-center my-2 text-secondary">
                           <DescriptionIcon />
                           <span className="mx-2 w-[90%] break-words">
                             <h6>Descripcion Gasto: </h6>
@@ -504,7 +501,7 @@ function Gastos() {
                             </p>
                           </span>
                         </div>
-                        <div className="flex items-center my-2 text-blue-800">
+                        <div className="flex items-center my-2 text-secondary">
                           <AttachMoneyIcon />
                           <span className="mx-2">
                             <h6>Valor del gasto:</h6>
@@ -517,7 +514,7 @@ function Gastos() {
                             </p>
                           </span>
                         </div>
-                        <div className="flex items-center text-blue-800">
+                        <div className="flex items-center text-secondary">
                           <CalendarMonthIcon />
                           <span className="mx-2">
                             <h6>Fecha del gasto:</h6>

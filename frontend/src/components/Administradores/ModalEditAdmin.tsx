@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+
 import Spinner from "../../utils/Spinner";
+import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
   isOpen: boolean;
@@ -34,9 +35,8 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
   const getAdministrador = async () => {
     try {
       setIsLoading(true);
-      await axios
-        .get(
-          `https://backendgestorventas1.azurewebsites.net/api/administradores/${Id}`,
+      await HttpClient.get(
+          `${import.meta.env.VITE_API_URL}/api/administradores/${Id}`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -125,9 +125,8 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
     if (!esValido) return;
 
     try {
-      axios
-        .put(
-          `https://backendgestorventas1.azurewebsites.net/api/Administradores/${Id}`,
+      HttpClient.put(
+          `${import.meta.env.VITE_API_URL}/api/Administradores/${Id}`,
           {
             NombreCompleto: nombre,
             NumeroDocumento: cedula,
@@ -188,7 +187,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
               <>
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <header className="flex justify-between items-center">
-                    <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-blue-900 ">
+                    <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-primary ">
                       Modificar Administrador
                     </h5>
                     <button
@@ -311,7 +310,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+                    className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-primary text-white rounded-lg hover:bg-tertiary font-semibold w-full my-3 "
                   >
                     Modificar Administrador
                   </button>

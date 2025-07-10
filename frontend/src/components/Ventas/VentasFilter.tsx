@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import CloseIcon from "@mui/icons-material/Close";
-import axios from "axios";
-import Spinner from "../utils/Spinner";
-import { useVendedorContext } from "../utils/Context/VendedorSelectedContext";
+import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import HttpClient from "../../Services/httpService";
+import Spinner from "../../utils/Spinner";
 
 interface Filtro {
   Id: number;
@@ -38,8 +38,8 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, 
     const fetchFiltros = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          "https://backendgestorventas1.azurewebsites.net/api/filtros",
+        const response = await HttpClient.get(
+          `${import.meta.env.VITE_API_URL}/api/filtros`,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -91,12 +91,12 @@ const VentasFilter: React.FC<Props> = ({ isOpen, onClose, onChange, vendedorId, 
       <header className="w-full bg-white py-2 shadow-md flex-col mb-3">
         <div className="w-full flex">
           <button
-            className="flex items-center justify-center p-2 text-3xl text-blue-800 font-extrabold"
+            className="flex items-center justify-center p-2 text-3xl text-secondary font-extrabold"
             onClick={onClose}
           >
             <CloseIcon fontSize="large" className="relative left-0" />
           </button>
-          <h2 className="font-bold text-blue-800 p-2 w-full text-center my-auto text-xl md:text-2xl lg:text-3xl">
+          <h2 className="font-bold text-secondary p-2 w-full text-center my-auto text-xl md:text-2xl lg:text-3xl">
             Filtrar Ventas
           </h2>
         </div>
