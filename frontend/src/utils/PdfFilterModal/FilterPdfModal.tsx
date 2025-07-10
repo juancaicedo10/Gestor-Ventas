@@ -111,7 +111,7 @@ const FilterPdfModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
                   <h3
-                    className="text-3xl leading-6 font-bold text-blue-900"
+                    className="text-3xl leading-6 font-bold text-primary"
                     id="modal-title"
                   >
                     Tipo de PDF

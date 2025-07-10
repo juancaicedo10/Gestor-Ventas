@@ -5,11 +5,15 @@ import CheckIcon from "@mui/icons-material/Check";
 import { useState, useEffect } from "react";
 import Spinner from "../../utils/Spinner";
 import ClientsImage from "../../images/clients.png";
-import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
-import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import { toast } from "react-toastify";
 import decodeToken from "../../utils/tokenDecored";
 import HttpClient from "../../Services/httpService";
+import PinDropIcon from "@mui/icons-material/PinDrop";
+import EmailIcon from "@mui/icons-material/Email";
+import PhoneIcon from "@mui/icons-material/Phone";
+import Work from "@mui/icons-material/Work";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
+import PersonIcon from "@mui/icons-material/Person";
 
 function clientesAprobar() {
   interface ClientToApprove {
@@ -17,7 +21,12 @@ function clientesAprobar() {
     NombreCompleto: string;
     Correo: string;
     NumeroDocumento: string;
+    VendedorNombre: string;
     Telefono: string;
+    Direccion: string;
+    Ocupacion: string;
+    Detalle: string;
+    Foto: string;
   }
 
   const [clientsToApprove, setClientsToApprove] = useState<ClientToApprove[]>(
@@ -30,15 +39,15 @@ function clientesAprobar() {
   useEffect(() => {
     setIsLoading(true);
     HttpClient.get(
-        `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${
-          decodeToken()?.user?.Id
-        }`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      )
+      `${import.meta.env.VITE_API_URL}/api/clientes/aprobar/${
+        decodeToken()?.user?.Id
+      }`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
       .then((res) => {
         setClientsToApprove(res.data);
         setIsLoading(false);
@@ -80,7 +89,7 @@ function clientesAprobar() {
     <section className="w-full">
       <Sidebar />
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
-        <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
+        <h1 className="mb-2 py-4 text-2xl text-primary md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full">
           Clientes por aprobar
         </h1>
         <section
@@ -91,7 +100,7 @@ function clientesAprobar() {
           ) : clientsToApprove.length === 0 ? (
             <div className="flex items-center flex-col justify-center w-full h-[70vh]">
               <img src={ClientsImage} alt="clientes image" />
-              <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-blue-900">
+              <h1 className="w-full md:w-1/2 text-center font-extrabold text-3xl md:text-4xl lg:text-6xl text-primary">
                 En este momento no hay ningun cliente por aprobar
               </h1>
             </div>
@@ -129,22 +138,37 @@ function clientesAprobar() {
                       </div>
                     </button>
                   </div>
-                  <div className="bg-blue-900 rounded-md p-2 md:p-4">
-                    <p className="text-lg font-bold text-white">
-                      <h6 className="font-normal text-center">
-                        {client.NombreCompleto}
-                      </h6>
-                    </p>
-                    <p className="text-lg text-white">
-                      <h6 className="font-normal text-center">
-                        CC.{client.NumeroDocumento}
-                      </h6>
-                    </p>
+                  <div className="bg-primary rounded-md p-2 md:p-4 flex flex-row">
+                    <img
+                      src={client.Foto}
+                      alt=""
+                      className="rounded-full w-16 h-16"
+                    />
+                    <div className="flex flex-col justify-center items-start ml-4">
+                      <p className="text-lg font-bold text-white">
+                        <h6 className="font-normal text-start">
+                          {client.NombreCompleto}
+                        </h6>
+                      </p>
+                      <p className="text-lg text-white">
+                        <h6 className="font-normal text-center">
+                          CC.{client.NumeroDocumento}
+                        </h6>
+                      </p>
+                    </div>
                   </div>
                   <div className="bg-white rounded-md border shadow-sm p-2">
-                    <p className="text-lg text-blue-900 flex items-center"></p>
-                    <p className="text-lg text-blue-900 flex items-center">
-                      <CalendarMonthIcon />
+                    <p className="text-lg text-primary flex items-center">
+                      <PersonIcon />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Vendedor:</h6>
+                        <span className="text-black font-normal">
+                          {client.VendedorNombre}
+                        </span>
+                      </span>
+                    </p>
+                    <p className="text-lg text-primary flex items-center">
+                      <EmailIcon />
                       <span className="m-1">
                         <h6 className="font-semibold">Correo:</h6>
                         <span className="text-black font-normal">
@@ -152,12 +176,39 @@ function clientesAprobar() {
                         </span>
                       </span>
                     </p>
-                    <p className="text-lg text-blue-900 flex items-center">
-                      <AccountBalanceIcon />
+                    <p className="text-lg text-primary flex items-center">
+                      <PhoneIcon />
                       <span className="m-1">
                         <h6 className="font-semibold">Telefono:</h6>
                         <span className="text-black font-normal">
                           +57 {client.Telefono}
+                        </span>
+                      </span>
+                    </p>
+                    <p className="text-lg text-primary flex items-center">
+                      <PinDropIcon />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Dirección:</h6>
+                        <span className="text-black font-normal">
+                          {client.Direccion}
+                        </span>
+                      </span>
+                    </p>
+                    <p className="text-lg text-primary flex items-center">
+                      <Work />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Ocupación:</h6>
+                        <span className="text-black font-normal">
+                          {client.Ocupacion}
+                        </span>
+                      </span>
+                    </p>
+                    <p className="text-lg text-primary flex items-center">
+                      <BorderColorIcon />
+                      <span className="m-1">
+                        <h6 className="font-semibold">Detalle:</h6>
+                        <span className="text-black font-normal">
+                          {client.Detalle}
                         </span>
                       </span>
                     </p>

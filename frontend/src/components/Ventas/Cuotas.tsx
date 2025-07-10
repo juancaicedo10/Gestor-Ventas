@@ -127,16 +127,16 @@ function Cuotas() {
     </div>
   ) : (
     <div>
-      <header className="shadow-md bg-white flex flex-col md:flex-row items items-center text-blue-900 justify-between relative">
+      <header className="shadow-md bg-white flex flex-col md:flex-row items items-center text-primary justify-between relative">
         <Link to="/ventas" className="absolute left-0 ml-4">
           <ReplyIcon fontSize="large" />
         </Link>
         <div className="flex-grow text-center">
-          <h1 className="font-semibold text-blue-900 py-2 text-xl md:text-2xl lg:text-3xl">
+          <h1 className="font-semibold text-primary py-2 text-xl md:text-2xl lg:text-3xl">
             Cuotas para la venta: <br />
-            <span className="font-bold text-blue-700">{NumeroVenta}</span>{" "}
+            <span className="font-bold text-tertiary">{NumeroVenta}</span>{" "}
             <br />
-            <span className="font-semibold text-blue-700 text-sm md:text-2xl">
+            <span className="font-semibold text-tertiary text-sm md:text-2xl">
               Cliente:{" "}
             </span>
             <span className="font-semibold text-black text-sm md:text-2xl">
@@ -194,7 +194,7 @@ function Cuotas() {
       <div className="flex justify-center flex-col items-center w-full px-1 overflow-hidden">
         <table className="border-2 border-black my-4 bg-[#f7f7f7] shadow-lg w-full md:w-3/4">
           <thead>
-            <tr className="border border-black text-[7px] md:text-sm lg:text-lg text-white bg-blue-800">
+            <tr className="border border-black text-[7px] md:text-sm lg:text-lg text-white bg-secondary">
               <th className="border-r border-black py-4 text-[7px] md:text-sm lg:text-lg">
                 <NumbersIcon fontSize="small" />
               </th>
@@ -235,7 +235,7 @@ function Cuotas() {
                         className={`text-xl ${
                           cuota.Pagada || isArchivada
                             ? "hidden"
-                            : "text-blue-900"
+                            : "text-primary"
                         }`}
                         onClick={() => {
                           setIsModalOpen(true);
@@ -247,7 +247,7 @@ function Cuotas() {
                       </button>
                       <button
                         className={`${
-                          cuota.Pagada ? "bg-green-500" : "bg-blue-800"
+                          cuota.Pagada ? "bg-green-500" : "bg-secondary"
                         } text-white text-[7px] md:text-xs rounded-sm p-1 ${
                           cuota.abonos.length < 1 && "hidden"
                         }`}
@@ -268,7 +268,7 @@ function Cuotas() {
                     <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg">
                       {formatDate(cuota.FechaPago)}
                     </td>
-                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg text-blue-500 font-semibold">
+                    <td className="text-center border-r px-1 border-black text-[7px] md:text-sm lg:text-lg text-fifth font-semibold">
                       {new Intl.NumberFormat("es-CO", {
                         style: "currency",
                         currency: "COP",
@@ -285,7 +285,7 @@ function Cuotas() {
                         {cuota.Pagada ? "Si" : "No"}
                       </span>
                     </td>
-                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-500 font-semibold">
+                    <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-fifth font-semibold">
                       {new Intl.NumberFormat("es-CO", {
                         style: "currency",
                         currency: "COP",
@@ -294,7 +294,7 @@ function Cuotas() {
                     {decodeToken().user.role === "Administrador" &&
                       !isArchivada && (
                         <>
-                          <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-blue-800">
+                          <td className="text-center border-r border-black text-[7px] md:text-sm lg:text-lg text-secondary">
                             <button
                               className="text-[7px]"
                               onClick={() => {
@@ -316,20 +316,20 @@ function Cuotas() {
                             <table className="w-full text-sm text-center">
                               <thead className="font-semibold">
                                 <tr>
-                                  <th className="text-[7px] md:text-sm lg:text-lg text-blue-800">
+                                  <th className="text-[7px] md:text-sm lg:text-lg text-secondary">
                                     Valor Abono
                                   </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                     Fecha Abono
                                   </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                     Abono Interes
                                   </th>
-                                  <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                     Abono Mora
                                   </th>
                                   {decodeToken()?.user.Id === 14 && (
-                                    <th className="text-[9px] md:text-sm lg:text-lg text-blue-800">
+                                    <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                       Acciones
                                     </th>
                                   )}
@@ -366,7 +366,7 @@ function Cuotas() {
                                       "Administrador" &&
                                       decodeToken()?.user.Id === 14 &&
                                       !abono.liquidado && (
-                                        <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-blue-800">
+                                        <td className="text-center px-1 text-[7px] md:text-sm lg:text-lg text-secondary">
                                           <button
                                             onClick={() => {
                                               setIsOpenEdit(true);
@@ -394,7 +394,7 @@ function Cuotas() {
         </table>
         <table className="border-2 border-black bg-[#f7f7f7] shadow-sm w-1/2">
           <thead>
-            <tr className="text-white bg-blue-800 text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
+            <tr className="text-white bg-secondary text-center text-[7px] md:text-sm lg:text-lg border-r border-black px-1">
               <th className="py-2 border-r border-black px-1">Valor venta</th>
               <th className="border-r border-black px-1">Valor Cuotas</th>
               <th className="border-r border-black px-1">Total Multa</th>

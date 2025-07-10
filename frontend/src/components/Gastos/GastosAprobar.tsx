@@ -99,7 +99,7 @@ function GastosAprobar() {
     <div>
       <Sidebar />
       <div className="ml-[63px]">
-        <h1 className="mb-2 py-4 text-2xl text-blue-900 md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
+        <h1 className="mb-2 py-4 text-2xl text-primary md:text-4xl lg:text-5xl text-center border-b shadow-md bg-gray-50 w-full font-bold">
           Gastos por aprobar
         </h1>
         {isLoading ? (
@@ -116,7 +116,7 @@ function GastosAprobar() {
                     alt="gasto imagen"
                     className="w-3/4 md:w-1/4"
                   />
-                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-blue-900 py-4 text-center w-full md:w-1/2">
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-extrabold text-primary py-4 text-center w-full md:w-1/2">
                     En este momento no hay ningun gasto por aprobar
                   </h1>
                 </div>
@@ -142,7 +142,7 @@ function GastosAprobar() {
                           Rechazar
                         </button>
                       </div>
-                      <div className="bg-blue-900 rounded-md p-2 md:p-4">
+                      <div className="bg-primary rounded-md p-2 md:p-4">
                         <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                           <span className="font-semibold mr-2">Vendedor:</span>{" "}
                           <h6 className="font-normal">{gasto.NombreVendedor}</h6>
@@ -153,7 +153,7 @@ function GastosAprobar() {
                         </p>
                       </div>
                       <div className="bg-white rounded-md border shadow-sm p-2">
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <AttachMoneyIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
@@ -167,7 +167,7 @@ function GastosAprobar() {
                             </span>
                           </span>
                         </p>
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <CalendarMonthIcon />
                           <span className="m-1">
                             <h6 className="font-semibold">
@@ -178,7 +178,7 @@ function GastosAprobar() {
                             </span>
                           </span>
                         </p>
-                        <p className="text-lg text-blue-900 flex items-center">
+                        <p className="text-lg text-primary flex items-center">
                           <ModeIcon />
                           <span className="m-1">
                             <h6 className="font-semibold flex">Detalles:</h6>

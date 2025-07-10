@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import Spinner from "../Spinner";
 import HttpClient from "../../Services/httpService";
+import FileInputWithPreview from "../Fotos/FileInputWithPreview";
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,6 +25,7 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
   const [contraseña, setContraseña] = useState("");
   const [oficinaId, setOficinaId] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
+  const [foto, setFoto] = useState<null | string | File>(null);
 
   const [isLoadingButton, setIsLoadingButton] = useState(false);
 
@@ -38,24 +40,24 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       await HttpClient.get(
-          `${import.meta.env.VITE_API_URL}/api/vendedores/${Id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then((response) => {
-          setNombre(response.data.NombreCompleto);
-          setCorreo(response.data.Correo);
-          setTelefono(response.data.Telefono);
-          setCedula(response.data.NumeroDocumento);
-          setDireccion(response.data.Direccion);
-          setContraseña(response.data.Contraseña);
-          setOficinaId(response.data.OficinaId);
-          setIsLoading(false);
-          console.log(response.data);
-        });
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${Id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      ).then((response) => {
+        setNombre(response.data.NombreCompleto);
+        setCorreo(response.data.Correo);
+        setTelefono(response.data.Telefono);
+        setCedula(response.data.NumeroDocumento);
+        setDireccion(response.data.Direccion);
+        setContraseña(response.data.Contraseña);
+        setFoto(response.data.Foto);
+        setOficinaId(response.data.OficinaId);
+        setIsLoading(false);
+        console.log(response.data);
+      });
     } catch (error) {
       console.error("Error obteniendo cliente:", error);
       setIsLoading(false);
@@ -131,31 +133,39 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
       return;
     }
 
+    const formData = new FormData();
+
+    formData.append("NombreCompleto", nombre);
+    formData.append("NumeroDocumento", cedula);
+    formData.append("TipoDocumento", "1");
+    formData.append("Telefono", telefono);
+    formData.append("Correo", correo);
+    formData.append("Direccion", direccion);
+    formData.append("Contrasena", contraseña);
+    formData.append("OficinaId", oficinaId.toString());
+    if (foto) {
+      if (typeof foto === "string") {
+        formData.append("Foto", foto);
+      } else {
+        formData.append("Foto", foto);
+      }
+    }
+
     try {
-      HttpClient.put(
-          `${import.meta.env.VITE_API_URL}/api/vendedores/${Id}`,
-          {
-            NombreCompleto: nombre,
-            NumeroDocumento: cedula,
-            TipoDocumento: 1,
-            Telefono: telefono,
-            Correo: correo,
-            Direccion: direccion,
-            Contrasena: contraseña,
-            OficinaId: oficinaId,
+      HttpClient.putForm(
+        `${import.meta.env.VITE_API_URL}/api/vendedores/${Id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(() => {
-          console.log("CLIENTE CREADO EXITOSAMENTE");
-          getVendedores();
-          setIsLoadingButton(false);
-          onClose();
-        });
+        }
+      ).then(() => {
+        console.log("CLIENTE CREADO EXITOSAMENTE");
+        getVendedores();
+        setIsLoadingButton(false);
+        onClose();
+      });
     } catch (error) {
       console.error("Error creando cliente:", error);
       setIsLoadingButton(false);
@@ -314,6 +324,13 @@ const ModificarVendedorModal: React.FC<ModalProps> = ({
                         Este campo es obligatorio
                       </p>
                     )}
+                  </label>
+                  <label className="block text-base md:text-lg font-normal mt-2">
+                    <span className="text-gray-700">Foto (opcional):</span>
+                    <FileInputWithPreview
+                      file={foto as string}
+                      onFileSelected={(e) => setFoto(e)}
+                    ></FileInputWithPreview>
                   </label>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

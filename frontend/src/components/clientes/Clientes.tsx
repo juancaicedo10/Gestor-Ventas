@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import _ from "lodash";
 import Sidebar from "../Sidebar";
 import decodeToken from "../../utils/tokenDecored";
-import PersonIcon from "@mui/icons-material/Person";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -17,6 +16,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import { Link } from "react-router-dom";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
+import { Tooltip } from "@mui/material";
 import HttpClient from "../../Services/httpService";
 
 function Clientes() {
@@ -30,6 +30,7 @@ function Clientes() {
     Ocupacion: string;
     Detalle: string;
     ValorDeuda: number;
+    Foto: string;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
@@ -141,19 +142,19 @@ function Clientes() {
 
   useEffect(() => {
     if (searchValue !== "") {
-    const handler = setTimeout(() => {
-      setCurrentPage(0); // Reinicia la página solo cuando se realiza una nueva búsqueda
-      getClients();
-    }, 400);
+      const handler = setTimeout(() => {
+        setCurrentPage(0); // Reinicia la página solo cuando se realiza una nueva búsqueda
+        getClients();
+      }, 400);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }
+      return () => {
+        clearTimeout(handler);
+      };
+    }
   }, [searchValue]);
 
   useEffect(() => {
-   getClients();
+    getClients();
   }, [currentPage, searchValue === ""]);
 
   const [visibleRange, setVisibleRange] = useState([0, 5]);
@@ -177,12 +178,12 @@ function Clientes() {
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               {decodeToken()?.user.role === "Administrador"
                 ? "Clientes"
                 : "Tus Clientes"}
             </h1>
-            <button className="mx-4 text-blue-900">
+            <button className="mx-4 text-primary">
               <GroupAddIcon fontSize="large" onClick={toggleModal} />
             </button>
           </div>
@@ -222,7 +223,7 @@ function Clientes() {
                 />
                 <button
                   type="submit"
-                  className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                  className="text-white absolute end-2.5 bottom-2.5 bg-secondary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
                 >
                   Buscar
                 </button>
@@ -268,8 +269,11 @@ function Clientes() {
                       key={client.Id}
                     >
                       <div className="flex flex-col">
-                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
-                          <PersonIcon fontSize="large" className="text-white" />
+                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-primary text-white">
+                          <img
+                            src={client.Foto}
+                            className="w-16 h-16 rounded-full"
+                          />
                           <span>
                             <h1 className="font-normal text-xl">
                               {client.NombreCompleto.split(" ")
@@ -343,14 +347,14 @@ function Clientes() {
                         </section>
                         <div className="text-lg font-light flex flex-col">
                           <li className="flex items-center my-1">
-                            <PinDropIcon className="text-blue-800" />
+                            <PinDropIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Direccion:</h3>
                               <p>{client.Direccion}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <EmailIcon className="text-blue-800" />
+                            <EmailIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Email:</h3>
                               <p className="overflow-ellipsis overflow-hidden w-40 md:w-full">
@@ -359,10 +363,10 @@ function Clientes() {
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <PhoneIcon className="text-blue-800" />
+                            <PhoneIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Telefono:</h3>
-                              <p className="border-b border-blue-600 text-blue-600">
+                              <p className="border-b border-quaternary text-quaternary">
                                 <a
                                   href={`https://wa.me/${client.Telefono}`}
                                   target="_blank"
@@ -374,18 +378,26 @@ function Clientes() {
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <WorkIcon className="text-blue-800" />
+                            <WorkIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ocupacion:</h3>
-                              <p>{client.Ocupacion}</p>
+                              <Tooltip title={client.Ocupacion} arrow>
+                                <p className="font-light tresPuntos">
+                                  {client.Ocupacion}
+                                </p>
+                              </Tooltip>
                             </span>
                           </li>
 
                           <li className="flex items-center my-1">
-                            <BorderColorIcon className="text-blue-800" />
+                            <BorderColorIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Detalle:</h3>
-                              <p>{client.Detalle}</p>
+                              <Tooltip title={client.Detalle} arrow>
+                                <p className="font-light tresPuntos">
+                                  {client.Detalle}
+                                </p>
+                              </Tooltip>
                             </span>
                           </li>
                         </div>
@@ -397,7 +409,7 @@ function Clientes() {
               <div className="flex justify-center mt-4 text-sm">
                 {visibleRange[0] > 0 && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded-md bg-white text-blue-700 font-normal"
+                    className="mx-1 px-3 py-1 border rounded-md bg-white text-tertiary font-normal"
                     onClick={handlePrevRange}
                   >
                     Anterior
@@ -408,8 +420,8 @@ function Clientes() {
                     key={index}
                     className={`mx-1 px-3 py-1 border rounded-md font-normal ${
                       currentPage === index
-                        ? "bg-blue-700 text-white"
-                        : "bg-white text-blue-700"
+                        ? "bg-tertiary text-white"
+                        : "bg-white text-tertiary"
                     }`}
                     onClick={() => handlePageClick(index)}
                   >
@@ -418,7 +430,7 @@ function Clientes() {
                 ))}
                 {visibleRange[1] < pageCount && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700 font-normal"
+                    className="mx-1 px-3 py-1 border rounded bg-white text-tertiary font-normal"
                     onClick={handleNextRange}
                   >
                     Siguiente

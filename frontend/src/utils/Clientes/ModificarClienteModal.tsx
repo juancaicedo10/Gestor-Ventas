@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Spinner from "../Spinner";
 import { toast } from "react-toastify";
 import HttpClient from "../../Services/httpService";
+import FileInputWithPreview from "../Fotos/FileInputWithPreview";
 
 interface ModalProps {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   onClose,
 }) => {
   const [nombre, setNombre] = useState("");
+  const [foto, setFoto] = useState<File | string | null>(null);
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
   const [cedula, setCedula] = useState("");
@@ -55,6 +57,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           setDireccion(response.data.Direccion);
           setOcupacion(response.data.Ocupacion);
           setDetalle(response.data.Detalle);
+          setFoto(response.data.Foto || null);
           setIsLoading(false);
           console.log(response.data);
         });
@@ -143,19 +146,27 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
       return;
     }
 
+
+    const formData = new FormData();
+
+    formData.append("NombreCompleto", nombre);
+    formData.append("NumeroDocumento", cedula);
+    formData.append("TipoDocumento", "1");
+    formData.append("Telefono", telefono);
+    formData.append("Correo", correo);
+    formData.append("Direccion", direccion);
+    formData.append("Ocupacion", ocupacion);
+    formData.append("Detalle", detalle);  
+    if (foto instanceof File) {
+      formData.append("Foto", foto);
+    } else if (typeof foto === "string") {
+      formData.append("Foto", foto);
+    }
+
     try {
-      HttpClient.put(
+      HttpClient.putForm(
           `${import.meta.env.VITE_API_URL}/api/clientes/${Id}`,
-          {
-            NombreCompleto: nombre,
-            NumeroDocumento: cedula,
-            TipoDocumento: 1,
-            Telefono: telefono,
-            Correo: correo,
-            Direccion: direccion,
-            Ocupacion: ocupacion,
-            Detalle: detalle,
-          },
+        formData,
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -344,6 +355,10 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                         Este campo es obligatorio
                       </p>
                     )}
+                  </label>
+                  <label className="block text-base md:text-lg font-normal mt-2">
+                    <span className="text-gray-700">Foto (opcional):</span>
+                      <FileInputWithPreview file={foto as string} onFileSelected={(e) => setFoto(e)}></FileInputWithPreview>
                   </label>
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">

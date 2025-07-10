@@ -136,7 +136,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
         >
           <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
             <header className="flex justify-between items-center mb-4">
-              <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-blue-900">
+              <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-primary">
                 Relacion Administrador - Vendedor
               </h5>
               <button
@@ -188,7 +188,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
                             e.target.checked
                           )
                         }
-                        className="form-checkbox h-5 w-5 text-blue-600"
+                        className="form-checkbox h-5 w-5 text-quaternary"
                       />
                       <span className="text-gray-800 text-lg font-normal">
                         {vendedor.NombreCompleto}
@@ -200,7 +200,7 @@ const RelacionAdministradorVendedorModal: React.FC<ModalProps> = ({
             </div>
             <button
               type="submit"
-              className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-700 font-semibold w-full my-3 "
+              className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-primary text-white rounded-lg hover:bg-tertiary font-semibold w-full my-3 "
             >
               {decodeToken()?.user.role === "Administrador" &&
                 "Guardar Relacion"}

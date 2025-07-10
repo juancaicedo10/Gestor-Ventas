@@ -106,10 +106,10 @@ function Vendedores() {
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               Vendedores
             </h1>
-            <button className="mx-4 text-blue-900">
+            <button className="mx-4 text-primary">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
           </div>
@@ -142,14 +142,14 @@ function Vendedores() {
                 <input
                   type="search"
                   id="default-search"
-                  className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-fifth focus:border-fifth"
                   placeholder="Buscar vendedor"
                   onChange={handleSearch}
                   required
                 />
                 <button
                   type="submit"
-                  className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                  className="text-white absolute end-2.5 bottom-2.5 bg-secondary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-sixth font-medium rounded-lg text-sm px-4 py-2"
                 >
                   Buscar
                 </button>
@@ -193,12 +193,12 @@ function Vendedores() {
                     <li
                       className={`w-full p-2 min-h-[260px] rounded-md border flex flex-col bg-white shadow-md md:hover:scale-105 transition-transform duration-100 ${
                         VendedorSelectedContext === vendedor.Id &&
-                        "border-2 border-blue-600"
+                        "border-2 border-quaternary"
                       }`}
                       key={vendedor.Id}
                     >
                       <div className="flex flex-col">
-                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
+                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-primary text-white">
                           <img
                             src={vendedor.Foto}
                             className="w-16 h-16 rounded-full"
@@ -287,24 +287,24 @@ function Vendedores() {
                         </section>
                         <div className="text-lg font-light flex flex-col">
                           <li className="flex items-center my-1">
-                            <PinDropIcon className="text-blue-800" />
+                            <PinDropIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Direccion:</h3>
                               <p>{vendedor.Direccion}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <EmailIcon className="text-blue-800" />
+                            <EmailIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Email:</h3>
                               <p>{vendedor.Correo}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <PhoneIcon className="text-blue-800" />
+                            <PhoneIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Telefono:</h3>
-                              <p className="border-b border-blue-600 text-blue-600">
+                              <p className="border-b border-quaternary text-quaternary">
                                 <a
                                   href={`https://wa.me/${vendedor.Telefono}`}
                                   target="_blank"
@@ -316,18 +316,18 @@ function Vendedores() {
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <SellIcon className="text-blue-800" />
+                            <SellIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
                               <p>{vendedor.TotalVentas}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <StorefrontIcon className="text-blue-800" />
+                            <StorefrontIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Ventas totales:</h3>
                               <Link to={`/ventas/vendedor/${vendedor.Id}`}>
-                                <p className="text-blue-600 hover:text-blue-900 cursor-pointer">
+                                <p className="text-quaternary hover:text-primary cursor-pointer">
                                   Ir a las ventas
                                 </p>
                               </Link>

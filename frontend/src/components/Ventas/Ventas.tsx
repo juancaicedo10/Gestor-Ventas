@@ -1,7 +1,6 @@
 import Sidebar from "../Sidebar";
 import { useEffect, useState } from "react";
 
-import SellIcon from "@mui/icons-material/Sell";
 import { useParams } from "react-router-dom";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import Spinner from "../../utils/Spinner";
@@ -292,23 +291,23 @@ function Ventas() {
       <div className="ml-[64px]">
         <header className="flex flex-col items-center w-full border-b shadow-md bg-white">
           <div className="flex-1 flex justify-cente">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-center p-2 font-bold">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-center p-2 font-bold">
               {decodeToken()?.user.role === "Administrador"
                 ? "Ventas"
                 : "Tus Ventas"}
             </h1>
           </div>
           <div className="flex-1 flex justify-end space-x-4">
-            <button className="text-blue-900">
+            <button className="text-primary">
               <PictureAsPdfIcon
                 fontSize="large"
                 onClick={() => setIsPdfFilterOpen(true)}
               />
             </button>
-            <button className="text-blue-900">
+            <button className="text-primary">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
-            <button className="text-blue-900">
+            <button className="text-primary">
               <TuneIcon
                 fontSize="large"
                 onClick={() => setIsFilterOpen(true)}
@@ -343,14 +342,14 @@ function Ventas() {
               <input
                 type="search"
                 id="default-search"
-                className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-fifth focus:border-fifth"
                 placeholder="Buscar cliente"
                 onChange={handleSearch}
                 required
               />
               <button
                 type="submit"
-                className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                className="text-white absolute end-2.5 bottom-2.5 bg-secondary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-sixth font-medium rounded-lg text-sm px-4 py-2"
               >
                 Buscar
               </button>
@@ -411,15 +410,22 @@ function Ventas() {
                       }}
                     >
                       <div className="flex flex-col m-2 p-2">
-                        <header className="bg-blue-900 text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[120px]">
-                          <SellIcon fontSize="large" className="text-white" />
+                        <header className="bg-primary text-white font-normal py-4 rounded-md px-4 w-full flex flex-col items-center min-h-[120px]">
+                          <img src={venta.FotoCliente} alt="foto cliente" className="w-16 h-16 rounded-full mb-2"/>
                           <h1 className="text-xl pb-2 text-center">
                             <span className="font-bold">Venta:</span>{" "}
                             {venta.NumeroVenta}
                           </h1>
                           <p className="text-gray-300 text-lg mx-3 text-center min-h-[60px]">
-                            <span className="font-medium">Cliente:</span>{" "}
+                            <span className="font-semibold text-white">Cliente:</span>{" "}
                             {venta.NombreCliente}
+                          </p>
+                          <p className="text-gray-300 text-lg mx-3 text-center">
+                            <span className="font-semibold text-white">Valor Venta:</span>{" "}
+                            {venta.ValorVenta.toLocaleString("es-CO", {
+                              style: "currency",
+                              currency: "COP",
+                            })}
                           </p>
                           <span
                             className={`rounded-md p-1 text-sm bg-[${venta.ColorEstado}] mt-2`}
@@ -439,7 +445,7 @@ function Ventas() {
               <div className="flex justify-center mt-4">
                 {visibleRange[0] > 0 && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    className="mx-1 px-3 py-1 border rounded bg-white text-tertiary"
                     onClick={handlePrevRange}
                   >
                     Anterior
@@ -450,8 +456,8 @@ function Ventas() {
                     key={index}
                     className={`mx-1 px-3 py-1 border rounded ${
                       currentPage === index
-                        ? "bg-blue-700 text-white"
-                        : "bg-white text-blue-700"
+                        ? "bg-tertiary text-white"
+                        : "bg-white text-tertiary"
                     }`}
                     onClick={() => handlePageClick(index)}
                   >
@@ -460,7 +466,7 @@ function Ventas() {
                 ))}
                 {visibleRange[1] < pageCount && (
                   <button
-                    className="mx-1 px-3 py-1 border rounded bg-white text-blue-700"
+                    className="mx-1 px-3 py-1 border rounded bg-white text-tertiary"
                     onClick={handleNextRange}
                   >
                     Siguiente

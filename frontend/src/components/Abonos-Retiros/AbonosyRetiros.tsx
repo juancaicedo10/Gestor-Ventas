@@ -112,11 +112,11 @@ function AbonosyRetiros() {
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               Abonos y Retiros
             </h1>
             <button
-              className="mx-4 text-blue-900"
+              className="mx-4 text-primary"
               onClick={() => setIsOpen(true)}
             >
               <AddCircleIcon fontSize="large" />
@@ -141,7 +141,7 @@ function AbonosyRetiros() {
             ) : (
               <>
                 <h3>
-                  <span className="font-bold text-3xl text-blue-800">
+                  <span className="font-bold text-3xl text-secondary">
                     Base Capital:
                   </span>
                   {new Intl.NumberFormat("es-CO", {
@@ -150,7 +150,7 @@ function AbonosyRetiros() {
                   }).format(BaseCapital || 0)}
                 </h3>
                 <h2 className="text-center text-2xl py-4 font-semibold">
-                  <span className="font-bold text-3xl text-blue-800">
+                  <span className="font-bold text-3xl text-secondary">
                     Base Vendedor:
                   </span>
                   {new Intl.NumberFormat("es-CO", {
@@ -183,7 +183,7 @@ function AbonosyRetiros() {
                     key={i}
                   >
                     <div className="flex flex-col">
-                      <section className="w-full p-2 flex items-center justify-center rounded-md bg-blue-900 text-white">
+                      <section className="w-full p-2 flex items-center justify-center rounded-md bg-primary text-white">
                         <span>
                           <h1 className="font-normal text-2xl py-2">
                             {retiro?.NombreVendedor?.split(" ")
@@ -203,7 +203,7 @@ function AbonosyRetiros() {
                       </section>
                       <div className="text-lg font-light flex flex-col">
                         <li className="flex items-center my-1">
-                          <SellIcon className="text-blue-800" />
+                          <SellIcon className="text-secondary" />
                           <span
                             className={`mx-4 font-bold ${
                               retiro.Tipo === "Retiro"
@@ -211,7 +211,7 @@ function AbonosyRetiros() {
                                 : "text-green-500"
                             }`}
                           >
-                            <h3 className="font-bold text-xl text-blue-800">
+                            <h3 className="font-bold text-xl text-secondary">
                               Valor:
                             </h3>
                             {retiro.Tipo === "Abono"
@@ -226,9 +226,9 @@ function AbonosyRetiros() {
                           </span>
                         </li>
                         <li className="flex items-center my-1">
-                          <DescriptionIcon className="text-blue-800" />
+                          <DescriptionIcon className="text-secondary" />
                           <span className="mx-4">
-                            <h3 className="font-bold text-xl text-blue-800">
+                            <h3 className="font-bold text-xl text-secondary">
                               Descripcion:
                             </h3>
                             <p className="overflow-ellipsis overflow-hidden w-40 md:w-full">
@@ -237,9 +237,9 @@ function AbonosyRetiros() {
                           </span>
                         </li>
                         <li className="flex items-center my-1">
-                          <AttachMoney className="text-blue-800" />
+                          <AttachMoney className="text-secondary" />
                           <span className="mx-4">
-                            <h3 className="font-bold text-xl text-blue-800">
+                            <h3 className="font-bold text-xl text-secondary">
                               Liquidado:
                             </h3>
                             <p className="overflow-ellipsis overflow-hidden w-40 md:w-full">

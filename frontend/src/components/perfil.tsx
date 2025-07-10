@@ -149,7 +149,7 @@ function Perfil() {
             className="flex flex-col w-full md:w-1/2 lg:w-1/3 rounded-md shadow-md border p-6 bg-white mx-2"
             onSubmit={handleUpdate}
           >
-            <h1 className="text-center font-bold text-4xl text-blue-800 pb-3">
+            <h1 className="text-center font-bold text-4xl text-secondary pb-3">
               Tu Perfil
             </h1>
             <label htmlFor="nombre" className="font-normal text-base">
@@ -234,10 +234,10 @@ function Perfil() {
             </div>
             <button
               type="submit"
-              className={`w-full py-3 bg-blue-800 hover:bg-blue-900 text-white font-bold rounded-lg my-4 ${
+              className={`w-full py-3 bg-secondary hover:bg-primary text-white font-bold rounded-lg my-4 ${
                 isLoading
                   ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
-                  : "bg-blue-800 hover:bg-blue-900 text-white"
+                  : "bg-secondary hover:bg-primary text-white"
               }`}
               disabled={isLoading || decodeToken()?.user?.role !== "Administrador"}
             >

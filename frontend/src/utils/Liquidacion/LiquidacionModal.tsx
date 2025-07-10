@@ -301,7 +301,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <header className="flex w-full items-center justify-between">
                   <h3
-                    className="text-3xl leading-6 font-bold text-blue-900"
+                    className="text-3xl leading-6 font-bold text-primary"
                     id="modal-title"
                   >
                     Realizar liquidación:
@@ -338,7 +338,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           }}
                         />
                         <button
-                          className="absolute right-0 top-1/2 -translate-y-1/2 text-white bg-blue-800 text-sm px-2 py-2 rounded-md"
+                          className="absolute right-0 top-1/2 -translate-y-1/2 text-white bg-secondary text-sm px-2 py-2 rounded-md"
                           onClick={(e) => [
                             getDataLiquidacion(selectedSeller ?? 0, e),
                             setEfectivoEntregar(0),
@@ -357,7 +357,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                     <>
                       <section className="grid grid-cols-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Base capital:
                           </label>
                           <h3 className="font-normal">
@@ -368,7 +368,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Cartera:
                           </label>
                           <h3 className="font-normal">
@@ -381,7 +381,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       </section>
                       <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Gastos:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -392,7 +392,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Total Ventas:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -405,7 +405,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       </section>
                       <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Total Intereses:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -416,7 +416,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Seguros:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -429,7 +429,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       </section>
                       <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Multas:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -440,7 +440,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Total Abonos:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -453,7 +453,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       </section>
                       <section className="grid grid-cols-2 mb-2">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Efectivo:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -464,7 +464,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Abono Capital:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -475,7 +475,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Base Vendedor:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -486,7 +486,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Movimientos:
                           </label>
                           <button
@@ -502,7 +502,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </button>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Cartera Restante:
                           </label>
                           <h3 className="font-normal">
@@ -518,7 +518,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           !isDifeValid ? "border-red-500" : ""
                         }`}
                       >
-                        <h3 className="text-lg font-semibold text-blue-800">
+                        <h3 className="text-lg font-semibold text-secondary">
                           Diferencia:
                         </h3>
                         <h3 className="font-normal text-lg">
@@ -535,7 +535,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                       )}
                       <section className="w-full grid grid-cols-2 mt-5">
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Clientes Activos:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -543,7 +543,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                          <label className="block text-base md:text-lg font-semibold text-blue-800">
+                          <label className="block text-base md:text-lg font-semibold text-secondary">
                             Intereses, Seguros, Multas:
                           </label>
                           <h3 className="font-normal text-lg">
@@ -555,7 +555,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                         </div>
                       </section>
                       <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
-                        <label className="block text-base md:text-lg font-semibold text-blue-800">
+                        <label className="block text-base md:text-lg font-semibold text-secondary">
                           Detalles:
                         </label>
                         <textarea
@@ -573,7 +573,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
               </div>
               <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex justify-between items-center">
                 <span className="text-xl">
-                  <label htmlFor="efectivo" className="text-blue-900">
+                  <label htmlFor="efectivo" className="text-primary">
                     Debe entregar:
                   </label>
                   <h3>
@@ -585,7 +585,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                 </span>
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fifth sm:ml-3 sm:w-auto sm:text-sm"
                   onClick={handleSubmit}
                 >
                   Liquidar vendedor

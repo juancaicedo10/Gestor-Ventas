@@ -114,7 +114,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                 <h4 className="text-xl font-bold pb-2 text-blue-600">
                   Detalles:
                 </h4>
-                <section className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <section className="flex flex-col w-full">
                   <div>
                     <li className="p-1">
                       <SellIcon fontSize="small" className="text-blue-900" />
@@ -211,7 +211,7 @@ const VisualizarVentaModal: React.FC<ModalProps> = ({
                     </li>
                   </div>
 
-                  <div className="w-full h-full flex justify-center items-center"><img src={ventaSelected?.FotoCliente} alt="foto cliente" className="w-36 h-36 rounded-full"/></div>
+        
                 </section>
               </ul>
               <div className="rounded-md border-2 p-2 w-full py-2 bg-white">

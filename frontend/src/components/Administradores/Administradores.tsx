@@ -92,16 +92,16 @@ function Administradores() {
       <div className="flex flex-col justify-center text-3xl font-bold ml-[64px]">
         <header className="flex flex-col w-full border-b shadow-md bg-white mb-4">
           <div className="flex w-full">
-            <h1 className="text-2xl text-blue-900 md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
+            <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               Administradores
             </h1>
-            <button className="mx-4 text-blue-900">
+            <button className="mx-4 text-primary">
               <SyncAltIcon
                 fontSize="large"
                 onClick={() => setIsRelacionOpen(true)}
               />
             </button>
-            <button className="mx-4 text-blue-900">
+            <button className="mx-4 text-primary">
               <AddCircleIcon fontSize="large" onClick={toggleModal} />
             </button>
           </div>
@@ -134,14 +134,14 @@ function Administradores() {
                 <input
                   type="search"
                   id="default-search"
-                  className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500"
+                  className="block w-full p-3 ps-10 text-base text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-fifth focus:border-fifth"
                   placeholder="Buscar Administrador"
                   onChange={handleSearch}
                   required
                 />
                 <button
                   type="submit"
-                  className="text-white absolute end-2.5 bottom-2.5 bg-blue-800 hover:bg-blue-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2"
+                  className="text-white absolute end-2.5 bottom-2.5 bg-secondary hover:bg-primary focus:ring-4 focus:outline-none focus:ring-sixth font-medium rounded-lg text-sm px-4 py-2"
                 >
                   Buscar
                 </button>
@@ -193,7 +193,7 @@ function Administradores() {
                       key={Administrador.Id}
                     >
                       <div className="flex flex-col">
-                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-blue-900 text-white">
+                        <section className="w-full p-2 flex items-center justify-between rounded-md bg-primary text-white">
                           <span>
                             <h1 className="font-normal text-xl">
                               {Administrador.NombreCompleto.split(" ")
@@ -261,24 +261,24 @@ function Administradores() {
                         </section>
                         <div className="text-lg font-light flex flex-col">
                           <li className="flex items-center my-1">
-                            <PinDropIcon className="text-blue-800" />
+                            <PinDropIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Direccion:</h3>
                               <p>{Administrador.Direccion}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <EmailIcon className="text-blue-800" />
+                            <EmailIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Email:</h3>
                               <p>{Administrador.Correo}</p>
                             </span>
                           </li>
                           <li className="flex items-center my-1">
-                            <PhoneIcon className="text-blue-800" />
+                            <PhoneIcon className="text-secondary" />
                             <span className="mx-4">
                               <h3 className="font-bold">Telefono:</h3>
-                              <p className="border-b border-blue-600 text-blue-600">
+                              <p className="border-b border-quaternary text-quaternary">
                                 <a
                                   href={`https://wa.me/${Administrador.Telefono}`}
                                   target="_blank"
