@@ -1,7 +1,7 @@
 import { SessionService } from "./SessionService";
 
 let inactivityTimeout: ReturnType<typeof setTimeout>;
-
+//
 const handleInactivity = () => {
   console.log("🔒 Usuario inactivo: cerrando sesión");
   SessionService.clearToken();
