@@ -219,7 +219,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
               <>
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <header className="flex justify-between items-center">
-                    <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-blue-900 ">
+                    <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-primary ">
                       Modificar Cliente
                     </h5>
                     <button
@@ -364,7 +364,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                 <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                   <button
                     type="submit"
-                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-900 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fifth sm:ml-3 sm:w-auto sm:text-sm"
                     disabled={isLoadingButton}
                   >
                     {isLoadingButton ? (
