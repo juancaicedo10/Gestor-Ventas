@@ -210,11 +210,14 @@ function Ventas() {
     }
   };
 
-  const getVentasFilterBuscar = async (Buscar: string) => {
+   const getVentasFilterBuscar = async (Buscar: string) => {
     setIsLoading(true);
     try {
       let res;
-      if (decodeToken()?.user.role === "Administrador") {
+      if (
+        decodeToken()?.user.role === "Administrador" &&
+        !VendedorSelectedContext
+      ) {
         res = await HttpClient.get(
           `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
           {
@@ -223,6 +226,21 @@ function Ventas() {
               limit: 16,
               Buscar: Buscar,
               AdministradorId: Id,
+            },
+          }
+        );
+      } else if (
+        decodeToken()?.user.role === "Administrador" &&
+        VendedorSelectedContext
+      ) {
+        res = await HttpClient.get(
+          `${import.meta.env.VITE_API_URL}/api/ventas/filter`,
+          {
+            params: {
+              page: currentPage + 1,
+              limit: 16,
+              Buscar: Buscar,
+              VendedorId: VendedorSelectedContext,
             },
           }
         );
