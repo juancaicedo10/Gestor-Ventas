@@ -80,12 +80,22 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
         { AbonoId: AbonoId },
         { responseType: "blob" } // MUY IMPORTANTE
       );
-
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      saveAs(blob, `recibo_${AbonoId}.pdf`);
+        // Crear una URL a partir de los datos del archivo
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        // Crear un enlace <a> temporal
+        const link = document.createElement("a");
+        link.href = url;
+        // Asignar un nombre al archivo descargado
+        link.setAttribute("download", "factura-abono.pdf");
+        // Añadir el enlace al documento y hacer clic para descargar
+        document.body.appendChild(link);
+        link.click();
+        // Limpiar el enlace después de la descarga
+        document.body.removeChild(link);
+      
     } catch (error) {
-      console.error("Error al descargar recibo:", error);
-    }
+      console.error("Error al descargar el documento:", error);
+    } 
   };
 
   const getVendedores = async () => {
