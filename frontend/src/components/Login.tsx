@@ -6,6 +6,9 @@ import httpClient from "../Services/httpService";
 import * as UAParserLib from "ua-parser-js";
 import DefaultModal from "./Shared/DefaultModal";
 import { SessionService } from "../Services/SessionService";
+import { addNewDevice, getDevice } from "../Services/indexedDB";
+import { v4 as uuidv4 } from "uuid";
+import { startAuthentication } from "@simplewebauthn/browser";
 
 function Login() {
   const navigate = useNavigate();
@@ -13,6 +16,7 @@ function Login() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [password, setPassword] = useState<string>("");
+  const [correo, setCorreo] = useState<string>("");
 
   const [showSessionExpiredModal, setShowSessionExpiredModal] =
     useState<boolean>(false);
@@ -37,10 +41,27 @@ function Login() {
       browser: userAgent.browser,
       os: userAgent.os,
     };
+
+    const device = await getDevice();
+    let storedDevice;
+    let newDevice;
+    if (device) {
+      storedDevice = device;
+    } else {
+      const id = uuidv4();
+
+      newDevice = await addNewDevice({
+        Name: userAgent.device.model ?? "",
+        OperativeSystem: userAgent.os.name ?? "",
+        DeviceId: id,
+      });
+    }
+
     const data = {
       correo: form.get("correo"),
       contraseña: form.get("contraseña"),
       ...deviceInfo,
+      deviceId: storedDevice ? storedDevice.DeviceId : newDevice!.DeviceId,
     };
 
     try {
@@ -53,11 +74,8 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("refreshToken", response.data.refreshToken);
 
-   
       SessionService.setToken(response.data.token);
       navigate("/clientes");
-
-
     } catch (error) {
       console.log(error, "error login");
       if (
@@ -102,6 +120,34 @@ function Login() {
     }
     setPassword(e.target.value);
   };
+
+  const handleFilterPrintLogin = async () => {
+    const response = await httpClient.post(
+      `${import.meta.env.VITE_API_URL}/login/fingerprint/start`,
+      {
+        correo: correo,
+        contraseña: password,
+      }
+    );
+    const assertion = await startAuthentication(response.data.options);
+
+    const verifyResponse = await httpClient.post(
+      `${import.meta.env.VITE_API_URL}/login/fingerprint/verify`,
+      {
+        assertion: assertion,
+ 
+      }
+    );
+
+    if (verifyResponse.data.verified) {
+      localStorage.setItem("token", verifyResponse.data.token);
+      localStorage.setItem("refreshToken", verifyResponse.data.refreshToken);
+      SessionService.setToken(verifyResponse.data.token);
+      navigate("/clientes");
+    } else {
+      setError("Error al iniciar sesión con huella digital");
+    }
+  };
   return (
     <>
       {showSessionExpiredModal && (
@@ -130,6 +176,9 @@ function Login() {
             type="email"
             name="correo"
             id="correo"
+            onChange={(e) => {
+              setCorreo(e.target.value);
+            }}
             className={`p-2 mb-4 border-2 rounded-md w-full ${
               error ? "border-red-500" : ""
             }`}
@@ -175,6 +224,18 @@ function Login() {
             disabled={isLoading}
           >
             {isLoading ? "Cargado..." : "Iniciar Sesion"}
+          </button>
+          <button
+            type="button"
+            className={`w-full py-3 bg-secondary hover:bg-primary text-white font-bold rounded-lg my-4 ${
+              isLoading
+                ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
+                : "bg-secondary hover:bg-primary text-white"
+            }`}
+            disabled={isLoading}
+            onClick={handleFilterPrintLogin}
+          >
+            Iniciar con Huella Digital
           </button>
         </form>
       </div>
