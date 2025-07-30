@@ -6,6 +6,9 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import Spinner from "../utils/Spinner";
 import HttpClient from "../Services/httpService";
+import FingerprintIcon from "@mui/icons-material/Fingerprint";
+import { startRegistration } from "@simplewebauthn/browser";
+import { toast } from "react-toastify";
 
 function Perfil() {
   const [nombre, setNombre] = useState("");
@@ -24,7 +27,6 @@ function Perfil() {
   const role = tokenData?.user?.role || "";
 
   const isAdimn = role === "Administrador";
-
 
   const string =
     role === "Administrador" ? `administradores/${Id}` : `vendedores/${Id}`;
@@ -137,111 +139,213 @@ function Perfil() {
     }
   };
 
+  const handleRegisterFingerPrint = async () => {
+    try {
+      const res = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/fingerprint/register/options`,
+        {
+          userId: Id,
+          userName: correo,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      const options = await res.data;
+
+      const attestationResponse = await startRegistration(options);
+
+      const verificationResponse = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/fingerprint/register/verify`,
+        {
+          userId: Id,
+          attestationResponse,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (verificationResponse.data.verified) {
+        console.log("Fingerprint registered successfully");
+        toast.success("Huella registrada correctamente");
+      }
+    } catch (error) {
+      console.error("Error adding fingerprint:", error);
+    }
+  };
+
   return (
-    <section>
+    <section className="min-h-screen flex">
       <Sidebar />
-      <div className="flex items-center justify-center h-dvh ml-[64px] px-2">
+      <div className="flex flex-1 items-center justify-center bg-gray-50 px-4">
         {isLoading ? (
-          <Spinner isLoading={true}/>
+          <Spinner isLoading={true} />
         ) : (
           <form
-            action=""
-            className="flex flex-col w-full md:w-1/2 lg:w-1/3 rounded-md shadow-md border p-6 bg-white mx-2"
             onSubmit={handleUpdate}
+            className="w-full max-w-xl bg-white rounded-2xl shadow-xl p-8 border border-gray-200"
           >
-            <h1 className="text-center font-bold text-4xl text-secondary pb-3">
+            <h1 className="text-3xl font-bold text-secondary text-center mb-6">
               Tu Perfil
             </h1>
-            <label htmlFor="nombre" className="font-normal text-base">
-              Nombre
-            </label>
-            <input
-              type="text"
-              className="p-2 text-sm border-2 rounded-md mb-2"
-              name="nombre"
-              value={nombre}
-              onChange={handleChange}
-              disabled={!isAdimn}
-            />
-            <label htmlFor="correo" className="font-normal text-base">
-              Correo
-            </label>
-            <input
-              type="email"
-              className="p-2 text-sm border-2 rounded-md mb-2"
-              name="correo"
-              value={correo}
-              onChange={handleChange}
-              disabled={!isAdimn}
-            />
-            <label htmlFor="telefono" className="font-normal text-base">
-              Telefono
-            </label>
-            <input
-              type="tel"
-              className="p-2 border-2 rounded-md text-sm mb-2"
-              name="telefono"
-              value={telefono}
-              onChange={handleChange}
-              disabled={!isAdimn}
-            />
-            <label htmlFor="cedula" className="font-normal text-base">
-              Cédula
-            </label>
-            <input
-              type="text"
-              className="p-2 border-2 rounded-md text-sm mb-2"
-              name="cedula"
-              value={cedula}
-              onChange={handleChange}
-             disabled={!isAdimn}
-            />
-            <label htmlFor="direccion" className="font-normal text-base">
-              Dirección
-            </label>
-            <input
-              type="text"
-              className="p-2 border-2 rounded-md text-sm mb-2"
-              name="direccion"
-              value={direccion}
-              onChange={handleChange}
-              disabled={!isAdimn}
-            />
-            <label htmlFor="contraseña" className="font-normal text-base">
-              Contraseña
-            </label>
-            <div className="flex w-full relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                name="contraseña"
-                id="contraseña"
-                onChange={handleChange}
-                value={contraseña}
-                disabled={!isAdimn}
-                className={`p-2 border-2 w-full rounded-md ${
-                  error ? "border-red-500" : ""
-                }`}
-              />
+
+            {/* Grupo de campos */}
+            <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="nombre"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Nombre
+                </label>
+                <input
+                  type="text"
+                  name="nombre"
+                  value={nombre}
+                  onChange={handleChange}
+                  disabled={!isAdimn}
+                  className="mt-1 w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="correo"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Correo
+                </label>
+                <input
+                  type="email"
+                  name="correo"
+                  value={correo}
+                  onChange={handleChange}
+                  disabled={!isAdimn}
+                  className="mt-1 w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="telefono"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Teléfono
+                </label>
+                <input
+                  type="tel"
+                  name="telefono"
+                  value={telefono}
+                  onChange={handleChange}
+                  disabled={!isAdimn}
+                  className="mt-1 w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="cedula"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Cédula
+                </label>
+                <input
+                  type="text"
+                  name="cedula"
+                  value={cedula}
+                  onChange={handleChange}
+                  disabled={!isAdimn}
+                  className="mt-1 w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="direccion"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Dirección
+                </label>
+                <input
+                  type="text"
+                  name="direccion"
+                  value={direccion}
+                  onChange={handleChange}
+                  disabled={!isAdimn}
+                  className="mt-1 w-full p-3 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-secondary"
+                />
+              </div>
+
+              {/* Contraseña con toggle */}
+              <div>
+                <label
+                  htmlFor="contraseña"
+                  className="block text-sm font-medium text-gray-700"
+                >
+                  Contraseña
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="contraseña"
+                    value={contraseña}
+                    onChange={handleChange}
+                    disabled={!isAdimn}
+                    className={`mt-1 w-full p-3 border rounded-md text-sm focus:outline-none focus:ring-2 ${
+                      error
+                        ? "border-red-500"
+                        : "border-gray-300 focus:ring-secondary"
+                    }`}
+                  />
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setShowPassword(!showPassword);
+                    }}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Botón de huella */}
+            <div className="flex justify-center mt-6">
               <button
-                className="absolute right-0 p-2"
                 onClick={(e) => {
                   e.preventDefault();
-                  setShowPassword(!showPassword);
+                  handleRegisterFingerPrint();
                 }}
+                className="flex items-center gap-2 px-4 py-3 bg-secondary hover:bg-primary text-white font-semibold rounded-md shadow-md transition-all duration-200"
+                disabled={isLoading}
               >
-                {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}{" "}
+                <FingerprintIcon className="text-white text-xl" />
+                <span>Registrar huella</span>
               </button>
             </div>
+
+            {/* Botón de actualizar */}
             <button
               type="submit"
-              className={`w-full py-3 bg-secondary hover:bg-primary text-white font-bold rounded-lg my-4 ${
+              className={`w-full mt-6 py-3 text-white font-bold rounded-lg transition-all duration-200 ${
                 isLoading
-                  ? "bg-gray-400 hover:bg-gray-500 cursor-not-allowed"
-                  : "bg-secondary hover:bg-primary text-white"
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-secondary hover:bg-primary"
               }`}
-              disabled={isLoading || decodeToken()?.user?.role !== "Administrador"}
+              disabled={isLoading || !isAdimn}
             >
-              {isLoading ? "Cargado..." : decodeToken()?.user?.role !== "Administrador" ? "No permitido" : "Actualizar Perfil" }
+              {isLoading
+                ? "Cargando..."
+                : !isAdimn
+                ? "No permitido"
+                : "Actualizar Perfil"}
             </button>
           </form>
         )}
