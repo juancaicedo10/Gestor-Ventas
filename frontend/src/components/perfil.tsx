@@ -156,11 +156,9 @@ function Perfil() {
 
       const options = await res.data;
 
-      console.log("Options received:", options);
-
       const attestationResponse = await startRegistration(options);
 
-      const resp2 = await HttpClient.post(
+      const verificationResponse = await HttpClient.post(
         `${import.meta.env.VITE_API_URL}/api/fingerprint/register/verify`,
         {
           userId: Id,
@@ -173,7 +171,7 @@ function Perfil() {
         }
       );
 
-      if (resp2.data.verified) {
+      if (verificationResponse.data.verified) {
         console.log("Fingerprint registered successfully");
         toast.success("Huella registrada correctamente");
       }
