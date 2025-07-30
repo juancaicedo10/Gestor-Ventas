@@ -24,6 +24,7 @@ import {
   stopInactivityMonitoring,
 } from "./Services/InactivityService";
 import { SessionService } from "./Services/SessionService";
+import ViewDevices from "./components/Devices/ViewDevices";
 
 function App() {
   useEffect(() => {
@@ -137,6 +138,14 @@ function App() {
           element={
             <PrivateRoute>
               <Liquidaciones />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/dispositivos"
+          element={
+            <PrivateRoute>
+              <ViewDevices />
             </PrivateRoute>
           }
         />

@@ -15,6 +15,7 @@ import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import SavingsIcon from "@mui/icons-material/Savings";
+import { DevicesOther } from "@mui/icons-material";
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
@@ -147,6 +148,16 @@ export default function Sidebar() {
               <SavingsIcon fontSize="inherit" />
               <p hidden={!show} className="font-normal text-xl">
                 Gastos por aprobar
+              </p>
+            </Link>
+            <Link
+              to="/dispositivos"
+              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
+              onClick={() => setShow(false)}
+            >
+              <DevicesOther fontSize="inherit" />
+              <p hidden={!show} className="font-normal text-xl">
+                Dispositivos
               </p>
             </Link>
             <Link
