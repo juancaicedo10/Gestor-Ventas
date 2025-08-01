@@ -10,6 +10,7 @@ import { addNewDevice, getDevice } from "../Services/indexedDB";
 import { v4 as uuidv4 } from "uuid";
 import { startAuthentication } from "@simplewebauthn/browser";
 import FingerprintIcon from "@mui/icons-material/Fingerprint";
+import { useDeviceName } from "../utils/hooks/useDeviceName";
 
 function Login() {
   const navigate = useNavigate();
@@ -21,6 +22,8 @@ function Login() {
 
   const [showSessionExpiredModal, setShowSessionExpiredModal] =
     useState<boolean>(false);
+
+  const deviceName = useDeviceName();
 
   useEffect(() => {
     const expired = localStorage.getItem("sessionExpired");
@@ -37,12 +40,6 @@ function Login() {
 
     const userAgent = UAParserLib.UAParser(navigator.userAgent);
 
-    const deviceInfo = {
-      device: userAgent.device,
-      browser: userAgent.browser,
-      os: userAgent.os,
-    };
-
     const device = await getDevice();
     let storedDevice;
     let newDevice;
@@ -52,7 +49,7 @@ function Login() {
       const id = uuidv4();
 
       newDevice = await addNewDevice({
-        Name: userAgent.device.model ?? "",
+        Name: deviceName ?? "",
         OperativeSystem: userAgent.os.name ?? "",
         DeviceId: id,
       });
@@ -61,7 +58,9 @@ function Login() {
     const data = {
       correo: form.get("correo"),
       contraseña: form.get("contraseña"),
-      ...deviceInfo,
+      browser: userAgent.browser,
+      os: userAgent.os,
+      device: deviceName ?? "",
       deviceId: storedDevice ? storedDevice.DeviceId : newDevice!.DeviceId,
     };
 
@@ -136,7 +135,6 @@ function Login() {
       `${import.meta.env.VITE_API_URL}/login/fingerprint/verify`,
       {
         assertion: assertion,
- 
       }
     );
 
@@ -150,112 +148,121 @@ function Login() {
     }
   };
   return (
- <>
-  {showSessionExpiredModal && (
-    <DefaultModal
-      title="Sesión expirada"
-      message="Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente."
-      onClose={() => setShowSessionExpiredModal(false)}
-    />
-  )}
-
-  <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
-    <h2 className="text-5xl md:text-6xl font-extrabold text-primary mb-8 text-center">
-      Bienvenido
-    </h2>
-
-    <form
-      onSubmit={handleSubmit}
-      className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
-    >
-      <h3 className="text-2xl font-bold text-secondary text-center mb-6">
-        Iniciar Sesión
-      </h3>
-
-      {/* Correo */}
-      <div className="mb-4">
-        <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-1">
-          Correo Electrónico
-        </label>
-        <input
-          type="email"
-          name="correo"
-          id="correo"
-          onChange={(e) => setCorreo(e.target.value)}
-          className={`w-full p-3 border rounded-md text-sm focus:outline-none focus:ring-2 ${
-            error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-secondary"
-          }`}
-          required
+    <>
+      {showSessionExpiredModal && (
+        <DefaultModal
+          title="Sesión expirada"
+          message="Tu sesión ha expirado por inactividad. Por favor, inicia sesión nuevamente."
+          onClose={() => setShowSessionExpiredModal(false)}
         />
-      </div>
+      )}
 
-      {/* Contraseña */}
-      <div className="mb-4">
-        <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700 mb-1">
-          Contraseña
-        </label>
-        <div className="relative">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="contraseña"
-            id="contraseña"
-            onChange={handleChange}
-            className={`w-full p-3 border rounded-md text-sm focus:outline-none focus:ring-2 ${
-              error ? "border-red-500 focus:ring-red-500" : "border-gray-300 focus:ring-secondary"
-            }`}
-            required
-          />
-          {password.length > 0 && (
-            <button
-              onClick={(e) => {
-                e.preventDefault();
-                setShowPassword(!showPassword);
-              }}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+      <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
+        <h2 className="text-5xl md:text-6xl font-extrabold text-primary mb-8 text-center">
+          Bienvenido
+        </h2>
+
+        <form
+          onSubmit={handleSubmit}
+          className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
+        >
+          <h3 className="text-2xl font-bold text-secondary text-center mb-6">
+            Iniciar Sesión
+          </h3>
+
+          {/* Correo */}
+          <div className="mb-4">
+            <label
+              htmlFor="correo"
+              className="block text-sm font-medium text-gray-700 mb-1"
             >
-              {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
-            </button>
-          )}
-        </div>
+              Correo Electrónico
+            </label>
+            <input
+              type="email"
+              name="correo"
+              id="correo"
+              onChange={(e) => setCorreo(e.target.value)}
+              className={`w-full p-3 border rounded-md text-sm focus:outline-none focus:ring-2 ${
+                error
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:ring-secondary"
+              }`}
+              required
+            />
+          </div>
+
+          {/* Contraseña */}
+          <div className="mb-4">
+            <label
+              htmlFor="contraseña"
+              className="block text-sm font-medium text-gray-700 mb-1"
+            >
+              Contraseña
+            </label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="contraseña"
+                id="contraseña"
+                onChange={handleChange}
+                className={`w-full p-3 border rounded-md text-sm focus:outline-none focus:ring-2 ${
+                  error
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:ring-secondary"
+                }`}
+                required
+              />
+              {password.length > 0 && (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowPassword(!showPassword);
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Error */}
+          {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+
+          {/* Botón Iniciar Sesión */}
+          <button
+            type="submit"
+            disabled={isLoading}
+            className={`w-full py-3 font-bold text-white rounded-lg transition-all duration-200 ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-secondary hover:bg-primary"
+            }`}
+          >
+            {isLoading ? "Cargando..." : "Iniciar Sesión"}
+          </button>
+
+          {/* Separador */}
+          <div className="my-4 text-center text-gray-500 text-sm">o</div>
+
+          {/* Botón Huella Digital */}
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={handleFilterPrintLogin}
+            className={`w-full py-3 font-bold text-white rounded-lg flex items-center justify-center gap-2 transition-all duration-200 ${
+              isLoading
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-secondary hover:bg-primary"
+            }`}
+          >
+            <FingerprintIcon className="text-white" />
+            Iniciar con Huella Digital
+          </button>
+        </form>
       </div>
-
-      {/* Error */}
-      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-
-      {/* Botón Iniciar Sesión */}
-      <button
-        type="submit"
-        disabled={isLoading}
-        className={`w-full py-3 font-bold text-white rounded-lg transition-all duration-200 ${
-          isLoading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-secondary hover:bg-primary"
-        }`}
-      >
-        {isLoading ? "Cargando..." : "Iniciar Sesión"}
-      </button>
-
-      {/* Separador */}
-      <div className="my-4 text-center text-gray-500 text-sm">o</div>
-
-      {/* Botón Huella Digital */}
-      <button
-        type="button"
-        disabled={isLoading}
-        onClick={handleFilterPrintLogin}
-        className={`w-full py-3 font-bold text-white rounded-lg flex items-center justify-center gap-2 transition-all duration-200 ${
-          isLoading
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-secondary hover:bg-primary"
-        }`}
-      >
-        <FingerprintIcon className="text-white" />
-        Iniciar con Huella Digital
-      </button>
-    </form>
-  </div>
-</>
-
+    </>
   );
 }
 
