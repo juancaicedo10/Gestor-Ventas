@@ -183,7 +183,7 @@ function Perfil() {
   return (
     <section className="min-h-screen flex">
       <Sidebar />
-      <div className="flex flex-1 items-center justify-center bg-gray-50 px-4">
+      <div className="flex flex-1 items-center justify-center bg-gray-50 ml-[64px]">
         {isLoading ? (
           <Spinner isLoading={true} />
         ) : (
