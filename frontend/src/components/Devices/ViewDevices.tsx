@@ -45,7 +45,6 @@ export default function ViewDevices() {
     }
   };
 
-
   const getDeviceByUser = async (userId: number) => {
     setIsLoading(true);
     try {
@@ -125,8 +124,13 @@ export default function ViewDevices() {
               if (option) {
                 getDeviceByUser(option.value);
               } else {
-                getDevices(); // Si no hay selección, recargar todos los dispositivos
+                getDevices();
               }
+            }}
+            menuPortalTarget={document.body} // Monta el menú en <body>
+            menuPosition="fixed" // Evita problemas de posición
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 9999 }), // Lo pone encima de todo
             }}
           />
         </header>
