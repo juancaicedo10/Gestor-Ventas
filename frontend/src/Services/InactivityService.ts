@@ -18,7 +18,7 @@ const resetInactivityTimer = () => {
 
   inactivityTimeout = setTimeout(() => {
     handleInactivity();
-  }, 5 * 60 * 1000);
+  }, 10 * 60 * 1000);
 };
 
 export const startInactivityMonitoring = () => {
