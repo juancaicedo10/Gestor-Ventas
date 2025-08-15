@@ -32,6 +32,7 @@ interface Cuota {
 }
 
 interface Abono {
+  Id: number;
   CuotaId: number;
   FechaAbono: string;
   ValorAbono: number;
@@ -102,6 +103,33 @@ function Cuotas() {
         console.log(err);
         setIsLoading(false);
       });
+  };
+
+  const descargarDocumento = async (abono: Abono) => {
+    const { Id } = abono;
+
+    try {
+      const response = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/recibo`,
+        { AbonoId: Id },
+        { responseType: "blob" } // MUY IMPORTANTE
+      );
+        // Crear una URL a partir de los datos del archivo
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        // Crear un enlace <a> temporal
+        const link = document.createElement("a");
+        link.href = url;
+        // Asignar un nombre al archivo descargado
+        link.setAttribute("download", "factura-abono.pdf");
+        // Añadir el enlace al documento y hacer clic para descargar
+        document.body.appendChild(link);
+        link.click();
+        // Limpiar el enlace después de la descarga
+        document.body.removeChild(link);
+      
+    } catch (error) {
+      console.error("Error al descargar el documento:", error);
+    } 
   };
 
   const getDatosVenta = async () => {
@@ -328,6 +356,7 @@ function Cuotas() {
                                   <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                     Abono Mora
                                   </th>
+                                  <th className="text-[9px] md:text-sm lg:text-lg text-secondary">Descargar</th>
                                   {decodeToken()?.user.Id === 14 && (
                                     <th className="text-[9px] md:text-sm lg:text-lg text-secondary">
                                       Acciones
@@ -361,6 +390,28 @@ function Cuotas() {
                                         style: "currency",
                                         currency: "COP",
                                       }).format(abono?.MoraAbono || 0)}
+                                    </td>
+                                    <td className="text-center h-full flex items-center px-1 text-[7px] md:text-sm lg:text-lg">
+                                      <button
+                                        onClick={() => descargarDocumento(abono)}
+                                        className="flex items-center gap-1 text-md font-medium text-secondary hover:text-tertiary transition justify-center w-full"
+                                      >
+                                        <svg
+                                          xmlns="http://www.w3.org/2000/svg"
+                                          className="h-6 w-6"
+                                          fill="none"
+                                          viewBox="0 0 24 24"
+                                          stroke="currentColor"
+                                        >
+                                          <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+                                          />
+                                        </svg>
+                                        
+                                      </button>
                                     </td>
                                     {decodeToken()?.user.role ===
                                       "Administrador" &&
