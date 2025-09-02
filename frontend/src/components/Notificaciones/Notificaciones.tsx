@@ -80,22 +80,21 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
         { AbonoId: AbonoId },
         { responseType: "blob" } // MUY IMPORTANTE
       );
-        // Crear una URL a partir de los datos del archivo
-        const url = window.URL.createObjectURL(new Blob([response.data]));
-        // Crear un enlace <a> temporal
-        const link = document.createElement("a");
-        link.href = url;
-        // Asignar un nombre al archivo descargado
-        link.setAttribute("download", "factura-abono.pdf");
-        // Añadir el enlace al documento y hacer clic para descargar
-        document.body.appendChild(link);
-        link.click();
-        // Limpiar el enlace después de la descarga
-        document.body.removeChild(link);
-      
+      // Crear una URL a partir de los datos del archivo
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      // Crear un enlace <a> temporal
+      const link = document.createElement("a");
+      link.href = url;
+      // Asignar un nombre al archivo descargado
+      link.setAttribute("download", "factura-abono.pdf");
+      // Añadir el enlace al documento y hacer clic para descargar
+      document.body.appendChild(link);
+      link.click();
+      // Limpiar el enlace después de la descarga
+      document.body.removeChild(link);
     } catch (error) {
       console.error("Error al descargar el documento:", error);
-    } 
+    }
   };
 
   const getVendedores = async () => {
@@ -137,19 +136,16 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     label: vendedor.NombreCompleto,
   }));
 
-
-
- useEffect(() => {
-  if (!isOpen) {
-    setSelectedFechaFin(undefined);
-    setSelectedFechaInicio(undefined);
-    setSelectedGastos(undefined);
-    setSelectedAbonos(undefined);
-    setSelectedVentas(undefined);
-    setSelectedSeller(undefined);
-  }
-}, [isOpen]);
-
+  useEffect(() => {
+    if (!isOpen) {
+      setSelectedFechaFin(undefined);
+      setSelectedFechaInicio(undefined);
+      setSelectedGastos(undefined);
+      setSelectedAbonos(undefined);
+      setSelectedVentas(undefined);
+      setSelectedSeller(undefined);
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     getNotificacionesFiltered();
@@ -162,34 +158,33 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
     selectedGastos,
   ]);
 
+  useEffect(() => {
+    if (isOpen) {
+      getVendedores();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
-  if (isOpen) {
-    getVendedores();
-  }
-}, [isOpen]);
-
-useEffect(() => {
-  if (
-    isOpen &&
-    (selectedSeller ||
-      selectedFechaInicio ||
-      selectedFechaFin ||
-      selectedVentas ||
-      selectedAbonos ||
-      selectedGastos)
-  ) {
-    getNotificacionesFiltered();
-  }
-}, [
-  isOpen,
-  selectedSeller,
-  selectedFechaInicio,
-  selectedFechaFin,
-  selectedVentas,
-  selectedAbonos,
-  selectedGastos,
-]);
+    if (
+      isOpen &&
+      (selectedSeller ||
+        selectedFechaInicio ||
+        selectedFechaFin ||
+        selectedVentas ||
+        selectedAbonos ||
+        selectedGastos)
+    ) {
+      getNotificacionesFiltered();
+    }
+  }, [
+    isOpen,
+    selectedSeller,
+    selectedFechaInicio,
+    selectedFechaFin,
+    selectedVentas,
+    selectedAbonos,
+    selectedGastos,
+  ]);
 
   return (
     <aside
@@ -347,20 +342,32 @@ useEffect(() => {
                     </span>
                     {notificacion.Detalle}
                   </>
-                ) : (
-                  notificacion.TipoId === 3 && (
-                    <>
-                      se registró un gasto por un valor de{" "}
-                      <span className="font-semibold text-quaternary">
-                        {notificacion.Valor}$
-                      </span>{" "}
-                      para{" "}
-                      <span className="font-semibold text-quaternary">
-                        {notificacion.NombreGasto}
-                      </span>
-                    </>
-                  )
-                )}
+                ) : notificacion.TipoId === 3 ? (
+                  <>
+                    se registró un gasto por un valor de{" "}
+                    <span className="font-semibold text-quaternary">
+                      {notificacion.Valor}$
+                    </span>{" "}
+                    para{" "}
+                    <span className="font-semibold text-quaternary">
+                      {notificacion.NombreGasto}
+                    </span>
+                  </>
+                ) : notificacion.TipoId === 5 ? (
+                  <>
+                      Se registró un retiro a Capital por un valor de{" "}
+                    <span className="font-semibold text-quaternary">
+                      {notificacion.Valor}$
+                    </span>
+                  </>
+                ) : notificacion.TipoId === 4 ? (
+                  <>
+                      Se registró un abono a Capital por un valor de{" "}
+                    <span className="font-semibold text-quaternary">
+                      {notificacion.Valor}$
+                    </span>
+                  </>
+                ) : null}
 
                 {[1, 2].includes(notificacion.TipoId) && (
                   <>
