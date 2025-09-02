@@ -71,15 +71,15 @@ function Clientes() {
     setIsLoading(true);
     if (decodeToken()?.user.role !== "Administrador") {
       HttpClient.get(
-          `${import.meta.env.VITE_API_URL}/api/clientes/vendedor/${VendedorId}`,
-          {
-            params: {
-              page: currentPage + 1,
-              limit: 8,
-              search: searchValue,
-            },
-          }
-        )
+        `${import.meta.env.VITE_API_URL}/api/clientes/vendedor/${VendedorId}`,
+        {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            search: searchValue,
+          },
+        }
+      )
         .then((res) => {
           setClients(res.data.data);
           setPageCount(res.data.totalPages);
@@ -89,17 +89,23 @@ function Clientes() {
           console.log(err);
           setIsLoading(false);
         });
-    } else if (VendedorSelectedContext && VendedorSelectedContext !== 0 && decodeToken()?.user.role === "Administrador") {
+    } else if (
+      VendedorSelectedContext &&
+      VendedorSelectedContext !== 0 &&
+      decodeToken()?.user.role === "Administrador"
+    ) {
       HttpClient.get(
-          `${import.meta.env.VITE_API_URL}/api/clientes/vendedor/${VendedorSelectedContext}`,
-          {
-            params: {
-              page: currentPage + 1,
-              limit: 8,
-              search: searchValue,
-            },
-          }
-        )
+        `${
+          import.meta.env.VITE_API_URL
+        }/api/clientes/vendedor/${VendedorSelectedContext}`,
+        {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            search: searchValue,
+          },
+        }
+      )
         .then((res) => {
           setClients(res.data.data);
           setPageCount(res.data.totalPages);
@@ -111,17 +117,17 @@ function Clientes() {
         });
     } else {
       HttpClient.get(
-          `${import.meta.env.VITE_API_URL}/api/clientes/${
-            decodeToken()?.user?.Id
-          }/all`,
-          {
-            params: {
-              page: currentPage + 1,
-              limit: 8,
-              search: searchValue,
-            },
-          }
-        )
+        `${import.meta.env.VITE_API_URL}/api/clientes/${
+          decodeToken()?.user?.Id
+        }/all`,
+        {
+          params: {
+            page: currentPage + 1,
+            limit: 8,
+            search: searchValue,
+          },
+        }
+      )
         .then((res) => {
           setClients(res.data.data);
           setPageCount(res.data.totalPages);
@@ -276,11 +282,13 @@ function Clientes() {
                           />
                           <span>
                             <h1 className="font-normal text-xl">
-                              {client.NombreCompleto.split(" ")
-                                .slice(0, 2)
-                                .join(" ")}
+                              <Tooltip title={client.NombreCompleto} arrow>
+                                <h6 className="font-normal text-center min-h-[40px] text-lg">
+                                  {client.NombreCompleto}
+                                </h6>
+                              </Tooltip>
                             </h1>
-                            <p className="text-gray-300 font-light py-2 text-lg">
+                            <p className="text-gray-300 font-light py-2 text-lg text-center">
                               CC. {client.NumeroDocumento}
                             </p>
                           </span>
@@ -332,7 +340,6 @@ function Clientes() {
                                       <Link
                                         to={`/ventas/cliente/${client.Id}`}
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-center"
-                                
                                         rel="noopener noreferrer"
                                         onClick={() => setOpenDropdownId(null)}
                                       >
