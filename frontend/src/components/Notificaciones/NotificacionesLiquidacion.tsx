@@ -113,7 +113,6 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                     <Link
                       to={`/ventas/${notificacion.VentaId}`}
                       className="font-semibold text-quaternary border-b-2 border-quaternary"
-                  
                       rel="noopener noreferrer"
                     >
                       ver
@@ -137,7 +136,6 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                   para la venta{" "}
                   <Link
                     to={`/cuotas/${notificacion.VentaId}/${notificacion.NumeroVenta}/${notificacion.Archivada}`}
-               
                     rel="noopener noreferrer"
                   >
                     <span className="text-quaternary font-sembibold border-b-2 border-quaternary font-semibold">
@@ -164,7 +162,20 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                   </>
                 )
               )}
+              {[1, 2].includes(notificacion.TipoId) && (
+                <>
+                  <p>
+                    <span className="font-semibold mr-1 text-quaternary">
+                      Cliente:
+                    </span>
+                    <span className="text-black">
+                      {notificacion.NombreCliente}
+                    </span>
+                  </p>
+                </>
+              )}
             </p>
+
             <footer className="w-full flex justify-between items-center text-base">
               <span>{FormatearFecha(notificacion.Fecha)}</span>
               <span>{formatDate(notificacion.Fecha)}</span>

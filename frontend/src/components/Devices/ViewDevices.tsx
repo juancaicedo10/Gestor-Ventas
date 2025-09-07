@@ -4,6 +4,7 @@ import {
   DevicesOther,
   Memory,
   Person,
+  DeleteOutline,
 } from "@mui/icons-material";
 
 import Spinner from "../../utils/Spinner";
@@ -12,6 +13,7 @@ import HttpClient from "../../Services/httpService";
 import { toast } from "react-toastify";
 import Select from "react-select";
 import decodeToken from "../../utils/tokenDecored";
+import ConfirmationModal from "../Shared/ConfirmationModal";
 
 type Dispositivo = {
   Id: number;
@@ -110,6 +112,14 @@ export default function ViewDevices() {
 
   return (
     <section className="w-full overflow-y-hidden">
+      <ConfirmationModal
+        isOpen={!!selectedId}
+        onClose={() => setSelectedId(null)}
+        url={`${import.meta.env.VITE_API_URL}/api/dispositivos/${selectedId}`}
+        getData={getDevices}
+        text="¿Estás seguro de que deseas eliminar este dispositivo? Esta acción no se puede deshacer."
+        archivada={() => toast.success("Dispositivo eliminado correctamente")}
+      />
       <Sidebar />
       <div className="flex flex-col justify-start h-full ml-[64px]">
         <header className="w-full bg-white text-primary px-4 py-6 shadow-md mb-4 flex items-center justify-center flex-col">
@@ -170,19 +180,32 @@ export default function ViewDevices() {
                           <p className="text-sm text-white/70">{device.Rol}</p>
                         </div>
                       </div>
-                      <button
-                        onClick={() =>
-                          toggleDeviceState(device.Id, device.Autorizado)
-                        }
-                        title={device.Autorizado ? "Desactivar" : "Activar"}
-                        className={`rounded-full p-1 transition font-bold ${
-                          device.Autorizado
-                            ? "bg-red-100 text-red-600 hover:bg-red-200"
-                            : "bg-green-100 text-green-600 hover:bg-green-200"
-                        }`}
-                      >
-                        <PowerSettingsNew />
-                      </button>
+
+                      {/* Botones lado derecho */}
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() =>
+                            toggleDeviceState(device.Id, device.Autorizado)
+                          }
+                          title={device.Autorizado ? "Desactivar" : "Activar"}
+                          className={`rounded-full p-1 transition font-bold ${
+                            device.Autorizado
+                              ? "bg-red-100 text-red-600 hover:bg-red-200"
+                              : "bg-green-100 text-green-600 hover:bg-green-200"
+                          }`}
+                        >
+                          <PowerSettingsNew />
+                        </button>
+
+                        {/* Botón Eliminar */}
+                        <button
+                          onClick={() => setSelectedId(device.Id)}
+                          title="Eliminar dispositivo"
+                          className="rounded-full p-1 bg-red-500 text-white hover:bg-red-600 transition"
+                        >
+                          <DeleteOutline />
+                        </button>
+                      </div>
                     </div>
 
                     {/* Cuerpo blanco con info */}

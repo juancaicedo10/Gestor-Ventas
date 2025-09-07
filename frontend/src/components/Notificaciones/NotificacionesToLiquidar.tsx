@@ -5,6 +5,7 @@ import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/Helpers/FormatDate";
 import HttpClient from "../../Services/httpService";
+import { Abono } from "../Ventas/Cuotas";
 
 interface Props {
   isOpen: boolean;
@@ -47,6 +48,7 @@ const NotificacionesToLiquidar: React.FC<Props> = ({
       console.error("Error al obtener las notificaciones", error);
     }
   };
+
 
   useEffect(() => {
     getNotificaciones(VendedorId);
@@ -152,7 +154,23 @@ const NotificacionesToLiquidar: React.FC<Props> = ({
                     </span>
                   </>
                 )
-              )}
+              )
+
+              
+}
+  {[1, 2].includes(notificacion.TipoId) && (
+                  <>
+                    <p>
+                      <span className="font-semibold mr-1 text-quaternary">
+                        Cliente:
+                      </span>
+                      <span className="text-black">
+                        {notificacion.NombreCliente}
+                      </span>
+                    </p>
+             
+                  </>
+                )}
             </p>
             <footer className="w-full flex justify-between items-center text-base font-semibold">
               <span>{FormatearFecha(notificacion.Fecha)}</span>

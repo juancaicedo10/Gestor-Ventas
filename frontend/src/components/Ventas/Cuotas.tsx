@@ -31,7 +31,7 @@ interface Cuota {
   abonos: [Abono];
 }
 
-interface Abono {
+export interface Abono {
   Id: number;
   CuotaId: number;
   FechaAbono: string;
