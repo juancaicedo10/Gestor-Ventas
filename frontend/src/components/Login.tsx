@@ -158,6 +158,7 @@ function Login() {
       )}
 
       <div className="min-h-screen flex flex-col justify-center items-center bg-gray-50 px-4">
+      
         <h2 className="text-5xl md:text-6xl font-extrabold text-primary mb-8 text-center">
           Bienvenido
         </h2>
@@ -166,9 +167,13 @@ function Login() {
           onSubmit={handleSubmit}
           className="w-full max-w-md bg-white p-8 rounded-2xl shadow-xl border border-gray-200"
         >
+          <div className="flex justify-center">
+                <img src="https://fotosgestorventas.blob.core.windows.net/fotos/InversionesOrienteLogo.jpeg" alt="logo" className="w-32 h-32 mb-8"/>
+</div>
           <h3 className="text-2xl font-bold text-secondary text-center mb-6">
             Iniciar Sesión
           </h3>
+
 
           {/* Correo */}
           <div className="mb-4">

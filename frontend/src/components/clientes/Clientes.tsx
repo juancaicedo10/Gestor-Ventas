@@ -18,6 +18,7 @@ import { Link } from "react-router-dom";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 import { Tooltip } from "@mui/material";
 import HttpClient from "../../Services/httpService";
+import PersonPinIcon from "@mui/icons-material/PersonPin";
 
 function Clientes() {
   interface Client {
@@ -31,6 +32,7 @@ function Clientes() {
     Detalle: string;
     ValorDeuda: number;
     Foto: string;
+    NombreVendedor: string;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
@@ -403,6 +405,17 @@ function Clientes() {
                               <Tooltip title={client.Detalle} arrow>
                                 <p className="font-light tresPuntos">
                                   {client.Detalle}
+                                </p>
+                              </Tooltip>
+                            </span>
+                          </li>
+                          <li className="flex items-center my-1">
+                            <PersonPinIcon className="text-secondary" />
+                            <span className="mx-4">
+                              <h3 className="font-bold">Vendedor:</h3>
+                              <Tooltip title={client.NombreVendedor} arrow>
+                                <p className="font-light tresPuntos">
+                                  {client.NombreVendedor}
                                 </p>
                               </Tooltip>
                             </span>
