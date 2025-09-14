@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-
 import _ from "lodash";
 import Sidebar from "../Sidebar";
 import decodeToken from "../../utils/tokenDecored";
@@ -19,6 +18,7 @@ import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext"
 import { Tooltip } from "@mui/material";
 import HttpClient from "../../Services/httpService";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
+import ImageModal from "../../utils/Fotos/ImageModal";
 
 function Clientes() {
   interface Client {
@@ -48,6 +48,9 @@ function Clientes() {
   const [pageCount, setPageCount] = useState(1);
 
   const [searchValue, setSearchValue] = useState<string>("");
+
+  // Estado para modal de imagen
+  const [openImage, setOpenImage] = useState<string | null>(null);
 
   const handlePageClick = (pageIndex: number) => {
     setCurrentPage(pageIndex);
@@ -278,10 +281,21 @@ function Clientes() {
                     >
                       <div className="flex flex-col">
                         <section className="w-full p-2 flex items-center justify-between rounded-md bg-primary text-white">
-                          <img
-                            src={client.Foto}
-                            className="w-16 h-16 rounded-full"
-                          />
+                          <button>
+                            <img
+                              src={client.Foto}
+                              className="w-16 h-16 rounded-full cursor-pointer hover:scale-110 transition-transform"
+                              alt="Foto cliente"
+                              onClick={() => setOpenImage(client.Foto)}
+                            />
+                          </button>
+                          {/* Modal para mostrar imagen en grande */}
+                          {openImage && (
+                            <ImageModal
+                              src={openImage}
+                              onClose={() => setOpenImage(null)}
+                            />
+                          )}
                           <span>
                             <h1 className="font-normal text-xl">
                               <Tooltip title={client.NombreCompleto} arrow>
