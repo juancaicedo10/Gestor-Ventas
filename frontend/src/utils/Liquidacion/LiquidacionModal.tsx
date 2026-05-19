@@ -127,7 +127,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setSeguros(data?.Seguros ?? 0);
       setMultas(data?.Multas ?? 0);
       setAbonoCapital(data?.AbonoCapital ?? 0);
-      setDifere(data?.Diferencia ?? 0);
+      setDifere(Math.round(data?.Diferencia ?? 0));
       setMovimientos(data?.Movimientos ?? 0);
       setEfectivoAbonosCompras(data?.EfectivoAbonosCompras ?? 0);
       setEfectivoEntregar(data?.EfectivoEntregar ?? 0);
@@ -138,7 +138,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
       setClientesActivus(data?.ClientesActivos ?? 0);
       setCarteraRestante(data?.CarteraRestante ?? 0);
-      setIsDifeValid(data?.Diferencia === 0);
+      setIsDifeValid(Math.round(data?.Diferencia ?? 0) === 0);
       setIsLoading(false);
     } catch (err) {
       console.error("Error fetching liquidacion data:", err);
@@ -216,7 +216,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    if (Difere !== 0) {
+    if (Math.abs(Difere) >= 0.5) {
       setIsDifeValid(false);
       return;
     }
