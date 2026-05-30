@@ -66,8 +66,7 @@ const ModificarAbonoModal: React.FC<ModalProps> = ({
     }
 
     await HttpClient.put(
-        `
-        ${import.meta.env.VITE_API_URL}/api/cuotas/cuota/abonar/${abonoSelected.Id}`,
+        `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/abonar/${abonoSelected.Id}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,
