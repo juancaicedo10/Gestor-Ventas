@@ -66,8 +66,7 @@ const RegistrarAbonoModal: React.FC<ModalProps> = ({
     }
 
     await HttpClient.post(
-        `
-        ${import.meta.env.VITE_API_URL}/api/cuotas/cuota/abonar/${cuotaId}`,
+        `${import.meta.env.VITE_API_URL}/api/cuotas/cuota/abonar/${cuotaId}`,
         {
           ValorAbono: Number(valorAbono),
           FechaAbono: fechaPago,

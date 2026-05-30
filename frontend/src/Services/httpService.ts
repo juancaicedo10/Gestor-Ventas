@@ -7,7 +7,7 @@ const token = localStorage.getItem("token");
 const refreshToken = localStorage.getItem("refreshToken");
 
 const HttpClient = axios.create({
-  baseURL: "", // Cambia esto a tu API real
+  baseURL: import.meta.env.VITE_API_URL,
   timeout: 30000,
   headers: {
     "Content-Type": "application/json",

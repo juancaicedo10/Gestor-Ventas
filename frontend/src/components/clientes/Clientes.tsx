@@ -7,6 +7,7 @@ import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
 import NuevoClienteModal from "../../utils/Clientes/NuevoClienteModal";
 import ModificarClienteModal from "../../utils/Clientes/ModificarClienteModal";
+import CambiarRutaModal from "../../utils/Clientes/CambiarRutaModal";
 import EditNoteIcon from "@mui/icons-material/EditNote";
 import ModalTest from "./ModalDeleteClient";
 import Spinner from "../../utils/Spinner";
@@ -38,6 +39,11 @@ function Clientes() {
   const [clients, setClients] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isRutaModalOpen, setIsRutaModalOpen] = useState(false);
+  const [clienteRuta, setClienteRuta] = useState<{
+    Id: number;
+    NombreCompleto: string;
+  } | null>(null);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isDeleteRequest, setIsDeleteRequest] = useState<boolean>(false);
   const [Id, setId] = useState<number>(0);
@@ -61,6 +67,16 @@ function Clientes() {
   const toggleEditModal = (id: number) => {
     setId(id);
     setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const openRutaModal = (client: { Id: number; NombreCompleto: string }) => {
+    setClienteRuta(client);
+    setIsRutaModalOpen(true);
+  };
+
+  const closeRutaModal = () => {
+    setIsRutaModalOpen(false);
+    setClienteRuta(null);
   };
 
   const { VendedorSelectedContext } = useVendedorContext();
@@ -273,6 +289,15 @@ function Clientes() {
                     Id={Id}
                   />
                 )}
+                {isRutaModalOpen && clienteRuta && (
+                  <CambiarRutaModal
+                    isOpen={isRutaModalOpen}
+                    ClienteId={clienteRuta.Id}
+                    nombreCliente={clienteRuta.NombreCompleto}
+                    onClose={closeRutaModal}
+                    getClients={getClients}
+                  />
+                )}
                 {clients.map((client) => {
                   return (
                     <li
@@ -343,6 +368,18 @@ function Clientes() {
                                         }}
                                       >
                                         Modificar
+                                      </button>
+                                      <button
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        onClick={() => {
+                                          openRutaModal({
+                                            Id: client.Id,
+                                            NombreCompleto: client.NombreCompleto,
+                                          });
+                                          setOpenDropdownId(null);
+                                        }}
+                                      >
+                                        Cambiar de ruta
                                       </button>
                                       <button
                                         className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"

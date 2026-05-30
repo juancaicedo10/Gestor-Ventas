@@ -18,6 +18,9 @@ interface Notificacion {
   Fecha: string;
   NombreCliente: string;
   NombreVendedor: string;
+  NombreVendedorAnterior: string | null;
+  NombreAdmin: string | null;
+  VentasTrasladadas: number | null;
   NumeroVenta: string;
   TipoId: number;
   TipoSeguimiento: string;
@@ -36,6 +39,25 @@ interface Vendedor {
   Id: number;
   NombreCompleto: string;
 }
+
+const TrasladoCard: React.FC<{
+  anterior: string | null;
+  nuevo: string;
+  admin: string | null;
+  ventas: number | null;
+}> = ({ anterior, nuevo, admin, ventas }) => (
+  <>
+    <span className="font-semibold text-quaternary">{anterior ?? "Sin asignar"}</span>
+    {" → "}
+    <span className="font-semibold text-quaternary">{nuevo}</span>
+    <br />
+    <span className="font-semibold text-quaternary mr-1">Ventas trasladadas:</span>
+    {ventas ?? 0}
+    <br />
+    <span className="font-semibold text-quaternary mr-1">Por:</span>
+    {admin}
+  </>
+);
 
 const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
   const [notificaciones, setNotificaciones] = useState<Notificacion[]>([]);
@@ -367,6 +389,13 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                       {notificacion.Valor}$
                     </span>
                   </>
+                ) : notificacion.TipoId === 6 ? (
+                  <TrasladoCard
+                    anterior={notificacion.NombreVendedorAnterior}
+                    nuevo={notificacion.NombreVendedor}
+                    admin={notificacion.NombreAdmin}
+                    ventas={notificacion.VentasTrasladadas}
+                  />
                 ) : null}
 
                 {[1, 2].includes(notificacion.TipoId) && (
