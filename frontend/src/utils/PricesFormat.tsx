@@ -5,18 +5,16 @@ const copFormatter = new Intl.NumberFormat('es-CO', {
   maximumFractionDigits: 0,
 });
 
-/** Formato COP con 2 decimales (es-CO: miles con punto, decimales con coma). */
+/** Formato COP con 2 decimales, consistente en todos los navegadores (sin depender de CLDR para COP). */
 export const formatCopCurrency = (value: number | string | null | undefined) => {
   const amount = Number(value ?? 0);
-  if (Number.isNaN(amount)) return "$ 0,00";
+  if (Number.isNaN(amount)) return '$ 0,00';
 
-  const formatted = new Intl.NumberFormat("es-CO", {
-    style: "decimal",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(amount);
+  const negative = amount < 0;
+  const [intPart, decPart] = Math.abs(amount).toFixed(2).split('.');
+  const withThousands = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
-  return `$ ${formatted}`;
+  return `${negative ? '- ' : ''}$ ${withThousands},${decPart}`;
 };
 
 export const formatInputValue = (inputValue: string) => {
