@@ -23,6 +23,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 import HttpClient from "../../Services/httpService";
+import { formatCopCurrency } from "../../utils/PricesFormat";
 
 interface Liquidacion {
   Id: number;
@@ -296,10 +297,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Base Capital:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.BaseCapital)}
+                                  {formatCopCurrency(liquidacion.BaseCapital)}
                                 </p>
                               </span>
                             </li>
@@ -308,10 +306,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Gastos:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Gastos)}
+                                  {formatCopCurrency(liquidacion.Gastos)}
                                 </p>
                               </span>
                             </li>
@@ -322,10 +317,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Total Ventas:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Ventas)}
+                                  {formatCopCurrency(liquidacion.Ventas)}
                                 </p>
                               </span>
                             </li>
@@ -334,10 +326,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Total Intereses:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Intereses)}
+                                  {formatCopCurrency(liquidacion.Intereses)}
                                 </p>
                               </span>
                             </li>
@@ -346,10 +335,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Seguros:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Seguros)}
+                                  {formatCopCurrency(liquidacion.Seguros)}
                                 </p>
                               </span>
                             </li>
@@ -358,10 +344,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Multas:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Multas)}
+                                  {formatCopCurrency(liquidacion.Multas)}
                                 </p>
                               </span>
                             </li>
@@ -370,10 +353,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Abono capital:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.AbonoCapital)}
+                                  {formatCopCurrency(liquidacion.AbonoCapital)}
                                 </p>
                               </span>
                             </li>
@@ -382,10 +362,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Efectivo:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Efectivo)}
+                                  {formatCopCurrency(liquidacion.Efectivo)}
                                 </p>
                               </span>
                             </li>
@@ -394,10 +371,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Abonos:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Abonos)}
+                                  {formatCopCurrency(liquidacion.Abonos)}
                                 </p>
                               </span>
                             </li>
@@ -406,10 +380,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Cartera:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Cartera)}
+                                  {formatCopCurrency(liquidacion.Cartera)}
                                 </p>
                               </span>
                             </li>
@@ -418,10 +389,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Base Vendedor:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.Base)}
+                                  {formatCopCurrency(liquidacion.Base)}
                                 </p>
                               </span>
                             </li>
@@ -430,10 +398,7 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Cartera Restante:</h3>
                                 <p>
-                                  {new Intl.NumberFormat("es-CO", {
-                                    style: "currency",
-                                    currency: "COP",
-                                  }).format(liquidacion.CarteraRestante)}
+                                  {formatCopCurrency(liquidacion.CarteraRestante)}
                                 </p>
                               </span>
                             </li>

@@ -5,6 +5,7 @@ import Spinner from "../Spinner";
 import NotificacionesToLiquidar from "../../components/Notificaciones/NotificacionesToLiquidar";
 import decodeToken from "../tokenDecored";
 import HttpClient from "../../Services/httpService";
+import { formatCopCurrency } from "../PricesFormat";
 
 interface ModalProps {
   isOpen: boolean;
@@ -92,9 +93,9 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       );
       const data = res.data;
       setBaseCapital(data?.BaseCapital ?? 0);
-      setCartera(data?.Cartera ?? 0);
+      setCartera(Number(data?.Cartera ?? 0));
       setBaseVendedor(data?.Base ?? 0);
-      setDifere(data?.Diferencia ?? 0);
+      setDifere(Number(data?.Diferencia ?? 0));
       setIsLoading(false);
     } catch (err) {
       {
@@ -127,18 +128,18 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setSeguros(data?.Seguros ?? 0);
       setMultas(data?.Multas ?? 0);
       setAbonoCapital(data?.AbonoCapital ?? 0);
-      setDifere(data?.Diferencia ?? 0);
+      setDifere(Number(data?.Diferencia ?? 0));
       setMovimientos(data?.Movimientos ?? 0);
       setEfectivoAbonosCompras(data?.EfectivoAbonosCompras ?? 0);
       setEfectivoEntregar(data?.EfectivoEntregar ?? 0);
       setAbonosTransacciones(data?.AbonosTransacciones ?? 0);
       setRetirosTransacciones(data?.RetirosTransacciones ?? 0);
       setBaseCapital(data?.BaseCapital ?? 0);
-      setCartera(data?.Cartera ?? 0);
+      setCartera(Number(data?.Cartera ?? 0));
       setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
       setClientesActivus(data?.ClientesActivos ?? 0);
-      setCarteraRestante(data?.CarteraRestante ?? 0);
-      setIsDifeValid(data?.Diferencia === 0);
+      setCarteraRestante(Number(data?.CarteraRestante ?? 0));
+      setIsDifeValid(Math.abs(Number(data?.Diferencia ?? 0)) < 0.005);
       setIsLoading(false);
     } catch (err) {
       console.error("Error fetching liquidacion data:", err);
@@ -216,7 +217,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const handleSubmit = (e: any) => {
     e.preventDefault();
 
-    if (Difere !== 0) {
+    if (Math.abs(Difere) >= 0.5) {
       setIsDifeValid(false);
       return;
     }
@@ -361,10 +362,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Base capital:
                           </label>
                           <h3 className="font-normal">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(baseCapital) ?? 0}
+                            {formatCopCurrency(baseCapital)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -372,10 +370,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Cartera:
                           </label>
                           <h3 className="font-normal">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(cartera) ?? 0}
+                            {formatCopCurrency(cartera)}
                           </h3>
                         </div>
                       </section>
@@ -385,10 +380,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Gastos:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(gastos) ?? 0}
+                            {formatCopCurrency(gastos)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -396,10 +388,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Total Ventas:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(ventas) ?? 0}
+                            {formatCopCurrency(ventas)}
                           </h3>
                         </div>
                       </section>
@@ -409,10 +398,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Total Intereses:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(intereses) ?? 0}
+                            {formatCopCurrency(intereses)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -420,10 +406,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Seguros:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(seguros) ?? 0}
+                            {formatCopCurrency(seguros)}
                           </h3>
                         </div>
                       </section>
@@ -433,10 +416,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Multas:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(multas) ?? 0}
+                            {formatCopCurrency(multas)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -444,10 +424,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Total Abonos:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(totalAbonos) ?? 0}
+                            {formatCopCurrency(totalAbonos)}
                           </h3>
                         </div>
                       </section>
@@ -457,10 +434,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Efectivo:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(efectivo) ?? 0}
+                            {formatCopCurrency(efectivo)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -468,10 +442,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Abono Capital:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(abonoCapital) ?? 0}
+                            {formatCopCurrency(abonoCapital)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -479,10 +450,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Base Vendedor:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(baseVendedor) ?? 0}
+                            {formatCopCurrency(baseVendedor)}
                           </h3>
                         </div>
                         <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
@@ -506,10 +474,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Cartera Restante:
                           </label>
                           <h3 className="font-normal">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(carteraRestante) ?? 0}
+                            {formatCopCurrency(carteraRestante)}
                           </h3>
                         </div>
                       </section>
@@ -522,10 +487,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           Diferencia:
                         </h3>
                         <h3 className="font-normal text-lg">
-                          {new Intl.NumberFormat("es-CO", {
-                            style: "currency",
-                            currency: "COP",
-                          }).format(Difere) ?? 0}
+                          {formatCopCurrency(Difere)}
                         </h3>
                       </div>
                       {!isDifeValid && (
@@ -547,10 +509,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                             Intereses, Seguros, Multas:
                           </label>
                           <h3 className="font-normal text-lg">
-                            {new Intl.NumberFormat("es-CO", {
-                              style: "currency",
-                              currency: "COP",
-                            }).format(abonosMultasSeguros) ?? 0}
+                            {formatCopCurrency(abonosMultasSeguros)}
                           </h3>
                         </div>
                       </section>
@@ -577,10 +536,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                     Debe entregar:
                   </label>
                   <h3>
-                    {new Intl.NumberFormat("es-CO", {
-                      style: "currency",
-                      currency: "COP",
-                    }).format(efectivoEntregar) ?? 0}
+                    {formatCopCurrency(efectivoEntregar)}
                   </h3>
                 </span>
                 <button
