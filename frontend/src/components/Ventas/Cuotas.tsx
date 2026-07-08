@@ -55,6 +55,13 @@ interface DatosVenta {
   TotalAPagar: number;
   InteresManual: number;
   MoraManual: number;
+  FueAjustada: boolean;
+  AjusteSaldoAdministrativo: number;
+  SaldoAnteriorAjuste: number;
+  SaldoNuevoAjuste: number;
+  DiferenciaAjuste: number;
+  FechaAjuste: string;
+  MotivoAjuste: string;
 }
 
 function Cuotas() {
@@ -502,6 +509,46 @@ function Cuotas() {
             </tr>
           </tbody>
         </table>
+        {decodeToken()?.user?.role === "Administrador" && DatosVenta?.FueAjustada && (
+          <div className="border-2 border-amber-400 bg-amber-50 rounded-md shadow-sm w-full md:w-3/4 my-4 p-3">
+            <h4 className="font-bold text-base text-amber-700 mb-2">
+              ⚙ Ajuste Administrativo Aplicado
+            </h4>
+            <ul className="text-sm space-y-1">
+              {DatosVenta?.MotivoAjuste && (
+                <li>
+                  <span className="font-semibold text-amber-800">Motivo:</span>{" "}
+                  {DatosVenta.MotivoAjuste}
+                </li>
+              )}
+              {DatosVenta?.SaldoAnteriorAjuste != null && (
+                <li>
+                  <span className="font-semibold text-amber-800">Saldo anterior:</span>{" "}
+                  {new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(DatosVenta.SaldoAnteriorAjuste)}
+                </li>
+              )}
+              {DatosVenta?.SaldoNuevoAjuste != null && (
+                <li>
+                  <span className="font-semibold text-amber-800">Saldo ajustado a:</span>{" "}
+                  {new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(DatosVenta.SaldoNuevoAjuste)}
+                </li>
+              )}
+              {DatosVenta?.DiferenciaAjuste != null && (
+                <li>
+                  <span className="font-semibold text-amber-800">Diferencia:</span>{" "}
+                  {new Intl.NumberFormat("es-CO", { style: "currency", currency: "COP" }).format(DatosVenta.DiferenciaAjuste)}
+                </li>
+              )}
+              {DatosVenta?.FechaAjuste && (
+                <li>
+                  <span className="font-semibold text-amber-800">Fecha del ajuste:</span>{" "}
+                  {formatDate(DatosVenta.FechaAjuste)}{" "}
+                  {FormatearFecha(DatosVenta.FechaAjuste)}
+                </li>
+              )}
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
