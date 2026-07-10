@@ -18,6 +18,7 @@ import Spinner from "../../utils/Spinner";
 interface VentaAprobar {
   Id: number;
   NombreCliente: string;
+  NumeroDocumento?: string;
   NombreVendedor: string;
   ValorVenta: number;
   FechaInicio: string;
@@ -30,6 +31,10 @@ interface VentaAprobar {
   ValorSeguro: number;
   NumeroVenta: string;
   FechaInicioPago: string;
+  TieneDeudaAbierta?: boolean;
+  TieneVentasPrevias?: boolean;
+  CantidadVentasPrevias?: number;
+  VentaDuplicadaPendiente?: boolean;
 }
 
 function VentasAprobar() {
@@ -161,11 +166,39 @@ function VentasAprobar() {
                         <span className="font-semibold mr-2">Cliente:</span>{" "}
                         <h6 className="font-normal">{venta.NombreCliente}</h6>
                       </p>
+                      {venta.NumeroDocumento && (
+                        <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
+                          <span className="font-semibold mr-2">Documento:</span>{" "}
+                          <h6 className="font-normal">{venta.NumeroDocumento}</h6>
+                        </p>
+                      )}
                       <p className="text-lg text-white flex flex-col justify-center items-center md:flex-row md:justify-start">
                         <span className="font-semibold mr-2">Vendedor:</span>{" "}
                         <h6 className="font-normal">{venta.NombreVendedor}</h6>
                       </p>
                     </div>
+                    {(venta.TieneVentasPrevias || venta.TieneDeudaAbierta || venta.VentaDuplicadaPendiente) && (
+                      <div className="border-2 border-amber-400 bg-amber-50 rounded-md p-2 text-sm">
+                        {venta.TieneVentasPrevias && (
+                          <p className="font-semibold text-amber-800">
+                            ⚠ Cliente con ventas previas
+                            {venta.CantidadVentasPrevias
+                              ? ` (${venta.CantidadVentasPrevias})`
+                              : ""}
+                          </p>
+                        )}
+                        {venta.TieneDeudaAbierta && (
+                          <p className="font-semibold text-red-700">
+                            ⚠ Tiene deuda abierta con la misma identificación
+                          </p>
+                        )}
+                        {venta.VentaDuplicadaPendiente && (
+                          <p className="font-semibold text-orange-700">
+                            ⚠ Hay otra venta pendiente de aprobación para este documento
+                          </p>
+                        )}
+                      </div>
+                    )}
                     <div className="bg-white rounded-md border shadow-sm p-2">
                       <p className="text-lg text-primary flex items-center">
                         <AttachMoneyIcon />
