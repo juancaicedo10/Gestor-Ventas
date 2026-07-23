@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { toast } from "react-toastify";
-import decodeToken from "../../utils/tokenDecored";
 import HttpClient from "../../Services/httpService";
 
 interface ModalProps {
@@ -104,12 +103,11 @@ const NuevoAdministradorModal: React.FC<ModalProps> = ({
     };
 
     HttpClient.post(`${import.meta.env.VITE_API_URL}/api/administradores`, admin, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
       .then(() => {
-        console.log("Administrador CREADO EXITOSAMENTE");
         setNombre("");
         setCorreo("");
         setTelefono("");
@@ -125,7 +123,7 @@ const NuevoAdministradorModal: React.FC<ModalProps> = ({
         toast.success("Administrador creado correctamente");
       })
       .catch((err) => {
-        console.log(err)
+        console.log(err);
         toast.error("Error creando el Administrador", err);
       });
     onClose();
@@ -292,9 +290,7 @@ const NuevoAdministradorModal: React.FC<ModalProps> = ({
               type="submit"
               className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-primary text-white rounded-lg hover:bg-tertiary font-semibold w-full my-3 "
             >
-              {decodeToken()?.user.role === "Administrador"
-                ? "Crear Administrador"
-                : "Enviar Administrador a aprobacion"}
+              Crear Administrador
             </button>
           </div>
         </form>

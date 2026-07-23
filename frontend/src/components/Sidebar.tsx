@@ -16,10 +16,27 @@ import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
 import SupervisedUserCircleIcon from "@mui/icons-material/SupervisedUserCircle";
 import SavingsIcon from "@mui/icons-material/Savings";
 import { DevicesOther } from "@mui/icons-material";
+import { MENU_MODULOS, MODULOS, ModuloCodigo } from "../constants/modulos";
+import { hasPermiso } from "../utils/permissions";
+
+const MODULO_ICONOS: Record<ModuloCodigo, JSX.Element> = {
+  [MODULOS.VENDEDORES]: <SupervisedUserCircleIcon fontSize="inherit" />,
+  [MODULOS.CLIENTES]: <PeopleIcon fontSize="inherit" />,
+  [MODULOS.VENTAS]: <SellIcon fontSize="inherit" />,
+  [MODULOS.GASTOS]: <PaymentsIcon fontSize="inherit" />,
+  [MODULOS.ADMINISTRADORES]: <SupervisedUserCircleIcon fontSize="inherit" />,
+  [MODULOS.ABONOS_RETIROS]: <AccountBalanceIcon fontSize="inherit" />,
+  [MODULOS.CLIENTES_APROBAR]: <HowToRegIcon fontSize="inherit" />,
+  [MODULOS.GASTOS_APROBAR]: <SavingsIcon fontSize="inherit" />,
+  [MODULOS.DISPOSITIVOS]: <DevicesOther fontSize="inherit" />,
+  [MODULOS.VENTAS_APROBAR]: <FactCheckIcon fontSize="inherit" />,
+  [MODULOS.LIQUIDACIONES]: <ReceiptLongIcon fontSize="inherit" />,
+};
 
 export default function Sidebar() {
   const [show, setShow] = useState(false);
   const navigate = useNavigate();
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -27,7 +44,10 @@ export default function Sidebar() {
     navigate("/");
   };
 
-  console.log(decodeToken().user);
+  const modulosVisibles = MENU_MODULOS.filter((modulo) =>
+    hasPermiso(modulo.codigo)
+  );
+
   return (
     <aside
       className={`z-50 h-full overflow-y-auto flex fixed flex-col bg-secondary transition-all duration-500 ease-in-out ${
@@ -64,124 +84,19 @@ export default function Sidebar() {
         </button>
       </header>
       <ul className="text-xl flex flex-col w-full">
-        {decodeToken()?.user.role === "Administrador" && (
+        {modulosVisibles.map((modulo) => (
           <Link
-            to="/vendedores"
+            key={modulo.codigo}
+            to={modulo.ruta}
             className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
             onClick={() => setShow(false)}
           >
-            <SupervisedUserCircleIcon fontSize="inherit" />
+            {MODULO_ICONOS[modulo.codigo]}
             <p hidden={!show} className="font-normal text-xl">
-              Vendedores
+              {modulo.label}
             </p>
           </Link>
-        )}
-
-        <Link
-          to="/clientes"
-          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-          onClick={() => setShow(false)}
-        >
-          <PeopleIcon fontSize="inherit" />
-          <p hidden={!show} className="font-normal text-xl">
-            Clientes
-          </p>
-        </Link>
-
-        <Link
-          to="/ventas"
-          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-          onClick={() => setShow(false)}
-        >
-          <SellIcon fontSize="inherit" />
-          <p hidden={!show} className="font-normal text-xl">
-            Ventas
-          </p>
-        </Link>
-        <Link
-          to="/gastos"
-          className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-        >
-          <PaymentsIcon fontSize="inherit" />
-          <p hidden={!show} className="font-normal text-xl">
-            Gastos
-          </p>
-        </Link>
-        {decodeToken()?.user.role === "Administrador" && (
-          <>
-         {decodeToken()?.user.Id === 14 && (
-          <Link
-            to="/administradores"
-            className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-            onClick={() => setShow(false)}
-          >
-            <SupervisedUserCircleIcon fontSize="inherit" />
-            <p hidden={!show} className="font-normal text-xl">
-              Administradores
-            </p>
-          </Link>
-)}
-            <Link
-              to="/abonos-retiros"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-            >
-              <AccountBalanceIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Abonos y Retiros
-              </p>
-            </Link>
-            <Link
-              to="/clientes/aprobar"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <HowToRegIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Clientes por aprobar
-              </p>
-            </Link>
-            <Link
-              to="/gastos/aprobar"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <SavingsIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Gastos por aprobar
-              </p>
-            </Link>
-            <Link
-              to="/dispositivos"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <DevicesOther fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Dispositivos
-              </p>
-            </Link>
-            <Link
-              to="/ventas/aprobar"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <FactCheckIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Ventas por aprobar
-              </p>
-            </Link>
-            <Link
-              to="/liquidaciones"
-              className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"
-              onClick={() => setShow(false)}
-            >
-              <ReceiptLongIcon fontSize="inherit" />
-              <p hidden={!show} className="font-normal text-xl">
-                Liquidaciones
-              </p>
-            </Link>
-          </>
-        )}
+        ))}
         <Link
           to="/perfil"
           className="flex text-white hover:text-white hover:bg-quaternary rounded-md m-2 p-2 cursor-pointer justify-start items-center overflow-hidden"

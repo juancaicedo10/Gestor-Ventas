@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
 import Sidebar from "../Sidebar";
-import decodeToken from "../../utils/tokenDecored";
+import HttpClient from "../../Services/httpService";
+import { canManageAdministradores } from "../../utils/permissions";
 import PinDropIcon from "@mui/icons-material/PinDrop";
 import EmailIcon from "@mui/icons-material/Email";
 import PhoneIcon from "@mui/icons-material/Phone";
@@ -10,10 +11,10 @@ import EditNoteIcon from "@mui/icons-material/EditNote";
 import Spinner from "../../utils/Spinner";
 import NuevoAdministradorModal from "./ModalCrearAdmin";
 import ModificarAdministradorModal from "./ModalEditAdmin";
+import ModalPermisosAdmin from "./ModalPermisosAdmin";
 import RelacionAdministradorVendedorModal from "./AdminVendedorRelacionModal";
 import SyncAltIcon from "@mui/icons-material/SyncAlt";
 import AdminDeleteModal from "./ModarDeleteAdmin";
-import HttpClient from "../../Services/httpService";
 
 function Administradores() {
   // Definiciones de estado e interfaces
@@ -31,11 +32,13 @@ function Administradores() {
   const [Administradores, setAdministradores] = useState<Client[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isPermisosModalOpen, setIsPermisosModalOpen] = useState(false);
   const [openDropdownId, setOpenDropdownId] = useState<number | null>(null);
   const [isDeleteRequest, setIsDeleteRequest] = useState<boolean>(false);
   const [isRelacionOpen, setIsRelacionOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [Id, setId] = useState<number>(0);
+  const [nombreSeleccionado, setNombreSeleccionado] = useState("");
   const [deleteMdal, setDeleteModal] = useState<boolean>(false);
 
   // Funciones para manejar los modales
@@ -43,9 +46,15 @@ function Administradores() {
     setIsModalOpen(!isModalOpen);
   };
 
-  const toggleEditModal = (Id: number) => {
-    setId(Id);
+  const toggleEditModal = (adminId: number) => {
+    setId(adminId);
     setIsEditModalOpen(!isEditModalOpen);
+  };
+
+  const openPermisosModal = (adminId: number, nombre: string) => {
+    setId(adminId);
+    setNombreSeleccionado(nombre);
+    setIsPermisosModalOpen(true);
   };
 
   const toggleDeleteModal = () => {
@@ -95,15 +104,19 @@ function Administradores() {
             <h1 className="text-2xl text-primary md:text-4xl lg:text-6xl text-start md:text-center p-2 w-full">
               Administradores
             </h1>
-            <button className="mx-4 text-primary">
-              <SyncAltIcon
-                fontSize="large"
-                onClick={() => setIsRelacionOpen(true)}
-              />
-            </button>
-            <button className="mx-4 text-primary">
-              <AddCircleIcon fontSize="large" onClick={toggleModal} />
-            </button>
+            {canManageAdministradores() && (
+              <>
+                <button className="mx-4 text-primary">
+                  <SyncAltIcon
+                    fontSize="large"
+                    onClick={() => setIsRelacionOpen(true)}
+                  />
+                </button>
+                <button className="mx-4 text-primary">
+                  <AddCircleIcon fontSize="large" onClick={toggleModal} />
+                </button>
+              </>
+            )}
           </div>
           <div className="flex justify-center items-center px-1">
             <form
@@ -169,7 +182,15 @@ function Administradores() {
                     Id={Id}
                     isOpen={isEditModalOpen}
                     getAdministradores={getAdministradores}
-                    onClose={() => toggleEditModal(Id)}
+                    onClose={() => setIsEditModalOpen(false)}
+                  />
+                )}
+                {isPermisosModalOpen && (
+                  <ModalPermisosAdmin
+                    Id={Id}
+                    nombreAdmin={nombreSeleccionado}
+                    isOpen={isPermisosModalOpen}
+                    onClose={() => setIsPermisosModalOpen(false)}
                   />
                 )}
                 {
@@ -204,7 +225,7 @@ function Administradores() {
                               CC. {Administrador.NumeroDocumento}
                             </p>
                           </span>
-                          {decodeToken()?.user.role === "Administrador" && (
+                          {canManageAdministradores() && (
                             <div className="relative inline-block text-left">
                               <div>
                                 <button
@@ -224,7 +245,7 @@ function Administradores() {
                                   <EditNoteIcon fontSize="medium" />
                                 </button>
                                 {openDropdownId === Administrador.Id && (
-                                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5">
+                                  <div className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-gray-50 ring-1 ring-black ring-opacity-5 z-10">
                                     <div
                                       className="py-1"
                                       role="menu"
@@ -232,17 +253,29 @@ function Administradores() {
                                       aria-labelledby="options-menu"
                                     >
                                       <button
-                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-left"
                                         onClick={() => {
                                           setId(Administrador.Id);
                                           setIsEditModalOpen(true);
                                           setOpenDropdownId(null);
                                         }}
                                       >
-                                        Modificar
+                                        Modificar informacion personal
                                       </button>
                                       <button
-                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full"
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-left"
+                                        onClick={() => {
+                                          openPermisosModal(
+                                            Administrador.Id,
+                                            Administrador.NombreCompleto
+                                          );
+                                          setOpenDropdownId(null);
+                                        }}
+                                      >
+                                        Permisos de modulos
+                                      </button>
+                                      <button
+                                        className="block px-4 py-2 text-sm text-gray-700 font-normal hover:bg-gray-200 hover:text-gray-900 w-full text-left"
                                         onClick={() => {
                                           setId(Administrador.Id);
                                           setIsDeleteRequest(true);

@@ -4,7 +4,7 @@ import "./App.css";
 import Clientes from "./components/clientes/Clientes";
 import Ventas from "./components/Ventas/Ventas";
 import Vendedores from "./components/vendedores/Vendedores";
-import { PrivateRoute } from "./components/routes/protectedRoutes";
+import { PermisoRoute, PrivateRoute } from "./components/routes/protectedRoutes";
 import ClientesAprobar from "./components/clientes/clientesAprobar";
 import Perfil from "./components/perfil";
 import Cuotas from "./components/Ventas/Cuotas";
@@ -25,10 +25,12 @@ import {
 } from "./Services/InactivityService";
 import { SessionService } from "./Services/SessionService";
 import ViewDevices from "./components/Devices/ViewDevices";
+import AccesoDenegado from "./components/AccesoDenegado";
+import { MODULOS } from "./constants/modulos";
 
 function App() {
   useEffect(() => {
-    SessionService.init(); // para el canal de comunicación
+    SessionService.init();
 
     const sub = SessionService.token$.subscribe((token) => {
       if (token) {
@@ -40,7 +42,7 @@ function App() {
 
     return () => {
       sub.unsubscribe();
-      stopInactivityMonitoring(); // limpieza
+      stopInactivityMonitoring();
     };
   }, []);
 
@@ -51,110 +53,130 @@ function App() {
         <Route
           path="/clientes"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.CLIENTES}>
               <Clientes />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/ventas"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.VENTAS}>
               <Ventas />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/ventas/:id"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.VENTAS}>
               <Ventas />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/vendedores"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.VENDEDORES}>
               <Vendedores />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/clientes/aprobar"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.CLIENTES_APROBAR}>
               <ClientesAprobar />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route path="/perfil" element={<Perfil />} />
-        <Route path="/ventas/vendedor/:id" element={<VentasByVendedor />} />
-        <Route path="/ventas/cliente/:id" element={<VentasByCliente />} />
+        <Route
+          path="/acceso-denegado"
+          element={
+            <PrivateRoute>
+              <AccesoDenegado />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/ventas/vendedor/:id"
+          element={
+            <PermisoRoute modulo={MODULOS.VENTAS}>
+              <VentasByVendedor />
+            </PermisoRoute>
+          }
+        />
+        <Route
+          path="/ventas/cliente/:id"
+          element={
+            <PermisoRoute modulo={MODULOS.VENTAS}>
+              <VentasByCliente />
+            </PermisoRoute>
+          }
+        />
         <Route
           path="/cuotas/:id/:numeroVenta/:archivada"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.VENTAS}>
               <Cuotas />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/ventas/aprobar"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.VENTAS_APROBAR}>
               <VentasAprobar />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/gastos/aprobar"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.GASTOS_APROBAR}>
               <GastosAprobar />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/gastos"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.GASTOS}>
               <Gastos />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
-
         <Route
           path="/abonos-retiros"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.ABONOS_RETIROS}>
               <Retiros />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
-
         <Route
           path="/liquidaciones"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.LIQUIDACIONES}>
               <Liquidaciones />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/dispositivos"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.DISPOSITIVOS}>
               <ViewDevices />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
         <Route
           path="/administradores"
           element={
-            <PrivateRoute>
+            <PermisoRoute modulo={MODULOS.ADMINISTRADORES}>
               <Administradores />
-            </PrivateRoute>
+            </PermisoRoute>
           }
         />
       </Routes>

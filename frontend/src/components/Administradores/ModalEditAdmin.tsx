@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 
 import Spinner from "../../utils/Spinner";
 import HttpClient from "../../Services/httpService";
-
 interface ModalProps {
   isOpen: boolean;
   Id: number;
@@ -36,24 +35,22 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
     try {
       setIsLoading(true);
       await HttpClient.get(
-          `${import.meta.env.VITE_API_URL}/api/administradores/${Id}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then((response) => {
-          setNombre(response.data.NombreCompleto);
-          setCorreo(response.data.Correo);
-          setTelefono(response.data.Telefono);
-          setCedula(response.data.NumeroDocumento);
-          setDireccion(response.data.Direccion);
-          setContraseña(response.data.Contraseña);
-          setOficinaId(response.data.OficinaId);
-          setIsLoading(false);
-          console.log(response.data);
-        });
+        `${import.meta.env.VITE_API_URL}/api/administradores/${Id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      ).then((response) => {
+        setNombre(response.data.NombreCompleto);
+        setCorreo(response.data.Correo);
+        setTelefono(response.data.Telefono);
+        setCedula(response.data.NumeroDocumento);
+        setDireccion(response.data.Direccion);
+        setContraseña(response.data.Contraseña);
+        setOficinaId(response.data.OficinaId);
+        setIsLoading(false);
+      });
     } catch (error) {
       console.error("Error obteniendo cliente:", error);
       setIsLoading(false);
@@ -68,29 +65,29 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.name === "nombre") {
-      setNombre(event.target.value)
+      setNombre(event.target.value);
       setNombreValido(true);
-    };
+    }
     if (event.target.name === "correo") {
-      setCorreo(event.target.value)
+      setCorreo(event.target.value);
       setCorreoValido(true);
-    };
+    }
     if (event.target.name === "telefono") {
-      setTelefono(event.target.value)
+      setTelefono(event.target.value);
       setTelefonoValido(true);
-    };
+    }
     if (event.target.name === "cedula") {
-      setCedula(event.target.value)
+      setCedula(event.target.value);
       setCedulaValido(true);
-    };
+    }
     if (event.target.name === "direccion") {
-      setDireccion(event.target.value)
+      setDireccion(event.target.value);
       setDireccionValido(true);
-    };
+    }
     if (event.target.name === "contraseña") {
-      setContraseña(event.target.value)
+      setContraseña(event.target.value);
       setContraseñaValido(true);
-    };
+    }
   };
 
   const handleSubmit = (event: React.FormEvent) => {
@@ -124,33 +121,29 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
 
     if (!esValido) return;
 
-    try {
-      HttpClient.put(
-          `${import.meta.env.VITE_API_URL}/api/Administradores/${Id}`,
-          {
-            NombreCompleto: nombre,
-            NumeroDocumento: cedula,
-            TipoDocumento: 1,
-            Telefono: telefono,
-            Correo: correo,
-            Direccion: direccion,
-            Contraseña: contraseña,
-            OficinaId: oficinaId,
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        )
-        .then(() => {
-          console.log("CLIENTE CREADO EXITOSAMENTE");
-          getAdministradores();
-        })
-        .catch((err) => console.log(err));
-    } catch (error) {
-      console.error("Error creando cliente:", error);
-    }
+    HttpClient.put(
+      `${import.meta.env.VITE_API_URL}/api/Administradores/${Id}`,
+      {
+        NombreCompleto: nombre,
+        NumeroDocumento: cedula,
+        TipoDocumento: 1,
+        Telefono: telefono,
+        Correo: correo,
+        Direccion: direccion,
+        Contraseña: contraseña,
+        OficinaId: oficinaId,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      }
+    )
+      .then(() => {
+        getAdministradores();
+      })
+      .catch((err) => console.log(err));
+
     onClose();
   };
 
@@ -174,7 +167,6 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
           action="submit"
           className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full"
         >
-          {" "}
           <section
             className={`${
               isLoading &&
@@ -188,7 +180,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
                 <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                   <header className="flex justify-between items-center">
                     <h5 className="font-bold text-xl sm:text-xl md:text-lg xl:text-3xl text-primary ">
-                      Modificar Administrador
+                      Modificar informacion personal
                     </h5>
                     <button
                       type="button"
@@ -312,7 +304,7 @@ const ModificarAdministradorModal: React.FC<ModalProps> = ({
                     type="submit"
                     className="text-base sm:text-base md:text-lg lg:text-xl xl:text-2xl py-2 px-4 bg-primary text-white rounded-lg hover:bg-tertiary font-semibold w-full my-3 "
                   >
-                    Modificar Administrador
+                    Guardar cambios
                   </button>
                 </div>
               </>
