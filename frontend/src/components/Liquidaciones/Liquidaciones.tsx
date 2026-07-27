@@ -20,6 +20,7 @@ import Notificaciones from "../Notificaciones/Notificaciones";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import NotificacionesLiquidacion from "../Notificaciones/NotificacionesLiquidacion";
 import PersonIcon from "@mui/icons-material/Person";
+import ManageAccountsIcon from "@mui/icons-material/ManageAccounts";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 import HttpClient from "../../Services/httpService";
@@ -268,11 +269,6 @@ export default function Liquidaciones() {
                             <span className="font-bold text-2xl">
                               {liquidacion.Consecutivo}
                             </span>
-                            {liquidacion.NombreLiquidador && (
-                              <p className="text-sm font-normal text-gray-200 mt-1">
-                                Liquidado por: {liquidacion.NombreLiquidador}
-                              </p>
-                            )}
                           </span>
                           {decodeToken()?.user.role === "Administrador" && (
                             <div className="relative inline-block text-left">
@@ -431,6 +427,16 @@ export default function Liquidaciones() {
                               <span className="mx-4">
                                 <h3 className="font-bold">Clientes Activos:</h3>
                                 <p>{liquidacion.ClientesActivos}</p>
+                              </span>
+                            </li>
+                            <li className="flex items-center my-1">
+                              <ManageAccountsIcon className="text-secondary" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Liquidado por:</h3>
+                                <p>
+                                  {liquidacion.NombreLiquidador?.trim() ||
+                                    "No registrado"}
+                                </p>
                               </span>
                             </li>
                           </div>
