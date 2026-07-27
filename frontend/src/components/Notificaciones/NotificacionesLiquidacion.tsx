@@ -5,6 +5,10 @@ import { FormatearFecha } from "../../utils/FormatearFecha";
 import { Link } from "react-router-dom";
 import { formatDate } from "../../utils/Helpers/FormatDate";
 import HttpClient from "../../Services/httpService";
+import {
+  movimientoEsAjusteBase,
+  renderMovimientoSeguimiento,
+} from "../../utils/Seguimiento/formatMovimientoSeguimiento";
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +33,7 @@ interface Notificacion {
   NombreGasto: string;
   Detalle: string;
   Archivada: boolean;
+  NombreAdmin?: string | null;
 }
 
 const NotificacionesLiquidacion: React.FC<Props> = ({
@@ -59,8 +64,10 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
 
   useEffect(() => {
     setNotificaciones([]);
-    getNotificaciones(Consecutivo, VendedorId);
-  }, [isOpen]);
+    if (isOpen && Consecutivo) {
+      getNotificaciones(Consecutivo, VendedorId);
+    }
+  }, [isOpen, Consecutivo, VendedorId]);
 
   return (
     <aside
@@ -148,8 +155,10 @@ const NotificacionesLiquidacion: React.FC<Props> = ({
                   </span>
                   {notificacion.Detalle}
                 </>
+              ) : movimientoEsAjusteBase(notificacion.TipoId) ? (
+                renderMovimientoSeguimiento(notificacion)
               ) : (
-                notificacion.TipoId === 3 && (
+                Number(notificacion.TipoId) === 3 && (
                   <>
                     se registró un gasto por un valor de
                     <span className="text-quaternary font-semibold ml-1">

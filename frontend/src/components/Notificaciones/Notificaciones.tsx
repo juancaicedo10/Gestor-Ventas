@@ -8,6 +8,10 @@ import { formatDate } from "../../utils/Helpers/FormatDate";
 import decodeToken from "../../utils/tokenDecored";
 import HttpClient from "../../Services/httpService";
 import { saveAs } from "file-saver";
+import {
+  movimientoEsAjusteBase,
+  renderMovimientoSeguimiento,
+} from "../../utils/Seguimiento/formatMovimientoSeguimiento";
 
 interface Props {
   isOpen: boolean;
@@ -375,27 +379,15 @@ const Notificaciones: React.FC<Props> = ({ isOpen, onClose }) => {
                       {notificacion.NombreGasto}
                     </span>
                   </>
-                ) : notificacion.TipoId === 5 ? (
-                  <>
-                      Se registró un retiro a Capital por un valor de{" "}
-                    <span className="font-semibold text-quaternary">
-                      {notificacion.Valor}$
-                    </span>
-                  </>
-                ) : notificacion.TipoId === 4 ? (
-                  <>
-                      Se registró un abono a Capital por un valor de{" "}
-                    <span className="font-semibold text-quaternary">
-                      {notificacion.Valor}$
-                    </span>
-                  </>
-                ) : notificacion.TipoId === 6 ? (
+                ) : Number(notificacion.TipoId) === 6 ? (
                   <TrasladoCard
                     anterior={notificacion.NombreVendedorAnterior}
                     nuevo={notificacion.NombreVendedor}
                     admin={notificacion.NombreAdmin}
                     ventas={notificacion.VentasTrasladadas}
                   />
+                ) : movimientoEsAjusteBase(notificacion.TipoId) ? (
+                  renderMovimientoSeguimiento(notificacion)
                 ) : null}
 
                 {[1, 2].includes(notificacion.TipoId) && (

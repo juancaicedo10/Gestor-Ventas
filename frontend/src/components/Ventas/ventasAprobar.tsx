@@ -13,6 +13,7 @@ import { FormatearFecha } from "../../utils/FormatearFecha";
 import decodeToken from "../../utils/tokenDecored";
 import Sidebar from "../Sidebar";
 import Spinner from "../../utils/Spinner";
+import { formatCopCurrency } from "../../utils/PricesFormat";
 
 
 interface VentaAprobar {
@@ -24,12 +25,14 @@ interface VentaAprobar {
   FechaServer: string;
   FechaFin: Date;
   NumeroCuotas: number;
-  DetallesVenta: number;
+  DetallesVenta: string;
   Periodicidad: number;
   TasaInteres: number;
   ValorSeguro: number;
   NumeroVenta: string;
   FechaInicioPago: string;
+  ExcedeTope?: boolean | number;
+  ValorTopeAplicado?: number | null;
 }
 
 function VentasAprobar() {
@@ -141,6 +144,12 @@ function VentasAprobar() {
               <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2">
                 {sellsToApprove.map((venta) => (
                   <li key={venta.Id} className="flex flex-col w-full mb-2">
+                    {!!venta.ExcedeTope && (
+                      <div className="w-full bg-red-600 text-white font-bold text-center py-2 px-3 rounded-t-md border-2 border-red-700">
+                        Esta venta excede el tope de{" "}
+                        {formatCopCurrency(Number(venta.ValorTopeAplicado ?? 0))}
+                      </div>
+                    )}
                     <div className="w-full">
                       <button
                         className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
@@ -172,10 +181,7 @@ function VentasAprobar() {
                         <span className="m-1">
                           <h6 className="font-semibold">Valor de la venta:</h6>
                           <span>
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(venta.ValorVenta)}
+                            {formatCopCurrency(venta.ValorVenta)}
                           </span>
                         </span>
                       </p>
@@ -184,10 +190,7 @@ function VentasAprobar() {
                         <span className="m-1">
                           <h6 className="font-semibold">Valor Seguro:</h6>
                           <span>
-                            {new Intl.NumberFormat("en-US", {
-                              style: "currency",
-                              currency: "USD",
-                            }).format(venta.ValorSeguro)}
+                            {formatCopCurrency(venta.ValorSeguro)}
                           </span>
                         </span>
                       </p>

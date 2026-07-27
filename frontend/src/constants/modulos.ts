@@ -63,6 +63,7 @@ export const RUTA_MODULO_MAP: Record<string, ModuloCodigo> = {
   "/clientes": MODULOS.CLIENTES,
   "/clientes/aprobar": MODULOS.CLIENTES_APROBAR,
   "/ventas": MODULOS.VENTAS,
+  "/ventas/topes": MODULOS.VENTAS,
   "/ventas/aprobar": MODULOS.VENTAS_APROBAR,
   "/gastos": MODULOS.GASTOS,
   "/gastos/aprobar": MODULOS.GASTOS_APROBAR,

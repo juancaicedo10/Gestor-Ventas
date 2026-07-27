@@ -64,6 +64,12 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const [clients, setClients] = useState<Client[]>([]);
 
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [excedeTopePreview, setExcedeTopePreview] = useState<boolean>(false);
+
+  const esVendedor = decodeToken()?.user?.role === "Vendedor";
+
+  const MENSAJE_EXCEDE_TOPE =
+    "El valor de esta venta excede el tope permitido. Verifique la información ingresada antes de enviar.";
 
   const periodos = [
     {
@@ -223,16 +229,21 @@ const CrearVentaModal: React.FC<ModalProps> = ({
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       })
-      .then(() => {
-        console.log("Venta CREADA EXITOSAMENTE");
+      .then((res) => {
         getVentas();
         setIsDisabled(false);
         onClose();
-        toast.success(
-          decodeToken()?.user?.role === "Administrador"
-            ? "Venta creada exitosamente"
-            : "Venta enviada a aprobacion"
-        );
+
+        if (res.data?.excedeTope) {
+          toast.success("Venta enviada a aprobación por un administrador.");
+        } else {
+          toast.success(
+            res.data?.mensaje ??
+              (decodeToken()?.user?.role === "Administrador"
+                ? "Venta creada exitosamente"
+                : "Venta enviada a aprobación")
+          );
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -262,6 +273,29 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   }, [selectedSeller]);
 
   useEffect(() => {
+    if (!esVendedor || !valorVenta || valorVenta <= 0) {
+      setExcedeTopePreview(false);
+      return;
+    }
+
+    const timer = setTimeout(async () => {
+      try {
+        const res = await HttpClient.post(
+          `${import.meta.env.VITE_API_URL}/api/ventas/topes/evaluar`,
+          { ValorVenta: valorVenta }
+        );
+        setExcedeTopePreview(
+          !!res.data?.validacionActiva && !!res.data?.excedeTope
+        );
+      } catch {
+        setExcedeTopePreview(false);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, [valorVenta, esVendedor]);
+
+  useEffect(() => {
     if (!isOpen) {
       decodeToken()?.user?.role === "Administrador" && setSelectedSeller(0);
       setSelectedClient("");
@@ -282,6 +316,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       setIsSelectedClientValid(true);
       setIsSelectedSellerValid(true);
       setIsDisabled(false);
+      setExcedeTopePreview(false);
     }
   }, [isOpen]);
 
@@ -421,7 +456,9 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     <input
                       type="number"
                       className={`p-2 rounded-md border w-full ${
-                        !isValorVentaValid ? "border-red-500" : ""
+                        !isValorVentaValid || excedeTopePreview
+                          ? "border-red-500"
+                          : ""
                       }`}
                       onChange={(e) => {
                         setValorVenta(Number(e.target.value));
@@ -575,7 +612,16 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                   </p>
                 )}
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+              <div className="bg-gray-50 px-4 py-3 sm:px-6">
+                {esVendedor && excedeTopePreview && (
+                  <div
+                    role="alert"
+                    className="mb-3 rounded-md border-2 border-red-500 bg-red-50 px-3 py-3 text-sm font-semibold text-red-700"
+                  >
+                    {MENSAJE_EXCEDE_TOPE}
+                  </div>
+                )}
+                <div className="sm:flex sm:flex-row-reverse">
                 <button
                   type="submit"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fifth sm:ml-3 sm:w-auto sm:text-sm"
@@ -592,6 +638,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     "Enviar Venta a aprobacion"
                   )}
                 </button>
+                </div>
               </div>
             </form>
           </div>

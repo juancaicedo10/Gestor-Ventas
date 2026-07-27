@@ -16,6 +16,7 @@ import Administradores from "./components/Administradores/Administradores";
 import VentasByCliente from "./components/Ventas/VentasByCliente";
 import VentasByVendedor from "./components/Ventas/VentasByVendedor";
 import VentasAprobar from "./components/Ventas/ventasAprobar";
+import ConfigTopesVentas from "./components/Ventas/ConfigTopesVentas";
 import GastosAprobar from "./components/Gastos/GastosAprobar";
 import Gastos from "./components/Gastos/Gastos";
 import { useEffect } from "react";
@@ -120,6 +121,14 @@ function App() {
           element={
             <PermisoRoute modulo={MODULOS.VENTAS}>
               <Cuotas />
+            </PermisoRoute>
+          }
+        />
+        <Route
+          path="/ventas/topes"
+          element={
+            <PermisoRoute modulo={MODULOS.VENTAS}>
+              <ConfigTopesVentas />
             </PermisoRoute>
           }
         />

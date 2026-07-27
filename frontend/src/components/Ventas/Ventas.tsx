@@ -8,6 +8,8 @@ import Spinner from "../../utils/Spinner";
 import decodeToken from "../../utils/tokenDecored";
 import PictureAsPdfIcon from "@mui/icons-material/PictureAsPdf";
 import TuneIcon from "@mui/icons-material/Tune";
+import SavingsIcon from "@mui/icons-material/Savings";
+import { Link } from "react-router-dom";
 import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext";
 import VisualizarVentaModal from "../../utils/Ventas/VisualizarVentaModal";
 import FilterPdfModal from "../../utils/PdfFilterModal/FilterPdfModal";
@@ -316,6 +318,11 @@ function Ventas() {
             </h1>
           </div>
           <div className="flex-1 flex justify-end space-x-4">
+            {decodeToken()?.user.role === "Administrador" && (
+              <Link to="/ventas/topes" className="text-primary" title="Configurar topes">
+                <SavingsIcon fontSize="large" />
+              </Link>
+            )}
             <button className="text-primary">
               <PictureAsPdfIcon
                 fontSize="large"

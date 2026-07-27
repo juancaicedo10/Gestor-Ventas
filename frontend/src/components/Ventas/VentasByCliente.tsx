@@ -9,6 +9,9 @@ import PhoneIcon from "@mui/icons-material/Phone";
 import HttpClient from "../../Services/httpService";
 import Spinner from "../../utils/Spinner";
 import Sidebar from "../Sidebar";
+import HojaVidaFinancieraPanel, {
+  HojaVidaFinanciera,
+} from "../clientes/HojaVidaFinancieraPanel";
 import { formatDate } from "../../utils/Helpers/FormatDate";
 import { FormatearFecha } from "../../utils/FormatearFecha";
 
@@ -38,6 +41,8 @@ function VentasByCliente() {
   const { id } = useParams<{ id: string }>();
   const [ventas, setVentas] = useState<Venta[]>([]);
   const [cliente, setcliente] = useState<any>({});
+  const [hojaVida, setHojaVida] = useState<HojaVidaFinanciera | null>(null);
+  const [isLoadingHojaVida, setIsLoadingHojaVida] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
   const [pageCount, setPageCount] = useState(1);
@@ -63,12 +68,27 @@ function VentasByCliente() {
         console.log(err);
         setIsLoading(false);
       });
+  }, [id, currentPage]);
 
-    // Fetch cliente info
+  useEffect(() => {
+    if (!id) return;
+
+    setIsLoadingHojaVida(true);
+
     HttpClient.get(`${import.meta.env.VITE_API_URL}/api/clientes/${id}`)
       .then((res) => setcliente(res.data))
       .catch((err) => console.log(err));
-  }, [id, currentPage]);
+
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/clientes/${id}/hoja-vida-financiera`
+    )
+      .then((res) => setHojaVida(res.data))
+      .catch((err) => {
+        console.log(err);
+        setHojaVida(null);
+      })
+      .finally(() => setIsLoadingHojaVida(false));
+  }, [id]);
 
   const [visibleRange, setVisibleRange] = useState([0, 5]);
 
@@ -104,6 +124,11 @@ function VentasByCliente() {
               <span className="text-quaternary">{cliente.NombreCompleto}</span>
             </h1>
           </header>
+          <HojaVidaFinancieraPanel
+            data={hojaVida}
+            isLoading={isLoadingHojaVida}
+            nombreCliente={cliente.NombreCompleto}
+          />
           <section
             className={`flex items-center justify-center ml-[67px] ${
               isLoading && "h-[100vh]"

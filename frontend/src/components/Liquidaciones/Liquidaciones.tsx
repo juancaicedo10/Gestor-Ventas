@@ -48,6 +48,8 @@ interface Liquidacion {
   CarteraRestante: number;
   Detalle: string;
   ClientesActivos: number;
+  NombreLiquidador?: string | null;
+  AdministradorLiquidadorId?: number | null;
 }
 
 interface VendedorOption {
@@ -266,6 +268,11 @@ export default function Liquidaciones() {
                             <span className="font-bold text-2xl">
                               {liquidacion.Consecutivo}
                             </span>
+                            {liquidacion.NombreLiquidador && (
+                              <p className="text-sm font-normal text-gray-200 mt-1">
+                                Liquidado por: {liquidacion.NombreLiquidador}
+                              </p>
+                            )}
                           </span>
                           {decodeToken()?.user.role === "Administrador" && (
                             <div className="relative inline-block text-left">

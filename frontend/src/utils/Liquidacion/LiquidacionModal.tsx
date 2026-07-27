@@ -6,6 +6,9 @@ import NotificacionesToLiquidar from "../../components/Notificaciones/Notificaci
 import decodeToken from "../tokenDecored";
 import HttpClient from "../../Services/httpService";
 import { formatCopCurrency } from "../PricesFormat";
+import MovimientosBaseLiquidacion, {
+  MovimientoBase,
+} from "./MovimientosBaseLiquidacion";
 
 interface ModalProps {
   isOpen: boolean;
@@ -62,6 +65,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
   const [Movimientos, setMovimientos] = useState<number>(0);
   const [carteraRestante, setCarteraRestante] = useState<number>(0);
   const [detalles, setDetalles] = useState<string>("");
+  const [movimientosBase, setMovimientosBase] = useState<MovimientoBase[]>([]);
   const [vendedores, setVendedores] = useState([]);
 
   const [isVendSelected, setIsVendSelected] = useState<boolean>(false);
@@ -139,6 +143,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setAbonosMultasSeguros(data?.AbonosMultasSeguros ?? 0);
       setClientesActivus(data?.ClientesActivos ?? 0);
       setCarteraRestante(Number(data?.CarteraRestante ?? 0));
+      setMovimientosBase(data?.movimientosBase ?? []);
       setIsDifeValid(Math.abs(Number(data?.Diferencia ?? 0)) < 0.005);
       setIsLoading(false);
     } catch (err) {
@@ -180,6 +185,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
       setMovimientos(0);
       setCarteraRestante(0);
       setDetalles("");
+      setMovimientosBase([]);
       setIsVendSelected(false);
       setIsDifeValid(true);
     }
@@ -513,6 +519,7 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                           </h3>
                         </div>
                       </section>
+                      <MovimientosBaseLiquidacion movimientos={movimientosBase} />
                       <div className="flex text-base md:text-lg font-normal mb-2 text-gray-700 flex-col items-start">
                         <label className="block text-base md:text-lg font-semibold text-secondary">
                           Detalles:
@@ -530,15 +537,23 @@ const LiquidacionModal: React.FC<ModalProps> = ({
                   )}
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex justify-between items-center">
-                <span className="text-xl">
-                  <label htmlFor="efectivo" className="text-primary">
-                    Debe entregar:
-                  </label>
-                  <h3>
-                    {formatCopCurrency(efectivoEntregar)}
-                  </h3>
-                </span>
+              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                <div>
+                  <span className="text-xl block">
+                    <label htmlFor="efectivo" className="text-primary">
+                      Debe entregar:
+                    </label>
+                    <h3>{formatCopCurrency(efectivoEntregar)}</h3>
+                  </span>
+                  {decodeToken()?.user?.role === "Administrador" && (
+                    <p className="text-sm text-gray-600 mt-1">
+                      Cerrando como:{" "}
+                      <span className="font-semibold text-secondary">
+                        {decodeToken()?.user?.NombreCompleto}
+                      </span>
+                    </p>
+                  )}
+                </div>
                 <button
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-primary text-base font-medium text-white hover:bg-tertiary focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-fifth sm:ml-3 sm:w-auto sm:text-sm"
