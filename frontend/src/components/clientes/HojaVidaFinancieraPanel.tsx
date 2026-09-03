@@ -1,9 +1,13 @@
-import { ReactNode } from "react";
+import { FormEvent, ReactNode, useEffect, useState } from "react";
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ShoppingBagOutlinedIcon from "@mui/icons-material/ShoppingBagOutlined";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import NotesIcon from "@mui/icons-material/Notes";
+import { toast } from "react-toastify";
+import HttpClient from "../../Services/httpService";
+import decodeToken from "../../utils/tokenDecored";
 
 export interface HojaVidaFinanciera {
   totalVentas: number;
@@ -20,6 +24,14 @@ interface HojaVidaFinancieraPanelProps {
   data: HojaVidaFinanciera | null;
   isLoading: boolean;
   nombreCliente?: string;
+  clienteId?: number;
+}
+
+interface NotaHojaVida {
+  id: number;
+  texto: string;
+  nombreAutor: string;
+  fechaCreacion: string;
 }
 
 const NIVEL_CONFIG: Record<
@@ -80,11 +92,78 @@ function StatCard({
   );
 }
 
+const formatFechaNota = (value: string) => {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString("es-CO", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
 export default function HojaVidaFinancieraPanel({
   data,
   isLoading,
   nombreCliente,
+  clienteId,
 }: HojaVidaFinancieraPanelProps) {
+  const [notas, setNotas] = useState<NotaHojaVida[]>([]);
+  const [nuevaNota, setNuevaNota] = useState("");
+  const [isSavingNota, setIsSavingNota] = useState(false);
+  const isAdmin = decodeToken()?.user?.role === "Administrador";
+
+  useEffect(() => {
+    if (!clienteId) {
+      setNotas([]);
+      return;
+    }
+
+    HttpClient.get(
+      `${import.meta.env.VITE_API_URL}/api/clientes/${clienteId}/hoja-vida-financiera/notas`
+    )
+      .then((res) => setNotas(res.data || []))
+      .catch(() => setNotas([]));
+  }, [clienteId]);
+
+  const handleRegistrarNota = async (event: FormEvent) => {
+    event.preventDefault();
+    if (!clienteId || !nuevaNota.trim()) {
+      toast.warn("Escribe una nota antes de guardar");
+      return;
+    }
+
+    try {
+      setIsSavingNota(true);
+      const res = await HttpClient.post(
+        `${import.meta.env.VITE_API_URL}/api/clientes/${clienteId}/hoja-vida-financiera/notas`,
+        { texto: nuevaNota.trim() }
+      );
+      setNotas((prev) => [res.data, ...prev]);
+      setNuevaNota("");
+      toast.success("Nota registrada");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "No se pudo guardar la nota");
+    } finally {
+      setIsSavingNota(false);
+    }
+  };
+
+  const handleDesactivarNota = async (notaId: number) => {
+    if (!clienteId) return;
+
+    try {
+      await HttpClient.delete(
+        `${import.meta.env.VITE_API_URL}/api/clientes/${clienteId}/hoja-vida-financiera/notas/${notaId}`
+      );
+      setNotas((prev) => prev.filter((nota) => nota.id !== notaId));
+      toast.success("Nota eliminada");
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "No se pudo eliminar la nota");
+    }
+  };
   if (isLoading) {
     return (
       <div className="mx-4 my-4 ml-[81px] animate-pulse rounded-xl border border-gray-200 bg-white p-6">
@@ -177,6 +256,74 @@ export default function HojaVidaFinancieraPanel({
           </p>
         </>
       )}
+
+      {typeof calificacion === "number" && calificacion >= 80 && notas.length > 0 && (
+        <div className="mt-4 rounded-xl border border-amber-300 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          La calificación automática está alta, pero hay notas manuales.
+          Revisa el historial antes de otorgar un nuevo crédito: un cliente
+          pudo haber estado en cartera castigada y pagar meses después.
+        </div>
+      )}
+
+      <div className="mt-5 border-t border-gray-100 pt-4">
+        <div className="mb-3 flex items-center gap-2">
+          <NotesIcon className="text-primary" />
+          <h3 className="text-base font-bold text-primary">Notas del administrador</h3>
+        </div>
+        <p className="mb-3 text-sm text-gray-500">
+          Estas notas no se borran cuando el cliente pone al día una deuda
+          vieja. Sirven para dejar constancia de cartera castigada o mala paga.
+        </p>
+
+        {isAdmin && clienteId && (
+          <form onSubmit={handleRegistrarNota} className="mb-4">
+            <textarea
+              value={nuevaNota}
+              onChange={(e) => setNuevaNota(e.target.value)}
+              maxLength={1000}
+              rows={3}
+              placeholder="Ej: Estuvo en cartera castigada 8 meses y pagó después de muchas gestiones."
+              className="w-full rounded-lg border border-gray-300 p-2 text-sm text-gray-800 focus:border-fifth focus:ring-fifth"
+            />
+            <div className="mt-2 flex items-center justify-between">
+              <span className="text-xs text-gray-400">{nuevaNota.length}/1000</span>
+              <button
+                type="submit"
+                disabled={isSavingNota || !nuevaNota.trim()}
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-tertiary disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isSavingNota ? "Guardando..." : "Agregar nota"}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {notas.length === 0 ? (
+          <p className="text-sm text-gray-500">Aún no hay notas en esta hoja de vida.</p>
+        ) : (
+          <ul className="max-h-72 space-y-2 overflow-y-auto">
+            {notas.map((nota) => (
+              <li key={nota.id} className="rounded-xl border border-gray-200 bg-gray-50 p-3">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="whitespace-pre-wrap text-sm text-gray-800">{nota.texto}</p>
+                  {isAdmin && (
+                    <button
+                      type="button"
+                      onClick={() => handleDesactivarNota(nota.id)}
+                      className="shrink-0 text-xs text-red-600 hover:text-red-800"
+                    >
+                      Quitar
+                    </button>
+                  )}
+                </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  {nota.nombreAutor} · {formatFechaNota(nota.fechaCreacion)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </section>
   );
 }

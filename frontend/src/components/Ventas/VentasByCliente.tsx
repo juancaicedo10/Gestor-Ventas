@@ -128,6 +128,7 @@ function VentasByCliente() {
             data={hojaVida}
             isLoading={isLoadingHojaVida}
             nombreCliente={cliente.NombreCompleto}
+            clienteId={Number(id)}
           />
           <section
             className={`flex items-center justify-center ml-[67px] ${
