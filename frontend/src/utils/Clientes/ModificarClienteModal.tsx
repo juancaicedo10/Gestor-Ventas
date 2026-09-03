@@ -4,6 +4,8 @@ import Spinner from "../Spinner";
 import { toast } from "react-toastify";
 import HttpClient from "../../Services/httpService";
 import FileInputWithPreview from "../Fotos/FileInputWithPreview";
+import decodeToken from "../tokenDecored";
+import { formatCopCurrency } from "../PricesFormat";
 
 interface ModalProps {
   isOpen: boolean;
@@ -26,6 +28,7 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
   const [direccion, setDireccion] = useState("");
   const [ocupacion, setOcupacion] = useState("");
   const [detalle, setDetalle] = useState("");
+  const [topeMaximo, setTopeMaximo] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const [isLoadingButton, setIsLoadingButton] = useState(false);
@@ -57,6 +60,11 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           setDireccion(response.data.Direccion);
           setOcupacion(response.data.Ocupacion);
           setDetalle(response.data.Detalle);
+          setTopeMaximo(
+            response.data.TopeMaximoVenta
+              ? String(Number(response.data.TopeMaximoVenta))
+              : ""
+          );
           setFoto(response.data.Foto || null);
           setIsLoading(false);
           console.log(response.data);
@@ -101,6 +109,9 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     if (event.target.name === "detalle") {
       setDetalle(event.target.value);
       setDetalleValido(true);
+    }
+    if (event.target.name === "topeMaximo") {
+      setTopeMaximo(event.target.value.replace(/[^\d]/g, ""));
     }
   };
 
@@ -156,7 +167,10 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
     formData.append("Correo", correo);
     formData.append("Direccion", direccion);
     formData.append("Ocupacion", ocupacion);
-    formData.append("Detalle", detalle);  
+    formData.append("Detalle", detalle);
+    if (decodeToken()?.user?.role === "Administrador") {
+      formData.append("TopeMaximoVenta", topeMaximo || "0");
+    }
     if (foto instanceof File) {
       formData.append("Foto", foto);
     } else if (typeof foto === "string") {
@@ -356,6 +370,27 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
                       </p>
                     )}
                   </label>
+                  {decodeToken()?.user?.role === "Administrador" && (
+                    <label className="block text-base md:text-lg font-normal">
+                      <span className="text-gray-700">
+                        Tope máximo de venta (COP):
+                      </span>
+                      <input
+                        type="text"
+                        name="topeMaximo"
+                        inputMode="numeric"
+                        value={topeMaximo}
+                        onChange={handleChange}
+                        className="p-2 rounded-md border w-full text-sm"
+                        placeholder="0 = sin tope"
+                      />
+                      <p className="text-xs text-gray-500 mt-1">
+                        {topeMaximo
+                          ? `Vista previa: ${formatCopCurrency(Number(topeMaximo))}`
+                          : "Sin tope: este cliente no se valida por monto."}
+                      </p>
+                    </label>
+                  )}
                   <label className="block text-base md:text-lg font-normal mt-2">
                     <span className="text-gray-700">Foto (opcional):</span>
                       <FileInputWithPreview file={foto as string} onFileSelected={(e) => setFoto(e)}></FileInputWithPreview>

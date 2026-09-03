@@ -69,7 +69,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   const esVendedor = decodeToken()?.user?.role === "Vendedor";
 
   const MENSAJE_EXCEDE_TOPE =
-    "El valor de esta venta excede el tope permitido. Verifique la información ingresada antes de enviar.";
+    "El valor de esta venta excede el tope permitido para este cliente. Verifique la información ingresada antes de enviar.";
 
   const periodos = [
     {
@@ -273,7 +273,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
   }, [selectedSeller]);
 
   useEffect(() => {
-    if (!esVendedor || !valorVenta || valorVenta <= 0) {
+    if (!esVendedor || !valorVenta || valorVenta <= 0 || !selectedClient) {
       setExcedeTopePreview(false);
       return;
     }
@@ -282,7 +282,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       try {
         const res = await HttpClient.post(
           `${import.meta.env.VITE_API_URL}/api/ventas/topes/evaluar`,
-          { ValorVenta: valorVenta }
+          { ValorVenta: valorVenta, ClienteId: selectedClient }
         );
         setExcedeTopePreview(
           !!res.data?.validacionActiva && !!res.data?.excedeTope
@@ -293,7 +293,7 @@ const CrearVentaModal: React.FC<ModalProps> = ({
     }, 400);
 
     return () => clearTimeout(timer);
-  }, [valorVenta, esVendedor]);
+  }, [valorVenta, esVendedor, selectedClient]);
 
   useEffect(() => {
     if (!isOpen) {

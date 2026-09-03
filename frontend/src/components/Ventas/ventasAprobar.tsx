@@ -146,8 +146,8 @@ function VentasAprobar() {
                   <li key={venta.Id} className="flex flex-col w-full mb-2">
                     {!!venta.ExcedeTope && (
                       <div className="w-full bg-red-600 text-white font-bold text-center py-2 px-3 rounded-t-md border-2 border-red-700">
-                        Esta venta excede el tope de{" "}
-                        {formatCopCurrency(Number(venta.ValorTopeAplicado ?? 0))}
+                        Esta venta excede el tope del cliente (
+                        {formatCopCurrency(Number(venta.ValorTopeAplicado ?? 0))})
                       </div>
                     )}
                     <div className="w-full">

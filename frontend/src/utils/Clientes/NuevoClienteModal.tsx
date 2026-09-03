@@ -24,6 +24,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
   const [direccion, setDireccion] = useState("");
   const [ocupacion, setOcupacion] = useState("");
   const [detalle, setDetalle] = useState("");
+  const [topeMaximo, setTopeMaximo] = useState("");
   const [foto, setFoto] = useState<File | null>(null);
 
   const [nombreValido, setNombreValido] = useState(true);
@@ -66,6 +67,9 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
       case "detalle":
         setDetalle(value);
         setDetalleValido(true);
+        break;
+      case "topeMaximo":
+        setTopeMaximo(value.replace(/[^\d]/g, ""));
         break;
       case "foto":
         if (files && files.length > 0) {
@@ -127,6 +131,9 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
     formData.append("Direccion", direccion);
     formData.append("Ocupacion", ocupacion);
     formData.append("Detalle", detalle);
+    if (decodeToken()?.user?.role === "Administrador") {
+      formData.append("TopeMaximoVenta", topeMaximo || "0");
+    }
     if (foto) {
       formData.append("Foto", foto); // Agregar el archivo al FormData
     }
@@ -150,6 +157,7 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
           setDireccion("");
           setOcupacion("");
           setDetalle("");
+          setTopeMaximo("");
           setNombreValido(true);
           setCorreoValido(true);
           setTelefonoValido(true);
@@ -358,6 +366,20 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
                 </p>
               )}
             </label>
+            {decodeToken()?.user?.role === "Administrador" && (
+              <label className="block text-base md:text-lg font-normal mt-2">
+                <span className="text-gray-700">Tope máximo de venta (COP):</span>
+                <input
+                  type="text"
+                  name="topeMaximo"
+                  inputMode="numeric"
+                  value={topeMaximo}
+                  onChange={handleChange}
+                  className="p-2 rounded-md border w-full text-sm"
+                  placeholder="0 = sin tope"
+                />
+              </label>
+            )}
                  <label className="block text-base md:text-lg font-normal mt-2">
                  <span className="text-gray-700">Foto (opcional):</span>
               <FileInputWithPreview file={Constants.DEFAULT_IMAGE} onFileSelected={(e) => setFoto(e)}/>

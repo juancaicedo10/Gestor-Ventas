@@ -319,7 +319,7 @@ function Ventas() {
           </div>
           <div className="flex-1 flex justify-end space-x-4">
             {decodeToken()?.user.role === "Administrador" && (
-              <Link to="/ventas/topes" className="text-primary" title="Configurar topes">
+              <Link to="/ventas/topes" className="text-primary" title="Topes por cliente">
                 <SavingsIcon fontSize="large" />
               </Link>
             )}
