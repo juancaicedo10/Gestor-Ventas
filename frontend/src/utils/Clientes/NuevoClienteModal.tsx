@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import FileInputWithPreview from "../Fotos/FileInputWithPreview";
 import { Constants } from  "../Helpers/Constants"
 import HttpClient from "../../Services/httpService";
+import { formatCopCurrency } from "../PricesFormat";
 
 interface ModalProps {
   isOpen: boolean;
@@ -378,6 +379,11 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
                   className="p-2 rounded-md border w-full text-sm"
                   placeholder="0 = sin tope"
                 />
+                <p className="text-xs text-gray-500 mt-1">
+                  {topeMaximo
+                    ? `Vista previa: ${formatCopCurrency(Number(topeMaximo))}`
+                    : "Sin tope: este cliente no se valida por monto."}
+                </p>
               </label>
             )}
                  <label className="block text-base md:text-lg font-normal mt-2">

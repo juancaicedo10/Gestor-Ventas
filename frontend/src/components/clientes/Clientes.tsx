@@ -19,7 +19,9 @@ import { useVendedorContext } from "../../utils/Context/VendedorSelectedContext"
 import { Tooltip } from "@mui/material";
 import HttpClient from "../../Services/httpService";
 import PersonPinIcon from "@mui/icons-material/PersonPin";
+import SavingsIcon from "@mui/icons-material/Savings";
 import ImageModal from "../../utils/Fotos/ImageModal";
+import { formatCopCurrency } from "../../utils/PricesFormat";
 
 function Clientes() {
   interface Client {
@@ -34,6 +36,7 @@ function Clientes() {
     ValorDeuda: number;
     Foto: string;
     NombreVendedor: string;
+    TopeMaximoVenta?: number | null;
   }
 
   const [clients, setClients] = useState<Client[]>([]);
@@ -471,6 +474,21 @@ function Clientes() {
                               </Tooltip>
                             </span>
                           </li>
+                          {decodeToken()?.user?.role === "Administrador" && (
+                            <li className="flex items-center my-1">
+                              <SavingsIcon className="text-secondary" />
+                              <span className="mx-4">
+                                <h3 className="font-bold">Tope de venta:</h3>
+                                <p className="font-light">
+                                  {Number(client.TopeMaximoVenta) > 0
+                                    ? formatCopCurrency(
+                                        Number(client.TopeMaximoVenta)
+                                      )
+                                    : "Sin tope"}
+                                </p>
+                              </span>
+                            </li>
+                          )}
                         </div>
                       </div>
                     </li>
