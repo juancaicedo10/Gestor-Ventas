@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import Sidebar from "../Sidebar";
@@ -16,8 +16,11 @@ interface ClienteTope {
   TopeMaximoVenta?: number | null;
 }
 
+const LIMITE_CLIENTES = 100;
+
 export default function ConfigTopesVentas() {
   const [clientes, setClientes] = useState<ClienteTope[]>([]);
+  const [totalClientes, setTotalClientes] = useState(0);
   const [search, setSearch] = useState("");
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [savingId, setSavingId] = useState<number | null>(null);
@@ -26,43 +29,44 @@ export default function ConfigTopesVentas() {
   const adminId = decodeToken()?.user?.Id;
   const esAdmin = decodeToken()?.user?.role === "Administrador";
 
-  const cargarClientes = async () => {
-    setIsLoading(true);
-    try {
-      const res = await HttpClient.get(
-        `${import.meta.env.VITE_API_URL}/api/clientes/${adminId}/all`,
-        { params: { page: 1, limit: 500, search: "" } }
-      );
-      const data: ClienteTope[] = res.data?.data || [];
-      setClientes(data);
-      const nextDrafts: Record<number, string> = {};
-      data.forEach((c) => {
-        nextDrafts[c.Id] = String(Number(c.TopeMaximoVenta ?? 0) || "");
-      });
-      setDrafts(nextDrafts);
-    } catch (error) {
-      console.error(error);
-      toast.error("No se pudieron cargar los clientes");
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
-    if (esAdmin && adminId) {
-      cargarClientes();
-    }
-  }, [esAdmin, adminId]);
+    if (!esAdmin || !adminId) return;
 
-  const filtrados = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return clientes;
-    return clientes.filter(
-      (c) =>
-        c.NombreCompleto?.toLowerCase().includes(q) ||
-        c.NumeroDocumento?.toLowerCase().includes(q)
-    );
-  }, [clientes, search]);
+    let cancelado = false;
+    const handler = setTimeout(async () => {
+      setIsLoading(true);
+      try {
+        const res = await HttpClient.get(
+          `${import.meta.env.VITE_API_URL}/api/clientes/${adminId}/all`,
+          { params: { page: 1, limit: LIMITE_CLIENTES, search: search.trim() } }
+        );
+        if (cancelado) return;
+        const data: ClienteTope[] = res.data?.data || [];
+        setClientes(data);
+        setTotalClientes(res.data?.totalRecords ?? data.length);
+        setDrafts((prev) => {
+          const next = { ...prev };
+          data.forEach((c) => {
+            if (!(c.Id in next)) {
+              next[c.Id] = String(Number(c.TopeMaximoVenta ?? 0) || "");
+            }
+          });
+          return next;
+        });
+      } catch (error) {
+        if (cancelado) return;
+        console.error(error);
+        toast.error("No se pudieron cargar los clientes");
+      } finally {
+        if (!cancelado) setIsLoading(false);
+      }
+    }, 400);
+
+    return () => {
+      cancelado = true;
+      clearTimeout(handler);
+    };
+  }, [esAdmin, adminId, search]);
 
   const guardarTope = async (cliente: ClienteTope) => {
     const raw = drafts[cliente.Id] ?? "";
@@ -134,9 +138,16 @@ export default function ConfigTopesVentas() {
             type="search"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Buscar cliente por nombre o documento"
+            placeholder="Buscar cliente por nombre, teléfono o correo"
             className="w-full border-2 border-gray-300 rounded-md px-3 py-2 bg-white"
           />
+
+          {!isLoading && totalClientes > clientes.length && (
+            <p className="text-sm text-gray-500">
+              Mostrando {clientes.length} de {totalClientes} clientes. Usa el
+              buscador para encontrar a los demás.
+            </p>
+          )}
 
           {isLoading ? (
             <div className="flex justify-center py-20">
@@ -144,7 +155,7 @@ export default function ConfigTopesVentas() {
             </div>
           ) : (
             <ul className="space-y-3">
-              {filtrados.map((cliente) => (
+              {clientes.map((cliente) => (
                 <li
                   key={cliente.Id}
                   className="bg-white rounded-lg shadow-sm p-4 flex flex-col md:flex-row md:items-center gap-3"
@@ -187,7 +198,7 @@ export default function ConfigTopesVentas() {
                   </div>
                 </li>
               ))}
-              {filtrados.length === 0 && (
+              {clientes.length === 0 && (
                 <li className="text-center text-gray-500 py-8">
                   No hay clientes para mostrar
                 </li>
