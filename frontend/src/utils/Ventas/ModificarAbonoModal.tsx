@@ -20,6 +20,9 @@ interface Cuota {
   Pagada: boolean;
 }
 
+// La BD admite 250, pero al corregir un abono se le agrega " [Anulado por correccion]".
+const MAX_DETALLE = 220;
+
 const ModificarAbonoModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -88,7 +91,11 @@ const ModificarAbonoModal: React.FC<ModalProps> = ({
         toast.success("Abono modificado correctamente");
       })
       .catch((err) => {
-        toast.error(err.response.data)
+        const data = err?.response?.data;
+        toast.error(
+          (typeof data === "string" ? data : data?.message) ||
+            "No se pudo modificar el abono"
+        );
         setIsSendButtonLoading(false);
       });
   };
@@ -253,11 +260,15 @@ const ModificarAbonoModal: React.FC<ModalProps> = ({
                       !isDetallesAbonoValid ? "border-red-500" : ""
                     }`}
                     style={{ resize: "none" }}
+                    maxLength={MAX_DETALLE}
                     onChange={(e) => {
                       setDetallesAbono(e.target.value);
                       setIsDetallesAbonoValid(true);
                     }}
                   ></textarea>
+                  <p className="text-right text-xs text-gray-400">
+                    {(detallesAbono ?? "").length}/{MAX_DETALLE}
+                  </p>
                   {!isDetallesAbonoValid && (
                     <p className="text-red-500 text-xs">
                       Este campo es obligatorio

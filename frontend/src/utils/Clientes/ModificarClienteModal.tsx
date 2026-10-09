@@ -192,6 +192,14 @@ const ModificarClienteModal: React.FC<ModalProps> = ({
           getClients();
           onClose();
           toast.success("Cliente modificado correctamente");
+        })
+        .catch((err) => {
+          console.error(err);
+          setIsLoadingButton(false);
+          toast.error(
+            err?.response?.data?.message ||
+              "No se pudo modificar el cliente. Intenta de nuevo o cambia la foto."
+          );
         });
     } catch (error) {
       setIsLoadingButton(false);

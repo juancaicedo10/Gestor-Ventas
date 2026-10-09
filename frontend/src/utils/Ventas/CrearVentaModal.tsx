@@ -21,6 +21,8 @@ interface ModalProps {
   getVentas: () => void;
 }
 
+const MAX_DETALLE_VENTA = 250;
+
 const CrearVentaModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
@@ -247,9 +249,12 @@ const CrearVentaModal: React.FC<ModalProps> = ({
       })
       .catch((err) => {
         console.log(err);
-        onClose();
         setIsDisabled(false);
-        toast.error("Error creando venta");
+        const data = err?.response?.data;
+        toast.error(
+          (typeof data === "string" ? data : data?.message || data?.mensaje) ||
+            "Error creando venta"
+        );
       });
   };
 
@@ -600,12 +605,16 @@ const CrearVentaModal: React.FC<ModalProps> = ({
                     !isDetallesVentaValid ? "border-red-500" : ""
                   }`}
                   style={{ resize: "none" }}
+                  maxLength={MAX_DETALLE_VENTA}
                   onChange={(e) => {
                     setDetallesVenta(e.target.value);
                     setIsDetallesVentaValid(true);
                     setIsDisabled(false);
                   }}
                 ></textarea>
+                <p className="text-right text-xs text-gray-400">
+                  {detallesVenta.length}/{MAX_DETALLE_VENTA}
+                </p>
                 {!isDetallesVentaValid && (
                   <p className="text-red-500 text-xs">
                     Este campo es obligatorio

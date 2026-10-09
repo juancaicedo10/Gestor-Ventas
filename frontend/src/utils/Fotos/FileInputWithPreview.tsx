@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { comprimirImagen } from "./comprimirImagen";
 
 interface FileInputWithPreviewProps {
   file: string;
@@ -21,8 +22,9 @@ export default function FileInputWithPreview({
     }
   }, [file]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0] || null;
+  const handleChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const original = e.target.files?.[0] || null;
+    const file = original ? await comprimirImagen(original) : null;
     setFoto(file);
     onFileSelected?.(file);
 
