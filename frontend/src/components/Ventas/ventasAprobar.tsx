@@ -18,6 +18,7 @@ import { formatCopCurrency } from "../../utils/PricesFormat";
 
 interface VentaAprobar {
   Id: number;
+  ClienteId: number;
   NombreCliente: string;
   NombreVendedor: string;
   ValorVenta: number;
@@ -33,12 +34,67 @@ interface VentaAprobar {
   FechaInicioPago: string;
   ExcedeTope?: boolean | number;
   ValorTopeAplicado?: number | null;
+  TopeActualCliente?: number | null;
 }
+
+const requiereAmpliarTope = (venta: VentaAprobar) => {
+  const tope = Number(venta.TopeActualCliente) || 0;
+  return tope > 0 && Number(venta.ValorVenta) > tope;
+};
 
 function VentasAprobar() {
   const [sellsToApprove, setSellsToApprove] = useState<VentaAprobar[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [disabled, setIsDisabled] = useState<boolean>(false);
+  const [topeDrafts, setTopeDrafts] = useState<Record<number, string>>({});
+  const [savingTopeVentaId, setSavingTopeVentaId] = useState<number | null>(
+    null
+  );
+
+  const actualizarTopeLocal = (clienteId: number, tope: number) => {
+    setSellsToApprove((prev) =>
+      prev.map((venta) =>
+        venta.ClienteId === clienteId
+          ? { ...venta, TopeActualCliente: tope }
+          : venta
+      )
+    );
+  };
+
+  const handleAmpliarTope = async (venta: VentaAprobar) => {
+    const nuevoTope = Number(
+      (topeDrafts[venta.Id] ?? String(venta.ValorVenta)).replace(/\D/g, "")
+    );
+
+    if (!nuevoTope || nuevoTope < Number(venta.ValorVenta)) {
+      toast.warn(
+        `El nuevo tope debe ser mínimo ${formatCopCurrency(venta.ValorVenta)}`
+      );
+      return;
+    }
+
+    setSavingTopeVentaId(venta.Id);
+    try {
+      const res = await HttpClient.put(
+        `${import.meta.env.VITE_API_URL}/api/ventas/topes/cliente/${venta.ClienteId}`,
+        { TopeMaximoVenta: nuevoTope }
+      );
+      actualizarTopeLocal(
+        venta.ClienteId,
+        Number(res.data?.TopeMaximoVenta ?? nuevoTope)
+      );
+      toast.success(
+        `Tope de ${venta.NombreCliente} ampliado a ${formatCopCurrency(nuevoTope)}`
+      );
+    } catch (err: any) {
+      console.error(err);
+      toast.error(
+        err?.response?.data?.message || "No se pudo ampliar el tope del cliente"
+      );
+    } finally {
+      setSavingTopeVentaId(null);
+    }
+  };
 
   const getVentasAprobar = async () => {
     setIsLoading(true);
@@ -78,9 +134,13 @@ function VentasAprobar() {
       setIsDisabled(false);
       setSellsToApprove(sellsToApprove.filter((venta) => venta.Id !== ventaId));
       toast.success("Venta aprobada correctamente");
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      toast.error("Error al aprobar la venta");
+      const data = err?.response?.data;
+      if (data?.requiereAmpliarTope) {
+        actualizarTopeLocal(data.clienteId, Number(data.topeActual));
+      }
+      toast.error(data?.message || "Error al aprobar la venta");
     } finally {
       setIsLoading(false);
       setIsDisabled(false);
@@ -142,18 +202,69 @@ function VentasAprobar() {
               </div>
             ) : (
               <ul className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:ml-4 px-2">
-                {sellsToApprove.map((venta) => (
+                {sellsToApprove.map((venta) => {
+                  const bloqueadaPorTope = requiereAmpliarTope(venta);
+                  const topeActual = Number(venta.TopeActualCliente) || 0;
+
+                  return (
                   <li key={venta.Id} className="flex flex-col w-full mb-2">
-                    {!!venta.ExcedeTope && (
-                      <div className="w-full bg-red-600 text-white font-bold text-center py-2 px-3 rounded-t-md border-2 border-red-700">
-                        Esta venta excede el tope del cliente (
-                        {formatCopCurrency(Number(venta.ValorTopeAplicado ?? 0))})
+                    {bloqueadaPorTope && (
+                      <div className="w-full bg-red-600 text-white py-2 px-3 rounded-t-md border-2 border-red-700">
+                        <p className="font-bold text-center">
+                          Esta venta supera el tope del cliente (
+                          {formatCopCurrency(topeActual)})
+                        </p>
+                        <p className="text-sm text-center mt-1">
+                          Para aprobarla, amplía el tope a mínimo{" "}
+                          {formatCopCurrency(venta.ValorVenta)}.
+                        </p>
+                        <div className="flex gap-2 mt-2">
+                          <input
+                            type="text"
+                            inputMode="numeric"
+                            className="flex-1 min-w-0 rounded-md px-2 py-1 text-gray-800"
+                            value={
+                              topeDrafts[venta.Id] ?? String(venta.ValorVenta)
+                            }
+                            onChange={(e) =>
+                              setTopeDrafts((prev) => ({
+                                ...prev,
+                                [venta.Id]: e.target.value.replace(/\D/g, ""),
+                              }))
+                            }
+                          />
+                          <button
+                            type="button"
+                            className="bg-white text-red-700 font-semibold px-3 py-1 rounded-md hover:bg-red-50 disabled:opacity-60"
+                            disabled={savingTopeVentaId === venta.Id}
+                            onClick={() => handleAmpliarTope(venta)}
+                          >
+                            {savingTopeVentaId === venta.Id
+                              ? "Guardando..."
+                              : "Ampliar tope"}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                    {!bloqueadaPorTope && !!venta.ExcedeTope && (
+                      <div className="w-full bg-amber-100 text-amber-900 font-semibold text-center py-2 px-3 rounded-t-md border-2 border-amber-300">
+                        Superaba el tope de{" "}
+                        {formatCopCurrency(Number(venta.ValorTopeAplicado ?? 0))}.
+                        Tope actual:{" "}
+                        {topeActual > 0
+                          ? formatCopCurrency(topeActual)
+                          : "sin tope"}
                       </div>
                     )}
                     <div className="w-full">
                       <button
-                        className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200"
-                        disabled={disabled}
+                        className="bg-green-50 text-green-500 px-2 py-1 rounded-md w-1/2 border-2 border-green-500 font-bold text-xl hover:bg-green-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-green-50"
+                        disabled={disabled || bloqueadaPorTope}
+                        title={
+                          bloqueadaPorTope
+                            ? "Amplía el tope del cliente para aprobar"
+                            : undefined
+                        }
                         onClick={() => handleAprobar(venta.Id)}
                       >
                         Aprobar
@@ -242,7 +353,8 @@ function VentasAprobar() {
                       </p>
                     </div>
                   </li>
-                ))}
+                  );
+                })}
               </ul>
             )}
           </div>
