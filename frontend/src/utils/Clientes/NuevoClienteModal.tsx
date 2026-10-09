@@ -164,17 +164,21 @@ const NuevoClienteModal: React.FC<ModalProps> = ({
               ? "Cliente creado exitosamente"
               : "Cliente enviado a aprobacion"
           );
+          onClose();
         })
         .catch((err) => {
           console.log(err);
           setIsDisabled(false);
+          toast.error(
+            err?.response?.data?.message ||
+              "No se pudo crear el cliente. Intenta de nuevo o cambia la foto."
+          );
         });
     } catch (error) {
       console.error("Error creando cliente:", error);
       toast.error("Error creando cliente");
       setIsDisabled(false);
     }
-    onClose();
   };
 
   useEffect(() => {
